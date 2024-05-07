@@ -1,3 +1,8 @@
+if (window.location.host.includes("github")) {
+    var domainPrefix = "/english";
+} else {
+    var domainPrefix = "";
+}
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
@@ -28,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 function fetchData(page) {
-    fetch("/english/assets/json/" + page + ".json")
+    fetch(domainPrefix + "/assets/json/" + page + ".json")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -45,18 +50,18 @@ function fetchData(page) {
             listItems.click(function () {
                 $(this).siblings().removeClass("active");
                 $(this).addClass("active");
-                var right = $("li.active").eq(1);
-                var left = $("li.active").eq(0);
+                var enActive = $("#en").find("li.active").eq(0);
+                var cnAvtive = $("#cn").find("li.active").eq(0);
                 if ($(this).parent().attr("id") == "en") {
-                    $("#video-" + left.data("en"))
-                        .get(0)
-                        .play();
+                    var audio = $("#audio-" + enActive.data("en")).get(0);
+                    audio.load()
+                    audio.play();
                 }
-                if (left.data("en") === right.data("en")) {
+                if (enActive.data("en") === cnAvtive.data("en")) {
                     const randomIndex = Math.floor(Math.random() * colors.length);
                     const randomColor = colors.splice(randomIndex, 1)[0];
-                    left.css({ background: randomColor });
-                    right.css({ background: randomColor });
+                    enActive.css({ background: randomColor });
+                    cnAvtive.css({ background: randomColor });
                 }
             });
         })
@@ -70,11 +75,12 @@ function initUI(en, cn) {
     en.forEach((word) => {
         const en = word.en.replace(/\s+/g, "_");
         const sourceElement = document.createElement("source");
-        sourceElement.src = `/english/assets/audio/${en}.mp3`;
+        sourceElement.src = domainPrefix + `/assets/audio/${en}.mp3`;
         sourceElement.type = "audio/mp3";
 
         const audioElement = document.createElement("audio");
-        audioElement.id = `video-${en}`;
+        audioElement.id = `audio-${en}`;
+        audioElement.controls = "0";
         audioElement.style.display = "none"; // 设置样式为不显示
         audioElement.textContent = "Your browser does not support the audio element.";
         audioElement.appendChild(sourceElement);
@@ -147,7 +153,7 @@ document.documentElement.addEventListener(
     },
     {
         passive: false,
-    }
+    },
 );
 // 禁用双击放大
 var lastTouchEnd = 0;
@@ -162,5 +168,5 @@ document.documentElement.addEventListener(
     },
     {
         passive: false,
-    }
+    },
 );
