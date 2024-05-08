@@ -75,13 +75,13 @@ function initUI(en, cn) {
     en.forEach((word) => {
         const en = word.en.replace(/\s+/g, "_");
         const sourceElement = document.createElement("source");
+        sourceElement.type = "audio/mp3";
         sourceElement.src = "data:audio/mp3;base64," + word.tts;
-        // sourceElement.type = "audio/mpeg";
 
         const audioElement = document.createElement("audio");
         audioElement.id = `audio-${en}`;
         audioElement.controls = 1;
-        // audioElement.style.display = "none"; // 设置样式为不显示
+        audioElement.style.display = "none"; // 设置样式为不显示
         audioElement.textContent = "Your browser does not support the audio element.";
         audioElement.appendChild(sourceElement);
 
