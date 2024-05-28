@@ -1,5 +1,6 @@
 const practice = document.getElementById("practice");
 const canvasElem = document.getElementById("canvas");
+const recognizeResult = document.getElementById("recognize-result");
 const width = practice.clientWidth;
 const height = practice.clientHeight;
 canvasElem.width = width;
@@ -8,15 +9,16 @@ canvasElem.height = height;
 function canvasShow() {
     if (canvasElem.style.display === "none" || canvasElem.style.display === "") {
         canvasElem.style.display = "block";
+        recognizeResult.style.display = "block";
     } else {
         canvasElem.style.display = "none";
+        recognizeResult.style.display = "none";
     }
 }
 
 var canvas = new handwriting.Canvas(canvasElem, 3);
 
 canvas.setCallBack(function (data, err) {
-    console.log(data);
     if (err) {
         alert(err);
         throw err;
@@ -25,7 +27,9 @@ canvas.setCallBack(function (data, err) {
         recognize(data[0]);
     }
 });
-
+function aaa() {
+    compare();
+}
 canvas.setLineWidth(5);
 
 //Set options

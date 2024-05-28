@@ -6,7 +6,7 @@ if (window.location.host.includes("github")) {
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
-const colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
+var colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
 document.addEventListener("DOMContentLoaded", function () {
     // 获取 Pre 和 Next 按钮元素
     var prevBtn = document.getElementById("prevBtn");
@@ -45,6 +45,7 @@ function fetchData(page) {
             const words = data;
             const enArray = shuffleArray(words);
             const cnArray = shuffleArray(words);
+            colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
             initUI(enArray, cnArray);
             var listItems = $("li");
             listItems.click(function () {
@@ -137,11 +138,14 @@ function compare() {
 function recognize(data) {
     const en = data.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
+    alert(colors.length)
     const randomColor = colors.splice(randomIndex, 1)[0];
     $('[data-en="' + en + '"]').each(function (i, element) {
-        const $element = $(element);
-        $element.css({ background: randomColor });
+        $(this).css({ background: randomColor });
         canvas.erase();
+        var audio = $("#audio-" + en).get(0);
+        audio.load();
+        audio.play();
     });
 }
 function getRandomInt(min, max) {
