@@ -116,6 +116,14 @@ body {
 #page #write-panel {
     border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
+#page #write-panel #recognize-result {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 12px;
+    background: #fff;
+}
+
 #canvas {
     display: none;
     border: 2px solid #007bff;
