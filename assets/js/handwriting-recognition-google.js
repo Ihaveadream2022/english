@@ -21,6 +21,7 @@ canvas.setCallBack(function (data, err) {
         alert(err);
         throw err;
     } else {
+        document.getElementById("recognize-result").innerHTML = data[0];
         recognize(data[0]);
     }
 });
