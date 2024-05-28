@@ -138,7 +138,6 @@ function compare() {
 function recognize(data) {
     const en = data.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
-    alert(colors.length)
     const randomColor = colors.splice(randomIndex, 1)[0];
     $('[data-en="' + en + '"]').each(function (i, element) {
         $(this).css({ background: randomColor });
