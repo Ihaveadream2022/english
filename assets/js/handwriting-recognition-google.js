@@ -18,6 +18,7 @@ var canvas = new handwriting.Canvas(canvasElem, 3);
 canvas.setCallBack(function (data, err) {
     console.log(data);
     if (err) {
+        alert(err);
         throw err;
     } else {
         recognize(data[0]);
