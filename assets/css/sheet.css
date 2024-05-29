@@ -32,6 +32,7 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     padding: 0;
+    position: relative;
 }
 #practice .item {
     flex: 1;
@@ -88,4 +89,48 @@ body {
     background-color: #ccc;
     color: #fff;
     font-weight: 900;
+}
+#page .recognize-buttons {
+    background: #007bff;
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    color: #fff;
+    font-weight: 900;
+}
+#page #write-panel,
+#page #page-panel {
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    box-sizing: border-box;
+}
+#page #write-panel {
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+#page #write-panel #recognize-result {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 12px;
+    background: #fff;
+}
+
+#canvas {
+    display: none;
+    border: 2px solid #007bff;
+    cursor: crosshair;
+    position: absolute;
+    bottom: 0px;
+}
+#recognize-result {
+    display: none;
 }

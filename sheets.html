@@ -14,16 +14,27 @@
             <div class="item">
                 <ul id="cn"></ul>
             </div>
+            <canvas id="canvas"> </canvas>
         </div>
         <div id="page">
-            <div id="prevBtn" class="page-item">Prev</div>
-            <div class="page-item">
-                <span id="curpage">1</span>/
-                <span id="total">100</span>
+            <div id="write-panel">
+                <div class="recognize-buttons" onclick="canvas.recognize()">Recognize</div>
+                <div class="recognize-buttons" onclick="canvas.erase()">Erase</div>
+                <div class="recognize-buttons" onclick="canvasShow()">Write</div>
+                <div id="recognize-result" onclick="aaa()">result</div>
             </div>
-            <div id="nextBtn" class="page-item btn">Next</div>
+            <div id="page-panel">
+                <div id="prevBtn" class="page-item">Prev</div>
+                <div class="page-item">
+                    <span id="curpage">1</span>/
+                    <span id="total">100</span>
+                </div>
+                <div id="nextBtn" class="page-item btn">Next</div>
+            </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="assets/js/sortable-public.js?a=20240508"></script>
+        <script src="assets/js/sortable-public.js?a=20240509"></script>
+        <script src="assets/js/handwriting.canvas.js?a=20240509" type="text/javascript"></script>
+        <script src="assets/js/handwriting-recognition-google.js?a=20240509811"></script>
     </body>
 </html>
