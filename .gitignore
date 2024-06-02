@@ -28,7 +28,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-html/
 
 # Others #
 *.log
