@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="pragram" content="no-cache" />
+        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="expires" content="0" />
+        <link rel="icon" href="" />
+        <title></title>
+        <style type="text/css"></style>
+    </head>
+    <body>
+        <div id="main" style="border: 2px solid green"></div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+        <script type="text/javascript">
+            // 初始化
+            var myChart = echarts.init(document.getElementById("main"), "dark", {
+                width: 600,
+                height: 400,
+            });
+            myChart.setOption({
+                backgroundColor: "rgba(255,255,255,0)",
+                color: ["#ff0000", "#00cfff", "#eecfff"],
+                title: {
+                    text: "船期状态",
+                    top: "48%",
+                    textAlign: "center", // title轮廓的中心位置
+                    left: "49%",
+                    textStyle: {
+                        // title字体相关的样式
+                        color: "#fff",
+                        fontSize: 18,
+                        fontWeight: "400",
+                    },
+                },
+                series: [
+                    {
+                        name: "状态",
+                        type: "pie",
+                        clockWise: true,
+                        radius: [90, 100],
+                        hoverAnimation: true,
+                        // data: [10, 20, 50], // 数组项
+                        data: [
+                            {
+                                value: 10,
+                                name: "詹姆斯",
+                                itemStyle: {
+                                    normal: {
+                                        borderWidth: 5,
+                                        //shadowBlur: 20,
+                                        borderColor: "#ff0000",
+                                        //shadowColor: "#00ff00",
+                                    },
+                                },
+                            },
+                            {
+                                value: 20,
+                                name: "韦德",
+                                itemStyle: {
+                                    normal: {
+                                        borderWidth: 5,
+                                        shadowBlur: 20,
+                                        borderColor: "#ffff00",
+                                        shadowColor: "#00ffff",
+                                    },
+                                },
+                            },
+                            {
+                                value: 70,
+                                name: "波什",
+                                itemStyle: {
+                                    normal: {
+                                        borderWidth: 5,
+                                        shadowBlur: 20,
+                                        borderColor: "#ffffff",
+                                        shadowColor: "#00ffff",
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            });
+        </script>
+    </body>
+</html>

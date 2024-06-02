@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.UserMapper">
+
+	<resultMap type="User" id="UserMapper">
+		<id property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="gender" column="gender" />
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="avatar" column="avatar" />
+		<result property="password" column="password" />
+		<result property="lastLoginIp" column="last_login_ip" />
+		<result property="lastLoginTime" column="last_login_time" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!-- Select -->
+	<sql id="selectWhere">
+		WHERE 1=1
+		<trim prefix="AND (" suffix=")" prefixOverrides="OR">
+			<if test="username != null and username != ''">OR `username` LIKE concat('%', #{username}, '%')</if>
+			<if test="phone != null and phone != ''">OR `phone` LIKE concat('%', #{phone}, '%')</if>
+			<if test="email != null and email != ''">OR `email` LIKE concat('%', #{email}, '%')</if>
+			<if test="gender != null">OR `gender` = #{gender}</if>
+		</trim>
+		<if test="createTime != null and createTime.size() > 0 and createTime[0] != null and createTime[0] != ''">
+			AND date_format(created_at,'%y%m%d') &gt;= date_format(#{createTime[0]}, '%y%m%d')
+		</if>
+		<if test="createTime != null and createTime.size() > 1 and createTime[1] != null and createTime[1] != ''">
+			AND date_format(created_at,'%y%m%d') &lt;= date_format(#{createTime[1]}, '%y%m%d')
+		</if>
+	</sql>
+
+	<select parameterType="QueryCondition" id="count">
+		SELECT count(*) AS `total` FROM `user` <include refid="selectWhere" />
+	</select>
+
+	<select parameterType="QueryCondition" resultMap="UserMapper" id="selectLimited">
+		SELECT `id`, `username`, `email`, `phone`, `avatar`, `gender`, `last_login_ip`, `last_login_time`, `created_at`, `updated_at`, `status` FROM `user`
+		<include refid="selectWhere" /> ORDER BY `id` DESC
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset}, #{pageSize}
+			</if>
+		</if>
+	</select>
+
+	<select id="findByUsername" parameterType="String" resultMap="UserMapper">
+		SELECT `id`, `username`, `password`, `status` FROM `user` WHERE `username` = #{username} LIMIT 1
+	</select>
+
+	<select id="findByPhone" parameterType="String" resultMap="UserMapper">
+		SELECT `id`, `phone`, `password`, `status` FROM `user` WHERE `phone` = #{phone} LIMIT 1
+	</select>
+
+	<select id="findByEmail" parameterType="String" resultMap="UserMapper">
+		SELECT `id`, `email`, `password`, `status` FROM `user` WHERE `email` = #{email} LIMIT 1
+	</select>
+	<!-- Select -->
+
+	<!-- Insert -->
+	<insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `user` (
+			`username`,`password`,
+			<if test="gender != null and gender != ''">`gender`,</if>
+			<if test="email != null and email != ''">`email`,</if>
+			<if test="avatar != null and avatar != ''">`avatar`,</if>
+			<if test="phone != null and phone != ''">`phone`,</if>
+			<if test="status != null">`status`,</if>
+			`created_at`
+		) VALUES (
+			#{username},#{password},
+			<if test="gender != null and gender != ''">#{gender},</if>
+			<if test="email != null and email != ''">#{email},</if>
+			<if test="avatar != null and avatar != ''">#{avatar},</if>
+			<if test="phone != null and phone != ''">#{phone},</if>
+			<if test="status != null">#{status},</if>
+			sysdate()
+		)
+	</insert>
+	<!-- Insert -->
+
+	<!-- Update -->
+	<update id="update" parameterType="User">
+		update `user`
+		<set>
+			<if test="gender != null and gender != ''">`gender` = #{gender},</if>
+			<if test="email != null and email != ''">`email` = #{email},</if>
+			<if test="avatar != null and avatar != ''">`avatar` = #{avatar},</if>
+			<if test="phone != null and phone != ''">`phone` = #{phone},</if>
+			<if test="status != null">`status` = #{status},</if>
+			`updated_at` = sysdate()
+		</set>
+		where `id` = #{id}
+	</update>
+
+	<update id="updatePassword" parameterType="User">
+		update `user`
+		<set>
+		    `password` = #{password},
+		    `updated_at` = sysdate(),
+		</set>
+		where `id` = #{id}
+	</update>
+
+	<update id="updateAfterLogin" parameterType="User">
+		update `user`
+		<set>
+			`last_login_ip` = #{lastLoginIp},
+			`last_login_time` = #{lastLoginTime, jdbcType=TIMESTAMP},
+		</set>
+		where `id` = #{id}
+	</update>
+	<!-- Update -->
+
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `user` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
+	</delete>
+
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `user`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+
+</mapper> 

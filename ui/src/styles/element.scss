@@ -1,0 +1,24 @@
+//  菜单缩小时的hover菜单
+.el-menu--vertical {
+    .el-menu--popup {
+        margin-left: 1px !important;
+        margin-right: 1px;
+        padding: 0;
+    }
+    .el-menu-item:focus,
+    .el-menu-item:hover {
+        background-color: rgb(88, 204, 2) !important;
+    }
+}
+.el-button {
+    padding: 8px 14px;
+    color: rgb(88, 204, 2);
+    &.el-button--primary {
+        color: #fff;
+        background-color: rgb(88, 204, 2);
+        border-color: rgb(88, 204, 2);
+    }
+}
+.el-form-item__label {
+    color: #333 !important;
+}

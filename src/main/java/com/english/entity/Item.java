@@ -1,0 +1,270 @@
+package com.english.entity;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+public class Item
+{
+    private Long id;
+
+    /**
+     * 0-default
+     * 1-country
+     * 2-abbreviation
+     * 3-celebrity
+     * 4-basketball
+     * 5-political
+     * 6-shape
+     * 7-geography
+     * 8-military
+     * 9-animals
+     * 10-food
+     * 11-plants
+     * 12-color
+     * 13-disease
+     * 14-symbol
+     * 15-celebrity
+     * 16-fruit
+     * 17-tool
+     * 18-brand
+     * 19-condiment
+     */
+    private Short category;
+
+    @NotBlank(message = "name is required")
+    @Size(min = 0, max = 64, message = "name length is between 0 and 512")
+    private String name;
+
+    @Size(min = 0, max = 64, message = "pronounce length is between 0 and 64")
+    private String pronounce;
+
+    @Size(min = 0, max = 64, message = "common length is between 0 and 64")
+    private String common;
+
+    @Size(min = 0, max = 1024, message = "noun length is between 0 and 1024")
+    private String noun;
+
+    @Size(min = 0, max = 64, message = "nounPlural length is between 0 and 64")
+    private String nounPlural;
+
+    @Size(min = 0, max = 1024, message = "verb length is between 0 and 1024")
+    private String verb;
+
+    @Size(min = 0, max = 64, message = "verbPastTense length is between 0 and 64")
+    private String verbPastTense;
+
+    @Size(min = 0, max = 64, message = "verbPastParticiple length is between 0 and 64")
+    private String verbPastParticiple;
+
+    @Size(min = 0, max = 64, message = "verbPresentParticiple length is between 0 and 64")
+    private String verbPresentParticiple;
+
+    @Size(min = 0, max = 64, message = "verbThirdPersonSingular length is between 0 and 64")
+    private String verbThirdPersonSingular;
+
+    @Size(min = 0, max = 1024, message = "adjective length is between 0 and 1024")
+    private String adjective;
+
+    @Size(min = 0, max = 1024, message = "adverb length is between 0 and 1024")
+    private String adverb;
+
+    @Size(min = 0, max = 1024, message = "conjunction length is between 0 and 1024")
+    private String conjunction;
+
+    @Size(min = 0, max = 1024, message = "pronoun length is between 0 and 1024")
+    private String pronoun;
+
+    @Size(min = 0, max = 1024, message = "preposition length is between 0 and 1024")
+    private String preposition;
+
+    @Size(min = 0, max = 1024, message = "comment length is between 0 and 1024")
+    private String comment;
+
+    private ItemTts tts;
+
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public Short getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory(Short category)
+    {
+        this.category = category;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getPronounce()
+    {
+        return pronounce;
+    }
+
+    public void setPronounce(String pronounce)
+    {
+        this.pronounce = pronounce;
+    }
+
+    public String getCommon()
+    {
+        return common;
+    }
+
+    public void setCommon(String common)
+    {
+        this.common = common;
+    }
+
+    public String getNoun()
+    {
+        return noun;
+    }
+
+    public void setNoun(String noun)
+    {
+        this.noun = noun;
+    }
+
+    public String getNounPlural()
+    {
+        return nounPlural;
+    }
+
+    public void setNounPlural(String nounPlural)
+    {
+        this.nounPlural = nounPlural;
+    }
+
+    public String getVerb()
+    {
+        return verb;
+    }
+
+    public void setVerb(String verb)
+    {
+        this.verb = verb;
+    }
+
+    public String getVerbPastTense()
+    {
+        return verbPastTense;
+    }
+
+    public void setVerbPastTense(String verbPastTense)
+    {
+        this.verbPastTense = verbPastTense;
+    }
+
+    public String getVerbPastParticiple()
+    {
+        return verbPastParticiple;
+    }
+
+    public void setVerbPastParticiple(String verbPastParticiple)
+    {
+        this.verbPastParticiple = verbPastParticiple;
+    }
+
+    public String getVerbPresentParticiple()
+    {
+        return verbPresentParticiple;
+    }
+
+    public void setVerbPresentParticiple(String verbPresentParticiple)
+    {
+        this.verbPresentParticiple = verbPresentParticiple;
+    }
+
+    public String getVerbThirdPersonSingular()
+    {
+        return verbThirdPersonSingular;
+    }
+
+    public void setVerbThirdPersonSingular(String verbThirdPersonSingular)
+    {
+        this.verbThirdPersonSingular = verbThirdPersonSingular;
+    }
+
+    public String getAdjective()
+    {
+        return adjective;
+    }
+
+    public void setAdjective(String adjective)
+    {
+        this.adjective = adjective;
+    }
+
+    public String getAdverb()
+    {
+        return adverb;
+    }
+
+    public void setAdverb(String adverb)
+    {
+        this.adverb = adverb;
+    }
+
+    public String getConjunction()
+    {
+        return conjunction;
+    }
+
+    public void setConjunction(String conjunction)
+    {
+        this.conjunction = conjunction;
+    }
+
+    public String getPronoun()
+    {
+        return pronoun;
+    }
+
+    public void setPronoun(String pronoun)
+    {
+        this.pronoun = pronoun;
+    }
+
+    public String getPreposition()
+    {
+        return preposition;
+    }
+
+    public void setPreposition(String preposition)
+    {
+        this.preposition = preposition;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public ItemTts getTts() {
+        return tts;
+    }
+
+    public void setTts(ItemTts tts) {
+        this.tts = tts;
+    }
+}

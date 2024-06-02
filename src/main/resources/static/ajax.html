@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajax Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+			var token = "eyJhbGciOiJIUzUxMiJ9.eyJzZXNzaW9uX2lkIjoic2Vzc2lvbl9pZDo5OGM3YTM0ZS1iMzVjLTQ5NzgtODgzOS1kMzhkZjEyYWM4YWYifQ.WvioxjPUUfj0pP7caDQ6ihC6KHiZrj5h5HVYysfTHFKBD_q5Eb83-PSFG30i6JWDpj37XXWelDGMqw5llLUoUQ";
+
+            $("#btn").click(function(){
+                $.ajax({
+                    url: "http://localhost:8080/test", // 替换为你的后端接口地址
+                    type: "POST", // 可以是 "GET", "POST", "PUT", "DELETE" 等
+					contentType: 'application/json', // 载荷类型
+                    dataType: "json", // 期望从服务器返回的数据类型
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Bearer " + token);
+					},
+                    success: function(data) {
+                        // 请求成功时的处理逻辑
+                        console.log("Success: ", data);
+                        // 可以根据返回的数据进行页面更新等操作
+                    },
+                    error: function(xhr, status, error) {
+                        // 请求失败时的处理逻辑
+                        console.error("Error: ", xhr.responseText);
+                    }
+                });
+            });
+
+            $("#login").click(function(){
+				var data = {"username": "admin", "password": "admin123", "code": 28, "uuid": "487e2389f9a54e468c498f325e7f5622"}
+                $.ajax({
+                    url: "http://localhost:8080/login", // 替换为你的后端接口地址
+                    type: "POST", // 可以是 "GET", "POST", "PUT", "DELETE" 等
+					contentType: 'application/json', // 载荷类型
+                    dataType: "json", // 期望从服务器返回的数据类型
+					data: JSON.stringify(data),
+                    success: function(data) {
+                        console.log("Success: ", data);
+						token = data.data.access_token;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", xhr.responseText);
+                    }
+                });
+            });
+
+		    $("#logout").click(function(){
+                $.ajax({
+                    url: "http://localhost:8080/logout", // 替换为你的后端接口地址
+                    type: "POST", // 可以是 "GET", "POST", "PUT", "DELETE" 等
+					contentType: 'application/json', // 载荷类型
+                    dataType: "json", // 期望从服务器返回的数据类型
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Bearer " + token);
+					},
+                    success: function(data) {
+                        // 请求成功时的处理逻辑
+                        console.log("Success: ", data);
+                        // 可以根据返回的数据进行页面更新等操作
+                    },
+                    error: function(xhr, status, error) {
+                        // 请求失败时的处理逻辑
+                        console.error("Error: ", xhr.responseText);
+                    }
+                });
+            });
+
+
+ });
+
+    </script>
+</head>
+<body>
+<button id="btn">test</button>
+<button id="login">login</button>
+<button id="logout">logout</button>
+</body>
+</html>

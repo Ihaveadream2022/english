@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.ItemMapper">
+	<resultMap type="Item" id="ItemMapper">
+		<id property="id" column="id" />
+		<result property="category" column="category" />
+		<result property="name" column="name" />
+		<result property="pronounce" column="pronounce" />
+		<result property="common" column="common" />
+		<result property="noun" column="noun" />
+		<result property="nounPlural" column="noun_plural" />
+		<result property="verb" column="verb" />
+		<result property="verbPastTense" column="verb_past_tense" />
+		<result property="verbPastParticiple" column="verb_past_participle" />
+		<result property="verbPresentParticiple" column="verb_present_participle" />
+		<result property="verbThirdPersonSingular" column="verb_third_person_singular" />
+		<result property="adjective" column="adjective" />
+		<result property="adverb" column="adverb" />
+		<result property="conjunction" column="conjunction" />
+		<result property="pronoun" column="pronoun" />
+		<result property="preposition" column="preposition" />
+		<result property="comment" column="comment" />
+		<association property="tts" javaType="ItemTts" resultMap="ItemTtsMapper" />
+	</resultMap>
+	<resultMap type="ItemTts" id="ItemTtsMapper">
+		<result property="id" column="item_tts_id" />
+		<result property="name" column="item_tts_name" />
+		<result property="speech" column="item_tts_speech" />
+	</resultMap>
+	<!-- Select -->
+	<sql id="selectWhere">
+		<trim prefix="WHERE 1=1 AND (" suffix=")" prefixOverrides="AND">
+			<if test="keyword != null and keyword != ''">AND (
+				`item`.`name` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`common` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`noun` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`verb` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`adjective` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`adverb` LIKE concat('%', #{keyword}, '%'))
+			</if>
+			<if test="category != null and category != ''">AND `item`.`category` = #{category}</if>
+		</trim>
+	</sql>
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(id) AS `total` FROM `item`
+		<include refid="selectWhere" />
+	</select>
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="ItemMapper">
+		SELECT
+		    `item`.*,
+			`item_tts`.`id` AS `item_tts_id`,
+		    `item_tts`.`name` AS `item_tts_name`,
+		    `item_tts`.`speech` AS `item_tts_speech`
+		FROM `item` LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
+		<include refid="selectWhere" />
+		ORDER BY `item`.`id` DESC
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset}, #{pageSize}
+			</if>
+		</if>
+	</select>
+	<select id="findByName" parameterType="String" resultMap="ItemMapper">
+		SELECT * FROM `item` WHERE `name` = #{name} LIMIT 1
+	</select>
+	<!-- Select -->
+	<!-- Insert -->
+	<insert id="insert" parameterType="Item" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `item`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			`name`
+			<if test="category != null and category != ''">,`category`</if>
+			<if test="pronounce != null and pronounce != ''">,`pronounce`</if>
+			<if test="common != null and common != ''">,`common`</if>
+			<if test="noun != null and noun != ''">,`noun`</if>
+			<if test="nounPlural != null and nounPlural != ''">,`noun_plural`</if>
+			<if test="verb != null and verb != ''">,`verb`</if>
+			<if test="verbPastTense != null and verbPastTense != ''">,`verb_past_tense`</if>
+			<if test="verbPastParticiple != null and verbPastParticiple != ''">,`verb_past_participle`</if>
+			<if test="verbPresentParticiple != null and verbPresentParticiple != ''">,`verb_present_participle`</if>
+			<if test="verbThirdPersonSingular != null and verbThirdPersonSingular != ''">,`verb_third_person_singular`</if>
+			<if test="adjective != null and adjective != ''">,`adjective`</if>
+			<if test="adverb != null and adverb != ''">,`adverb`</if>
+			<if test="conjunction != null and conjunction != ''">,`conjunction`</if>
+			<if test="pronoun != null and pronoun != ''">,`pronoun`</if>
+			<if test="preposition != null and preposition != ''">,`preposition`</if>
+			<if test="comment != null and comment != ''">,`comment`</if>
+		</trim>
+		    VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			#{name}
+			<if test="category != null and category != ''">,#{category}</if>
+			<if test="pronounce != null and pronounce != ''">,#{pronounce}</if>
+			<if test="common != null and common != ''">,#{common}</if>
+			<if test="noun != null and noun != ''">,#{noun}</if>
+			<if test="nounPlural != null and nounPlural != ''">,#{nounPlural}</if>
+			<if test="verb != null and verb != ''">,#{verb}</if>
+			<if test="verbPastTense != null and verbPastTense != ''">,#{verbPastTense}</if>
+			<if test="verbPastParticiple != null and verbPastParticiple != ''">,#{verbPastParticiple}</if>
+			<if test="verbPresentParticiple != null and verbPresentParticiple != ''">,#{verbPresentParticiple}</if>
+			<if test="verbThirdPersonSingular != null and verbThirdPersonSingular != ''">,#{verbThirdPersonSingular}</if>
+			<if test="adjective != null and adjective != ''">,#{adjective}</if>
+			<if test="adverb != null and adverb != ''">,#{adverb}</if>
+			<if test="conjunction != null and conjunction != ''">,#{conjunction}</if>
+			<if test="pronoun != null and pronoun != ''">,#{pronoun}</if>
+			<if test="preposition != null and preposition != ''">,#{preposition}</if>
+			<if test="comment != null and comment != ''">,#{comment}</if>
+		</trim>
+	</insert>
+	<!-- Insert -->
+	<!-- Update -->
+	<update id="update" parameterType="Item">
+		update `item`
+		<set>
+			<if test="name != null and name != ''">,`name` = #{name}</if>
+			<if test="category != null and category >=0">,`category` = #{category}</if>
+			<if test="pronounce != null">,`pronounce` = #{pronounce}</if>
+			<if test="common != null">,`common` = #{common}</if>
+			<if test="noun != null">,`noun` = #{noun}</if>
+			<if test="nounPlural != null">,`noun_plural` = #{nounPlural}</if>
+			<if test="verb != null">,`verb` = #{verb}</if>
+			<if test="verbPastTense != null">,`verb_past_tense` = #{verbPastTense}</if>
+			<if test="verbPastParticiple != null">,`verb_past_participle` = #{verbPastParticiple}</if>
+			<if test="verbPresentParticiple != null">,`verb_present_participle` = #{verbPresentParticiple}</if>
+			<if test="verbThirdPersonSingular != null">,`verb_third_person_singular` = #{verbThirdPersonSingular}</if>
+			<if test="adjective != null">,`adjective` = #{adjective}</if>
+			<if test="adverb != null">,`adverb` = #{adverb}</if>
+			<if test="conjunction != null">,`conjunction` = #{conjunction}</if>
+			<if test="pronoun != null">,`pronoun` = #{pronoun}</if>
+			<if test="preposition != null">,`preposition` = #{preposition}</if>
+			<if test="comment != null">,`comment` = #{comment}</if>
+		</set>
+		where `id` = #{id}
+	</update>
+	<!-- Update -->
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `item` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
+	</delete>
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `item`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+</mapper>

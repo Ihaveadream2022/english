@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.ItemTtsMapper">
+	<resultMap type="ItemTts" id="ItemTtsMapper">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="speech" column="speech" />
+	</resultMap>
+	<!-- Select -->
+	<sql id="selectWhere">
+		<trim prefix="WHERE 1=1 AND (" suffix=")" prefixOverrides="AND">
+			<if test="name != null and name != ''">AND `name` LIKE concat('%', #{name}, '%')</if>
+		</trim>
+	</sql>
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(*) AS `total` FROM `item_tts` <include refid="selectWhere" />
+	</select>
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="ItemTtsMapper">
+		SELECT * FROM `item_tts` <include refid="selectWhere" />
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset}, #{pageSize}
+			</if>
+		</if>
+	</select>
+	<select id="findByName" parameterType="String" resultMap="ItemTtsMapper">
+		SELECT * FROM `item_tts` WHERE `name` = #{name} LIMIT 1
+	</select>
+	<!-- Select -->
+	<!-- Insert -->
+	<insert id="insert" parameterType="ItemTts" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `item_tts`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			`name`,`speech`
+		</trim>
+		    VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			#{name},#{speech}
+		</trim>
+	</insert>
+	<!-- Insert -->
+	<!-- Update -->
+	<update id="update" parameterType="ItemTts">
+		update `item_tts`
+		<set>
+			<if test="speech != null">`speech` = #{speech}</if>
+		</set>
+		where `id` = #{id}
+	</update>
+	<!-- Update -->
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `item_tts` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
+	</delete>
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `item_tts`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.RoleMapper">
+
+	<resultMap type="Role" id="RoleMapper">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="key" column="key" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!-- Select -->
+	<sql id="selectWhere">
+		WHERE 1=1
+		<trim prefix="AND (" suffix=")" prefixOverrides="OR">
+			<if test="name != null and name != ''">OR `name` LIKE concat('%', #{name}, '%')</if>
+			<if test="key != null and key != ''">OR `key` LIKE concat('%', #{key}, '%')</if>
+		</trim>
+		<if test="createTime != null and createTime.size() > 0 and createTime[0] != null and createTime[0] != ''">
+			AND date_format(created_at,'%y%m%d') &gt;= date_format(#{createTime[0]}, '%y%m%d')
+		</if>
+		<if test="createTime != null and createTime.size() > 1 and createTime[1] != null and createTime[1] != ''">
+			AND date_format(created_at,'%y%m%d') &lt;= date_format(#{createTime[1]}, '%y%m%d')
+		</if>
+	</sql>
+
+	<select id="count" parameterType="QueryCondition">
+		SELECT count(*) AS `total` FROM `role` <include refid="selectWhere" />
+	</select>
+
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="RoleMapper">
+		SELECT * FROM `role`
+		<include refid="selectWhere" /> ORDER BY `id` DESC
+		<if test="pageSize != null and pageSize != ''">
+			LIMIT ${pageSize * (pageNo - 1)},#{pageSize}
+		</if>
+	</select>
+
+	<select id="select" parameterType="QueryCondition" resultMap="RoleMapper">
+		SELECT * FROM `role` <include refid="selectWhere" /> ORDER BY `id` DESC
+	</select>
+
+	<select id="findByName" parameterType="String" resultMap="RoleMapper">
+		SELECT `id`, `name` FROM `role` WHERE `name` = #{name} LIMIT 1
+	</select>
+
+	<select id="findByKey" parameterType="String" resultMap="RoleMapper">
+		SELECT `id`, `key` FROM `role` WHERE `key` = #{key} LIMIT 1
+	</select>
+	<!-- Select -->
+
+	<!-- Insert -->
+	<insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `role` (
+			<if test="name != null and name != ''">`name`,</if>
+			<if test="key != null and key != ''">`key`,</if>
+			<if test="status != null">status,</if>
+			created_at
+		) VALUES (
+			<if test="name != null and name != ''">#{name},</if>
+			<if test="key != null and key != ''">#{key},</if>
+			<if test="status != null">#{status},</if>
+			sysdate()
+		)
+	</insert>
+	<!-- Insert -->
+
+	<!-- Update -->
+	<update id="update" parameterType="Role">
+		update `role`
+		<set>
+			<if test="name != null and name != ''">`name` = #{name},</if>
+			<if test="status != null">`status` = #{status},</if>
+			updated_at = sysdate()
+		</set>
+		where `id` = #{id}
+	</update>
+	<!-- Update -->
+
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `role` <if test="id != null">WHERE `id` = #{id}</if>
+	</delete>
+
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `role`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+
+</mapper> 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+<img src="" id="captcha">
+<input value="" id="uuid"></input>
+</body>
+<script src="https://cdn.staticfile.net/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        $.ajax({
+            url:"/captcha",
+            success:function(result){
+                $("#uuid").val(result.data.uuid)
+                $("#captcha").attr("src", "data:image/gif;base64,"+result.data.image);
+            }});
+    });
+</script>
+</html>

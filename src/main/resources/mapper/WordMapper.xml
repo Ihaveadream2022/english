@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.WordMapper">
+	<resultMap type="Word" id="WordMapper">
+		<id property="id" column="id" />
+		<result property="word" column="word" />
+		<result property="pronounce" column="pronounce" />
+		<result property="plural" column="plural" />
+		<result property="pastTense" column="past_tense" />
+		<result property="pastParticiple" column="past_participle" />
+		<result property="presentParticiple" column="present_participle" />
+		<result property="thirdPersonSingular" column="third_person_singular" />
+		<result property="chinese" column="chinese" />
+		<result property="examples" column="examples" />
+		<result property="category" column="category" />
+		<result property="isClassN" column="is_class_n" />
+		<result property="isClassV" column="is_class_v" />
+		<result property="isClassAdj" column="is_class_adj" />
+		<result property="isClassAdv" column="is_class_adv" />
+		<result property="isClassConj" column="is_class_conj" />
+		<result property="isClassPron" column="is_class_pron" />
+		<result property="isClassPrep" column="is_class_prep" />
+	</resultMap>
+
+	<!-- Select -->
+	<sql id="selectWhere">
+		<trim prefix="WHERE 1=1 AND (" suffix=")" prefixOverrides="AND">
+			<if test="word != null and word != ''">AND `word` LIKE concat('%', #{word}, '%')</if>
+			<if test="category != null and category != ''">AND `category` = #{category}</if>
+		</trim>
+	</sql>
+
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(*) AS `total` FROM `word` <include refid="selectWhere" />
+	</select>
+
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="WordMapper">
+		SELECT * FROM `word` <include refid="selectWhere" /> ORDER BY `id` DESC
+		<if test="pageSize != null and pageSize != '' and pageSize &gt; 0">
+			<if test="offset != null and offset != '' and offset &gt; 0">
+				LIMIT #{offset}, #{pageSize}
+			</if>
+		</if>
+	</select>
+
+	<select id="findByWord" parameterType="String" resultMap="WordMapper">
+		SELECT * FROM `word` WHERE `word` = #{word} LIMIT 1
+	</select>
+	<!-- Select -->
+
+	<!-- Insert -->
+	<insert id="insert" parameterType="Word" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `word`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			`word`
+			<if test="pronounce != null and pronounce != ''">,`pronounce`</if>
+			<if test="plural != null and plural != ''">,`plural`</if>
+			<if test="pastTense != null and pastTense != ''">,`past_tense`</if>
+			<if test="pastParticiple != null and pastParticiple != ''">,`past_participle`</if>
+			<if test="presentParticiple != null and presentParticiple != ''">,`present_participle`</if>
+			<if test="thirdPersonSingular != null and thirdPersonSingular != ''">,`third_person_singular`</if>
+			<if test="chinese != null and chinese != ''">,`chinese`</if>
+			<if test="examples != null and examples != ''">,`examples`</if>
+			<if test="category != null and category != ''">,`category`</if>
+			<if test="isClassN != null and (isClassN == 0 or isClassN == 1)">,`is_class_n`</if>
+			<if test="isClassV != null and (isClassV == 0 or isClassV == 1)">,`is_class_v`</if>
+			<if test="isClassAdj != null and (isClassAdj == 0 or isClassAdj == 1)">,`is_class_adj`</if>
+			<if test="isClassAdv != null and (isClassAdv == 0 or isClassAdv == 1)">,`is_class_adv`</if>
+			<if test="isClassConj != null and (isClassConj == 0 or isClassConj == 1)">,`is_class_conj`</if>
+			<if test="isClassPron != null and (isClassPron == 0 or isClassPron == 1)">,`is_class_pron`</if>
+			<if test="isClassPrep != null and (isClassPrep == 0 or isClassPrep == 1)">,`is_class_prep`</if>
+		</trim>
+		    VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			#{word}
+			<if test="pronounce != null and pronounce != ''">,#{pronounce}</if>
+			<if test="plural != null and plural != ''">,#{plural}</if>
+			<if test="pastTense != null and pastTense != ''">,#{pastTense}</if>
+			<if test="pastParticiple != null and pastParticiple != ''">,#{pastParticiple}</if>
+			<if test="presentParticiple != null and presentParticiple != ''">,#{presentParticiple}</if>
+			<if test="thirdPersonSingular != null and thirdPersonSingular != ''">,#{thirdPersonSingular}</if>
+			<if test="chinese != null and chinese != ''">,#{chinese}</if>
+			<if test="examples != null and examples != ''">,#{examples}</if>
+			<if test="category != null and category != ''">,#{category}</if>
+			<if test="isClassN != null and (isClassN == 0 or isClassN == 1)">,#{isClassN}</if>
+			<if test="isClassV != null and (isClassV == 0 or isClassV == 1)">,#{isClassV}</if>
+			<if test="isClassAdj != null and (isClassAdj == 0 or isClassAdj == 1)">,#{isClassAdj}</if>
+			<if test="isClassAdv != null and (isClassAdv == 0 or isClassAdv == 1)">,#{isClassAdv}</if>
+			<if test="isClassConj != null and (isClassConj == 0 or isClassConj == 1)">,#{isClassConj}</if>
+			<if test="isClassPron != null and (isClassPron == 0 or isClassPron == 1)">,#{isClassPron}</if>
+			<if test="isClassPrep != null and (isClassPrep == 0 or isClassPrep == 1)">,#{isClassPrep}</if>
+		</trim>
+	</insert>
+	<!-- Insert -->
+</mapper>

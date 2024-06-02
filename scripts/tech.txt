@@ -1,0 +1,42 @@
+
+
+
+
+
+
+
+
+
+
+
+多邻国在安卓与IOS都使用了原生技术，以下是招聘简历的要求：
+IOS 纽约
+You have...
+
+A Bachelor’s degree in Computer Science or a related technical field
+A solid foundation in computer science with strong competencies in data structures, algorithms, and software design
+Programming experience in Swift
+Exceptional candidates will have...
+
+5 years of programming experience in Swift
+Strong technical knowledge of iOS mobile application development for iPhone/iPad using Swift with Cocoa Touch and related frameworks
+Experience designing clean and maintainable APIs
+Experience with multithreaded programming
+Experience writing unit tests and testable code
+Knowledge of iOS SDK performance tools and optimization techniques
+
+
+安卓 北京
+You Have...
+
+A Bachelor’s degree in Computer Science or a related technical field
+Programming experience in Kotlin on Android and Java; technical expertise in RxJava.
+The ability to communicate technical issues effectively to technical and non-technical stakeholders
+Relocation to Beijing, China. This position is based in Beijing.
+Exceptional Candidates Will Have...
+
+Strong product sense and user empathy.
+Outstanding leadership and negotiation skills
+Experience designing clean and maintainable APIs
+Experience writing unit tests and testable code
+Proficient in both spoken and written English.

@@ -1,0 +1,87 @@
+#file: noinspection SpringBootApplicationYaml
+
+server:
+    port: 8082 # WEB服务端口
+    servlet:
+        context-path: / # WEB访问路径前缀
+    tomcat:
+        uri-encoding: UTF-8 # tomcat的URI编码
+        accept-count: 1000 # 连接数满后的排队数，默认为100
+        threads:
+            max: 800 # tomcat最大线程数，默认为200
+            min-spare: 100 # Tomcat启动初始化的线程数，默认值10
+
+spring:
+    thymeleaf:
+        cache: false
+    jackson:
+        time-zone: Asia/Shanghai
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/fs?useSSL=false&characterEncoding=utf8
+        username: fs_admin
+        password: U9h5@p9m$
+        druid:
+            initialSize: 5 # 初始连接数
+            minIdle: 10  # 最小连接池数量
+            maxActive: 20 # 最大连接池数量
+            maxWait: 60000 # 配置获取连接等待超时的时间
+            connectTimeout: 30000 # 配置连接超时时间
+            socketTimeout: 60000 # 配置网络超时时间
+            timeBetweenEvictionRunsMillis: 60000 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+            minEvictableIdleTimeMillis: 300000  # 配置一个连接在池中最小生存的时间，单位是毫秒
+            maxEvictableIdleTimeMillis: 900000 # 配置一个连接在池中最大生存的时间，单位是毫秒
+            validationQuery: SELECT 1 FROM DUAL  # 配置检测连接是否有效
+            testWhileIdle: true
+            testOnBorrow: false
+            testOnReturn: false
+            statViewServlet: # 监控URL的数据请求状态
+                enabled: true
+                allow: 127.0.0.1,localhost # 控制台访问白名单，不填则允许所有访问
+                url-pattern: /druid-console/* #控制台访问路径
+                login-username: root  # 控制台管理用户名
+                login-password: 123456@  # 控制台管理密码
+            webStatFilter: # 不纳入监控的URL
+                enabled: true
+                url-pattern: /*
+                exclusions: .js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid-console/*
+            filter:
+                stat:
+                    enabled: true
+                    log-slow-sql: true # 慢SQL记录
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+    servlet:
+        multipart:  # 文件上传
+            max-file-size: 10MB  # 单个文件大小
+            max-request-size: 20MB # 单次请求上传的文件上限
+    devtools:
+        restart:
+            enabled: true
+    redis:
+        host: 127.0.0.1
+        port: 6379
+        database: 0  # 逻辑数据库索引
+        password: T8uQ@91i
+        timeout: 10s  # 连接超时时间
+        lettuce:
+            pool:
+                min-idle: 0  # 连接池中的最小空闲连接
+                max-idle: 8  # 连接池中的最大空闲连接
+                max-active: 8  # 连接池的最大数据库连接数
+                max-wait: -1ms  # #连接池最大阻塞等待时间（使用负值表示没有限制）
+    mvc:
+        static-path-pattern: /static/**  # 静态资源路径 #
+        throw-exception-if-no-handler-found: true
+
+mybatis:
+    typeAliasesPackage: com.english.entity,com.english.model # 搜索指定包别名
+    mapperLocations: classpath*:mapper/*Mapper.xml # 配置mapper的扫描，找到所有的mapper.xml映射文件
+    configLocation: classpath:mybatis/mybatis-config.xml # 加载全局的配置文件
+
+logging:
+    config: classpath:logback-prod.xml
