@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var curPageElement = document.getElementById("curpage");
     var totalPageElement = document.getElementById("total");
     // 初始当前页数和总页数
-    var currentPage = parseInt(curPageElement.textContent);
+    var currentPage = parseInt(curPageElement.value);
     var totalPages = parseInt(totalPageElement.textContent);
     // 添加点击事件监听器
     prevBtn.addEventListener("click", function () {

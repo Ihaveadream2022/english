@@ -27,9 +27,6 @@ canvas.setCallBack(function (data, err) {
         recognize(data[0]);
     }
 });
-function aaa() {
-    compare();
-}
 canvas.setLineWidth(5);
 
 //Set options
