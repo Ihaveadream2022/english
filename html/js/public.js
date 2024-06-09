@@ -21,15 +21,27 @@ document.addEventListener("DOMContentLoaded", function () {
     prevBtn.addEventListener("click", function () {
         if (currentPage > 1) {
             currentPage--;
-            curPageElement.textContent = currentPage.toString();
+            curPageElement.value = currentPage.toString();
             fetchData(currentPage);
         }
     });
     nextBtn.addEventListener("click", function () {
         if (currentPage < totalPages) {
             currentPage++;
-            curPageElement.textContent = currentPage.toString();
+            curPageElement.value = currentPage.toString();
             fetchData(currentPage);
+        }
+    });
+    curPageElement.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            var inputPage = parseInt(curPageElement.value);
+            if (!isNaN(inputPage) && inputPage >= 1 && inputPage <= totalPages) {
+                currentPage = inputPage;
+                fetchData(currentPage);
+            } else {
+                alert("请输入有效的页码（1 至 " + totalPages + "）");
+                curPageElement.value = currentPage.toString();
+            }
         }
     });
 });
@@ -166,7 +178,7 @@ document.documentElement.addEventListener(
     },
     {
         passive: false,
-    }
+    },
 );
 // 禁用双击放大
 var lastTouchEnd = 0;
@@ -181,5 +193,5 @@ document.documentElement.addEventListener(
     },
     {
         passive: false,
-    }
+    },
 );
