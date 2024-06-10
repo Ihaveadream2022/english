@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class ItemServiceImpl implements ItemService
-{
+public class ItemServiceImpl implements ItemService {
+
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -30,8 +30,7 @@ public class ItemServiceImpl implements ItemService
     @Autowired
     ItemMapper itemMapper;
 
-    public HashMap<String, Object> pageList(QueryCondition queryCondition)
-    {
+    public HashMap<String, Object> pageList(QueryCondition queryCondition) {
         Integer a = queryCondition.getOffset();
         HashMap<String, Object> data = new HashMap<>();
 
@@ -46,37 +45,32 @@ public class ItemServiceImpl implements ItemService
         return data;
     }
 
-    public Item findByName(String name)
-    {
+    public Item findByName(String name) {
         return itemMapper.findByName(name);
     }
 
     @Override
     @Transactional
-    public Long insert(Item item)
-    {
+    public Long insert(Item item) {
         return itemMapper.insert(item);
     }
 
     @Override
     @Transactional
-    public Long update(Item item)
-    {
+    public Long update(Item item) {
         return itemMapper.update(item);
     }
 
     @Override
-    public Boolean exist(Item item)
-    {
-        Long wordId = item.getId() == null? -1L : item.getId();
+    public Boolean exist(Item item) {
+        long wordId = item.getId() == null? -1L : item.getId();
         Item one = itemMapper.findByName(item.getName());
-        return one != null && one.getId().longValue() != wordId.longValue();
+        return one != null && one.getId() != wordId;
     }
 
     @Override
     @Transactional
-    public Long delete(DeleteRequestBody deleteRequestBody)
-    {
+    public Long delete(DeleteRequestBody deleteRequestBody) {
         if (deleteRequestBody.getId() != null) {
             return itemMapper.delete(deleteRequestBody);
         }
@@ -86,8 +80,7 @@ public class ItemServiceImpl implements ItemService
 
     @Override
     @Transactional
-    public Long batchDelete(DeleteRequestBody deleteRequestBody)
-    {
+    public Long batchDelete(DeleteRequestBody deleteRequestBody) {
         if (deleteRequestBody.getIds() != null && deleteRequestBody.getIds().length > 0) {
             return itemMapper.batchDelete(deleteRequestBody);
         }
@@ -96,8 +89,7 @@ public class ItemServiceImpl implements ItemService
     }
 
     @Override
-    public void itemsToJsonFiles(List<Item> itemList, Integer index)
-    {
+    public void itemsToJsonFiles(List<Item> itemList, Integer index) {
         try {
             List<ItemHtml> list = new ArrayList<>();
             for (Item item : itemList) {

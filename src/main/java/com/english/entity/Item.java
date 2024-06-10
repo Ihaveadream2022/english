@@ -82,8 +82,7 @@ public class Item
 
     private ItemTts tts;
 
-    public Long getId()
-    {
+    public Long getId() {
         return id;
     }
 

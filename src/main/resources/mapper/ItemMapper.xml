@@ -42,8 +42,7 @@
 		</trim>
 	</sql>
 	<select id="count" parameterType="QueryCondition" >
-		SELECT count(id) AS `total` FROM `item`
-		<include refid="selectWhere" />
+		SELECT count(id) AS `total` FROM `item` <include refid="selectWhere" />
 	</select>
 	<select id="selectLimited" parameterType="QueryCondition" resultMap="ItemMapper">
 		SELECT
@@ -51,12 +50,10 @@
 			`item_tts`.`id` AS `item_tts_id`,
 		    `item_tts`.`name` AS `item_tts_name`,
 		    `item_tts`.`speech` AS `item_tts_speech`
-		FROM `item` LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
-		<include refid="selectWhere" />
-		ORDER BY `item`.`id` DESC
+		FROM `item` LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name` <include refid="selectWhere" /> ORDER BY `item`.`id` DESC
 		<if test="pageSize != null and pageSize > 0">
 			<if test="offset != null and offset >= 0">
-				LIMIT #{offset}, #{pageSize}
+				LIMIT #{offset},#{pageSize}
 			</if>
 		</if>
 	</select>

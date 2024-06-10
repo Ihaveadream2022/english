@@ -65,8 +65,7 @@ public class ItemController
     }
 
     @PutMapping("/{id}")
-    public JsonResponse update(@PathVariable Long id, @Validated @RequestBody Item item)
-    {
+    public JsonResponse update(@PathVariable Long id, @Validated @RequestBody Item item) {
         item.setId(id);
 
         if (item.getName() != null && item.getName().trim().length() != 0 && itemService.exist(item)) {

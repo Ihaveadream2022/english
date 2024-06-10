@@ -2,6 +2,7 @@ package com.english.controller;
 
 import com.english.thread.ThreadManager;
 import com.english.util.FileUtil;
+import com.english.util.encrypt.Digest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.core.io.ClassPathResource;
@@ -31,8 +32,15 @@ import java.lang.Runnable;
 public class TestController
 {
     @GetMapping(value = "/video", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void getAudio(HttpServletResponse response) throws IOException
-    {
+    public void getAudio(HttpServletResponse response) throws IOException {
+
+
+        String input = Digest.digestMD5("画");
+        String firstFour = input.substring(0, Math.min(input.length(), 4));
+        String lastFour = input.substring(Math.max(input.length() - 4, 0));
+        System.out.println(firstFour + lastFour);
+
+
 //        String downloadFileName = "download2.mp3";
 //        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition,download-filename");
 //        response.setHeader("Content-disposition", "attachment; filename=" + downloadFileName);
