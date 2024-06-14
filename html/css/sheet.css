@@ -90,6 +90,11 @@ body {
     color: #fff;
     font-weight: 900;
 }
+#page #curpage{
+    width: 20px; 
+    height: 8px;
+    text-align: center;
+}
 #page #write-panel,
 #page #page-panel,
 #page #play-panel {

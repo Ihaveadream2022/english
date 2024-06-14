@@ -22,7 +22,7 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.1.167:3306/english?useSSL=false&characterEncoding=utf8
+        url: jdbc:mysql://192.168.1.188:3306/english?useSSL=false&characterEncoding=utf8
         username: root
         password: 123456
         druid:
@@ -66,7 +66,7 @@ spring:
         restart:
             enabled: true
     redis:
-        host: 192.168.1.167
+        host: 192.168.1.188
         port: 6379
         database: 0  # 逻辑数据库索引
         password: 123456

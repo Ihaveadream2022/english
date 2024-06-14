@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>sheets</title>
+        <title>English</title>
         <link type="text/css" rel="stylesheet" href="css/sheet.css?v=2" />
     </head>
     <body>
@@ -14,22 +14,24 @@
             <div class="item">
                 <ul id="cn"></ul>
             </div>
-            <canvas id="canvas"> </canvas>
+            <audio id="listPlayer" style="display: none"></audio>
+            <canvas id="canvas"></canvas>
         </div>
         <div id="page">
             <div id="write-panel">
                 <div class="item" onclick="canvas.recognize()">&#128269;</div>
-                <div class="item" onclick="canvas.erase()">&#9587;</div>
+                <div class="item" onclick="canvas.erase()">&#129529;</div>
                 <div class="item" onclick="canvasShow()">&#9997;</div>
                 <div id="recognize-result">result</div>
             </div>
             <div id="play-panel">
-                <div id="playBtn" class="item">&#9205;</div>
+                <div id="playBtn" class="item" onclick="doPlay()">&#9654;</div>
             </div>
             <div id="page-panel">
                 <div id="prevBtn" class="page-item">&#10096;</div>
                 <div class="page-item">
-                    <input id="curpage" value="1" style="width: 20px; text-align: center" />/
+                    <input id="curpage" value="1" />
+                    <span>&nbsp;&#8260;&nbsp;</span>
                     <span id="total">100</span>
                 </div>
                 <div id="nextBtn" class="page-item btn">&#10097;</div>
