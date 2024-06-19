@@ -27,7 +27,7 @@ public class GitManager {
         return instance;
     }
 
-    public void push() {
+    public void push(String token) {
         try {
             // 获取仓库状态
             Status status = git.status().call();
@@ -101,7 +101,7 @@ public class GitManager {
             PushCommand pushCommand = git.push();
             pushCommand.setRemote("origin");
             pushCommand.setRefSpecs(new RefSpec("refs/heads/main:refs/heads/main"));
-            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("token", ""));
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""));
             Iterable<PushResult> results = pushCommand.call();
             for (PushResult result : results) {
                 System.out.println(result.getMessages());
