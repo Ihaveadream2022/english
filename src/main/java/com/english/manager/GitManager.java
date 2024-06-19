@@ -118,7 +118,7 @@ public class GitManager {
             pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(secret, ""));
             Iterable<PushResult> results = pushCommand.call();
             for (PushResult result : results) {
-                System.out.println(result.getMessages());
+                log.append(result.getMessages());
             }
 
             logger.info(log.toString());
