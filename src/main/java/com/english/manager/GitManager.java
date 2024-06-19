@@ -99,7 +99,7 @@ public class GitManager {
             /* Git Commit */
             CommitCommand commitCommand = git.commit();
             commitCommand.setMessage("Commit Message");
-            commitCommand.setCommitter(new PersonIdent("Your Name", "your.email@example.com"));
+            commitCommand.setCommitter(new PersonIdent("gogpa", "gogpa@163.com"));
             commitCommand.call();
 
             /* Git Push */
