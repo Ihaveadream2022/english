@@ -55,39 +55,41 @@ public class GitManager {
             log.append("(use \"git restore <file>...\" to discard changes in working directory)").append("\r\n");
             // 工作区-被修改的文件
             Set<String> modifiedFiles = status.getModified();
-            modifiedFiles.forEach(v -> log.append("\t\tmodified").append(v).append("\r\n"));
+            modifiedFiles.forEach(v -> log.append("\t\tmodified: ").append(v).append("\r\n"));
             // 工作区-被删除的文件
             Set<String> missingFiles = status.getMissing();
-            missingFiles.forEach(v -> log.append("\t\tdeleted").append(v).append("\r\n"));
+            missingFiles.forEach(v -> log.append("\t\tdeleted: ").append(v).append("\r\n"));
             // 工作区-未被跟踪的文件
             log.append("\r\n");
             log.append("Untracked files:").append("\r\n");
             log.append("(use \"git add <file>...\" to include in what will be committed)").append("\r\n");
             Set<String> untrackedFiles = status.getUntracked();
-            untrackedFiles.forEach(v -> log.append("\t\tuntracked").append(v).append("\r\n"));
+            untrackedFiles.forEach(v -> log.append("\t\tuntracked: ").append(v).append("\r\n"));
 
-            /* Git Add */
-            modifiedFiles.forEach(v -> {
-                try {
-                    git.add().addFilepattern(v).call();
-                } catch (GitAPIException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            missingFiles.forEach(v -> {
-                try {
-                    git.add().addFilepattern(v).call();
-                } catch (GitAPIException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            untrackedFiles.forEach(v -> {
-                try {
-                    git.add().addFilepattern(v).call();
-                } catch (GitAPIException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+
+            git.add().addFilepattern(".").call();
+//            /* Git Add */
+//            modifiedFiles.forEach(v -> {
+//                try {
+//                    git.add().addFilepattern(v).call();
+//                } catch (GitAPIException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            missingFiles.forEach(v -> {
+//                try {
+//                    git.add().addFilepattern(v).call();
+//                } catch (GitAPIException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            untrackedFiles.forEach(v -> {
+//                try {
+//                    git.add().addFilepattern(v).call();
+//                } catch (GitAPIException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
 
             /* Git Commit */
             RevCommit commit = git.commit().setMessage("Commit Message").call();
