@@ -1,6 +1,5 @@
 package com.english.manager;
 
-import com.english.config.AppConfig;
 import com.english.util.SpringUtil;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -21,8 +20,6 @@ public class GitManager {
     private final Logger logger = LoggerFactory.getLogger("SERVICE");
 
     private final Git git = (Git) SpringUtil.getBean("JGitService");
-
-    private final AppConfig appConfig = (AppConfig) SpringUtil.getBean("AppConfig");
 
     private GitManager() {};
 
