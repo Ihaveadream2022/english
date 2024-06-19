@@ -68,28 +68,29 @@ public class GitManager {
 
 
             git.add().addFilepattern(".").call();
-//            /* Git Add */
-//            modifiedFiles.forEach(v -> {
-//                try {
-//                    git.add().addFilepattern(v).call();
-//                } catch (GitAPIException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//            missingFiles.forEach(v -> {
-//                try {
-//                    git.add().addFilepattern(v).call();
-//                } catch (GitAPIException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//            untrackedFiles.forEach(v -> {
-//                try {
-//                    git.add().addFilepattern(v).call();
-//                } catch (GitAPIException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
+            /* Git Add */
+            modifiedFiles.forEach(v -> {
+                try {
+                    git.add().addFilepattern(v).call();
+                } catch (GitAPIException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            missingFiles.forEach(v -> {
+                try {
+                    System.out.println("operation delete add: " +v);
+                    git.add().addFilepattern(v).call();
+                } catch (GitAPIException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            untrackedFiles.forEach(v -> {
+                try {
+                    git.add().addFilepattern(v).call();
+                } catch (GitAPIException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
             /* Git Commit */
             RevCommit commit = git.commit().setMessage("Commit Message").call();
