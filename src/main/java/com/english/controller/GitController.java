@@ -15,7 +15,7 @@ public class GitController {
     @GetMapping("/push")
     public JsonResponse pushToRemote(@RequestParam String token) {
 
-        GitManager.getInstance().push(token);
+        GitManager.getInstance().push();
 
         return JsonResponse.success();
     }

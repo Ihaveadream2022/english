@@ -1,5 +1,6 @@
 package com.english.manager;
 
+import com.english.exception.ServiceRuntimeException;
 import com.english.util.SpringUtil;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -31,14 +32,23 @@ public class GitManager {
         return instance;
     }
 
-    public void push(String token) {
+    public void push() {
         try {
+            // 读取密钥
+            String secret = "";
+            File file = new File("D:\\Github\\token-for-jgit.txt");
+            Scanner scanner = new Scanner(file);
+            if (scanner.hasNextLine()) {
+                secret = scanner.nextLine();
+            }
+
             // 获取仓库状态
             Status status = git.status().call();
 
             // 日志内容
             StringBuilder log = new StringBuilder();
 
+            //日期线
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String time = localDateTime.format(dateTimeFormatter);
@@ -101,19 +111,11 @@ public class GitManager {
             commitCommand.setMessage("Commit Message");
             commitCommand.call();
 
-            File file = new File("D:\\Github\\token-for-jgit.txt");
-            Scanner scanner = new Scanner(file);
-            if (scanner.hasNextLine()) {
-                String line = scanner.nextLine(); // 读取文件中的第一行
-                System.out.println("a:"+line); // 输出读取的行
-            }
-
-
             /* Git Push */
             PushCommand pushCommand = git.push();
             pushCommand.setRemote("origin");
             pushCommand.setRefSpecs(new RefSpec("refs/heads/main:refs/heads/main"));
-            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""));
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(secret, ""));
             Iterable<PushResult> results = pushCommand.call();
             for (PushResult result : results) {
                 System.out.println(result.getMessages());
@@ -121,7 +123,7 @@ public class GitManager {
 
             logger.info(log.toString());
         } catch (GitAPIException | FileNotFoundException e) {
-           throw new RuntimeException(e.getMessage());
+           throw new ServiceRuntimeException(e.getMessage());
         }
     }
 }
