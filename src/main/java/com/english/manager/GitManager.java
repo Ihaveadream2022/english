@@ -66,7 +66,6 @@ public class GitManager {
             Set<String> untrackedFiles = status.getUntracked();
             untrackedFiles.forEach(v -> log.append("\t\tuntracked: ").append(v).append("\r\n"));
 
-
             /* Git Add */
             modifiedFiles.forEach(v -> {
                 try {
@@ -96,11 +95,13 @@ public class GitManager {
             /* Git Commit */
             CommitCommand commitCommand = git.commit();
             commitCommand.setMessage("Commit Message");
-            commitCommand.setCommitter(new PersonIdent("gogpa", "gogpa@163.com"));
             commitCommand.call();
 
             /* Git Push */
             PushCommand pushCommand = git.push();
+            pushCommand.setRemote("origin");
+            pushCommand.setRefSpecs(new RefSpec("refs/heads/main:refs/heads/main"));
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("token", ""));
             Iterable<PushResult> results = pushCommand.call();
             for (PushResult result : results) {
                 System.out.println(result.getMessages());
