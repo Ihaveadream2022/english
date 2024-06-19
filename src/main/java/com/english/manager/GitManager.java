@@ -79,7 +79,7 @@ public class GitManager {
             missingFiles.forEach(v -> {
                 try {
                     System.out.println("missingFiles: " +v);
-                    git.add().addFilepattern(v).call();
+                    git.rm().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
                 }
