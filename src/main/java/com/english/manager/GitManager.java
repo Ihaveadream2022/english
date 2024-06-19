@@ -115,13 +115,14 @@ public class GitManager {
             PushCommand pushCommand = git.push();
             pushCommand.setRemote("origin");
             pushCommand.setRefSpecs(new RefSpec("refs/heads/main:refs/heads/main"));
-            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("secret", ""));
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(secret, ""));
             Iterable<PushResult> results = pushCommand.call();
             for (PushResult result : results) {
                 System.out.println(result.getMessages());
             }
 
             logger.info(log.toString());
+
         } catch (GitAPIException | FileNotFoundException e) {
            throw new ServiceRuntimeException(e.getMessage());
         }
