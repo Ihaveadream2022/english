@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/git")
 public class GitController {
     @GetMapping("/push")
-    public JsonResponse pushToRemote(@RequestParam String token) {
+    public JsonResponse pushToRemote() {
 
         GitManager.getInstance().push();
 
