@@ -9,8 +9,12 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 import java.util.Set;
 
 public class GitManager {
@@ -66,7 +70,7 @@ public class GitManager {
             Set<String> untrackedFiles = status.getUntracked();
             untrackedFiles.forEach(v -> log.append("\t\tuntracked: ").append(v).append("\r\n"));
 
-            /* Git Add */
+            /* Git Add & Remove */
             modifiedFiles.forEach(v -> {
                 try {
                     AddCommand addCommand = git.add();
@@ -97,6 +101,14 @@ public class GitManager {
             commitCommand.setMessage("Commit Message");
             commitCommand.call();
 
+            File file = new File("D:\\Github\\token-for-jgit.txt");
+            Scanner scanner = new Scanner(file);
+            if (scanner.hasNextLine()) {
+                String line = scanner.nextLine(); // 读取文件中的第一行
+                System.out.println(line); // 输出读取的行
+            }
+
+
             /* Git Push */
             PushCommand pushCommand = git.push();
             pushCommand.setRemote("origin");
@@ -108,7 +120,7 @@ public class GitManager {
             }
 
             logger.info(log.toString());
-        } catch (GitAPIException e) {
+        } catch (GitAPIException | FileNotFoundException e) {
            throw new RuntimeException(e.getMessage());
         }
     }
