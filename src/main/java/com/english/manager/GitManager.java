@@ -5,15 +5,11 @@ import com.english.util.SpringUtil;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
@@ -26,8 +22,7 @@ public class GitManager {
 
     private final Git git = (Git) SpringUtil.getBean("JGitService");
 
-    @Autowired
-    AppConfig appConfig;
+    private final AppConfig appConfig = (AppConfig) SpringUtil.getBean("AppConfig");
 
     private GitManager() {};
 

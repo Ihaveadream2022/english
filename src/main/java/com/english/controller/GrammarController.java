@@ -1,13 +1,11 @@
 package com.english.controller;
 
-import com.english.config.AppConfig;
 import com.english.entity.Grammar;
 import com.english.model.JsonResponse;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.GrammarQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.GrammarService;
-import com.english.manager.GitManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,6 @@ public class GrammarController {
 
     @Autowired
     GrammarService grammarService;
-
-    @Autowired
-    AppConfig appConfig;
 
     @GetMapping
     public JsonResponse list(GrammarQueryCondition grammarQueryCondition) {
