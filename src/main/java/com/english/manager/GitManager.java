@@ -1,10 +1,12 @@
 package com.english.manager;
 
 import com.english.util.SpringUtil;
+import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
@@ -95,7 +97,10 @@ public class GitManager {
             });
 
             /* Git Commit */
-            RevCommit commit = git.commit().setMessage("Commit Message").call();
+            CommitCommand commitCommand = git.commit();
+            commitCommand.setMessage("Commit Message").call();
+            commitCommand.setCommitter(new PersonIdent("Your Name", "your.email@example.com"));
+            commitCommand.setSign(true);
 
             /* Git Push */
             PushCommand pushCommand = git.push();
