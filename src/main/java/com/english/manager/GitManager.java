@@ -67,10 +67,10 @@ public class GitManager {
             untrackedFiles.forEach(v -> log.append("\t\tuntracked: ").append(v).append("\r\n"));
 
 
-//            git.add().addFilepattern(".").call();
             /* Git Add */
             modifiedFiles.forEach(v -> {
                 try {
+                    System.out.println("modifiedFiles: " +v);
                     git.add().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
@@ -78,7 +78,7 @@ public class GitManager {
             });
             missingFiles.forEach(v -> {
                 try {
-                    System.out.println("operation delete add: " +v);
+                    System.out.println("missingFiles: " +v);
                     git.add().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
@@ -86,6 +86,7 @@ public class GitManager {
             });
             untrackedFiles.forEach(v -> {
                 try {
+                    System.out.println("untrackedFiles: " +v);
                     git.add().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
