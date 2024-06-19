@@ -67,7 +67,7 @@ public class GitManager {
             untrackedFiles.forEach(v -> log.append("\t\tuntracked: ").append(v).append("\r\n"));
 
 
-            git.add().addFilepattern(".").call();
+//            git.add().addFilepattern(".").call();
             /* Git Add */
             modifiedFiles.forEach(v -> {
                 try {
