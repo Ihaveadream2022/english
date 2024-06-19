@@ -2,9 +2,12 @@ package com.english.manager;
 
 import com.english.util.SpringUtil;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +73,6 @@ public class GitManager {
             /* Git Add */
             modifiedFiles.forEach(v -> {
                 try {
-                    System.out.println("modifiedFiles: " +v);
                     git.add().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
@@ -78,7 +80,6 @@ public class GitManager {
             });
             missingFiles.forEach(v -> {
                 try {
-                    System.out.println("missingFiles: " +v);
                     git.rm().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
@@ -86,7 +87,6 @@ public class GitManager {
             });
             untrackedFiles.forEach(v -> {
                 try {
-                    System.out.println("untrackedFiles: " +v);
                     git.add().addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
@@ -95,15 +95,14 @@ public class GitManager {
 
             /* Git Commit */
             RevCommit commit = git.commit().setMessage("Commit Message").call();
-            log.append(commit.getFullMessage());
 
             /* Git Push */
-//            PushCommand pushCommand = git.push();
-//            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("username", "password"));
-//            Iterable<PushResult> results = pushCommand.call();
-//            for (PushResult result : results) {
-//                System.out.println(result.getMessages());
-//            }
+            PushCommand pushCommand = git.push();
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("username", "password"));
+            Iterable<PushResult> results = pushCommand.call();
+            for (PushResult result : results) {
+                System.out.println(result.getMessages());
+            }
 
             logger.info(log.toString());
         } catch (GitAPIException e) {
