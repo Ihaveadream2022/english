@@ -105,7 +105,7 @@ public class GitManager {
             Scanner scanner = new Scanner(file);
             if (scanner.hasNextLine()) {
                 String line = scanner.nextLine(); // 读取文件中的第一行
-                System.out.println(line); // 输出读取的行
+                System.out.println("a:"+line); // 输出读取的行
             }
 
 
