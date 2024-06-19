@@ -26,15 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class ItemTtsServiceImpl implements ItemTtsService
-{
-    @Autowired
-    ItemTtsMapper itemTtsMapper;
+public class ItemTtsServiceImpl implements ItemTtsService {
 
     private static final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
-    public HashMap<String, Object> pageList(QueryCondition queryCondition)
-    {
+    @Autowired
+    ItemTtsMapper itemTtsMapper;
+
+    public HashMap<String, Object> pageList(QueryCondition queryCondition) {
         Integer a = queryCondition.getOffset();
         HashMap<String, Object> data = new HashMap<>();
 
@@ -49,28 +48,24 @@ public class ItemTtsServiceImpl implements ItemTtsService
         return data;
     }
 
-    public ItemTts findByName(String name)
-    {
+    public ItemTts findByName(String name) {
         return itemTtsMapper.findByName(name);
     }
 
     @Override
     @Transactional
-    public Long insert(ItemTts itemTts)
-    {
+    public Long insert(ItemTts itemTts) {
         return itemTtsMapper.insert(itemTts);
     }
 
     @Override
     @Transactional
-    public Long update(ItemTts itemTts)
-    {
+    public Long update(ItemTts itemTts) {
         return itemTtsMapper.update(itemTts);
     }
 
     @Override
-    public Boolean exist(ItemTts itemTts)
-    {
+    public Boolean exist(ItemTts itemTts) {
         Long wordId = itemTts.getId() == null? -1L : itemTts.getId();
         ItemTts one = itemTtsMapper.findByName(itemTts.getName());
         return one != null && one.getId().longValue() != wordId.longValue();
@@ -78,8 +73,7 @@ public class ItemTtsServiceImpl implements ItemTtsService
 
     @Override
     @Transactional
-    public Long delete(DeleteRequestBody deleteRequestBody)
-    {
+    public Long delete(DeleteRequestBody deleteRequestBody) {
         if (deleteRequestBody.getId() != null) {
             return itemTtsMapper.delete(deleteRequestBody);
         }
@@ -89,8 +83,7 @@ public class ItemTtsServiceImpl implements ItemTtsService
 
     @Override
     @Transactional
-    public Long batchDelete(DeleteRequestBody deleteRequestBody)
-    {
+    public Long batchDelete(DeleteRequestBody deleteRequestBody) {
         if (deleteRequestBody.getIds() != null && deleteRequestBody.getIds().length > 0) {
             return itemTtsMapper.batchDelete(deleteRequestBody);
         }
@@ -99,8 +92,7 @@ public class ItemTtsServiceImpl implements ItemTtsService
     }
 
     @Override
-    public void dealSpeech(ItemTts itemTts)
-    {
+    public void dealSpeech(ItemTts itemTts) {
         try {
             // Create audio
             String scriptPath = "python " + System.getProperty("user.dir") + "/scripts/english.py";
@@ -139,8 +131,7 @@ public class ItemTtsServiceImpl implements ItemTtsService
     }
 
     @Override
-    public void writeSpeech(ItemTts itemTts)
-    {
+    public void writeSpeech(ItemTts itemTts) {
         String savePath = System.getProperty("user.dir") + "/audio/" + itemTts.getName().replace(" ","_") + ".mp3";
         try (FileOutputStream fos = new FileOutputStream(savePath)) {
             FileUtil.writeBase64ToOutputStream(itemTts.getSpeech(), fos);

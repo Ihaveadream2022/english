@@ -1,5 +1,9 @@
 #file: noinspection SpringBootApplicationYaml
 
+app:
+    name: english
+    gitRepositoryPath: D:\Github\english
+
 server:
     port: 8080 # WEB服务端口
     servlet:

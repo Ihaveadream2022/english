@@ -41,11 +41,11 @@
 	<!-- Insert -->
 	<!-- Update -->
 	<update id="update" parameterType="ItemTts">
-		update `item_tts`
+		UPDATE `item_tts`
 		<set>
 			<if test="speech != null">`speech` = #{speech}</if>
 		</set>
-		where `id` = #{id}
+		WHERE `id` = #{id}
 	</update>
 	<!-- Update -->
 	<!-- Delete -->

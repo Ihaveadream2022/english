@@ -42,7 +42,7 @@
             height: 36px !important;
         }
         .el-aside {
-            width: 80px !important;
+            width: 90px !important;
             background: #001529;
             height: calc(100vh - 36px);
             overflow: hidden;

@@ -3,8 +3,8 @@ package com.english.entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class Item
-{
+public class Item {
+
     private Long id;
 
     /**
@@ -32,7 +32,7 @@ public class Item
     private Short category;
 
     @NotBlank(message = "name is required")
-    @Size(min = 0, max = 64, message = "name length is between 0 and 512")
+    @Size(min = 0, max = 64, message = "name length is between 0 and 64")
     private String name;
 
     @Size(min = 0, max = 64, message = "pronounce length is between 0 and 64")
@@ -79,6 +79,9 @@ public class Item
 
     @Size(min = 0, max = 1024, message = "comment length is between 0 and 1024")
     private String comment;
+
+    @Size(min = 0, max = 1024, message = "examples length is between 0 and 1024")
+    private String examples;
 
     private ItemTts tts;
 
@@ -265,5 +268,15 @@ public class Item
 
     public void setTts(ItemTts tts) {
         this.tts = tts;
+    }
+
+    public String getExamples()
+    {
+        return examples;
+    }
+
+    public void setExamples(String examples)
+    {
+        this.examples = examples;
     }
 }

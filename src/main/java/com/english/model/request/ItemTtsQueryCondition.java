@@ -1,7 +1,7 @@
 package com.english.model.request;
 
-public class ItemTtsQueryCondition extends QueryCondition
-{
+public class ItemTtsQueryCondition extends QueryCondition {
+
     private String name;
 
     public String getName()

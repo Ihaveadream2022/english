@@ -4,7 +4,7 @@ import com.english.entity.ItemTts;
 import com.english.model.request.ItemTtsQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemTtsService;
-import com.english.thread.ThreadManager;
+import com.english.manager.ThreadManager;
 import com.english.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

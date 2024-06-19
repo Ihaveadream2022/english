@@ -141,7 +141,38 @@ export const itemGenerate = () =>
         method: "get",
         url: segments.urlAss + "/items/generate",
     });
-    
+
+// Grammar
+export const grammarList = (params) =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/grammars",
+        params: params,
+    });
+export const grammarAdd = (data) =>
+    requestBase.request({
+        method: "post",
+        url: segments.urlAss + "/grammars",
+        data: data,
+    });
+export const grammarEdit = (data) =>
+    requestBase.request({
+        method: "put",
+        url: segments.urlAss + "/grammars/" + data.id,
+        data: data,
+    });
+
+export const grammarDelete = (data) =>
+    requestBase.request({
+        method: "delete",
+        url: segments.urlAss + "/grammars/" + data.id,
+    });
+export const grammarGenerate = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/grammars/generate",
+    });
+
 // Placeholder
 export const placeholder = (params) =>
     requestBase.request({
@@ -154,4 +185,10 @@ export const ttsGenerate = () =>
     requestBase.request({
         method: "get",
         url: segments.urlAss + "/tts/generate",
+    });
+
+export const GitPush = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/git/push",
     });

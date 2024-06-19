@@ -1,25 +1,205 @@
+body,
+html,
+body,
+html,
+h1,
+h2,
+ul,
+p,
+li {
+    padding: 0;
+    margin: 0;
+}
 html,
 body {
-    margin: 0;
-    padding: 0;
+    height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
-#box {
-    width: 500px;
-    margin: 0 auto;
+:root {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Safari, and Opera */
+}
+#index-box {
+    box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+}
+#index-box .item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-weight: 900;
+    font-size: 30px;
 }
 
-.item {
-    margin-bottom: 50px;
-    border-bottom: 2px dotted #95e272;
+#practice {
+    box-sizing: border-box;
+    height: 92%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    position: relative;
 }
-.item .text {
-    margin: 12px;
-    font-size: 22px;
+#practice .item {
+    flex: 1;
+    height: 100%;
+}
+#practice ul {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+}
+#practice .item li {
+    flex: 1;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    justify-content: space-around;
+    width: 100%;
+}
+#practice .item li.active {
+    background: rgb(215, 255, 184);
+}
+
+#practice .item li.matched {
+    color: #fff;
+    background-color: rgb(88, 204, 2);
+}
+#practice #en {
+    border-right: 1px solid #ccc;
+}
+#practice #cn {
+    color: #000;
+    background-color: #fff;
+}
+#practice #recognize-result {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 12px;
+    background: #fff;
+}
+#panel {
+    height: 8%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+}
+
+#page-panel .page-item {
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #ccc;
+    color: #fff;
+    font-weight: 900;
+}
+#panel #curpage {
+    width: 20px;
+    height: 8px;
     text-align: center;
 }
-.item .text .chinese {
+#panel #write-panel,
+#panel #page-panel,
+#panel #play-panel {
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    box-sizing: border-box;
+    flex: 1;
+}
+#panel #write-panel .item,
+#panel #play-panel .item {
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    color: #fff;
+    font-weight: 900;
+    border-right: 1px solid #fff;
+}
+#panel #play-panel {
+    flex: 0.4;
+}
+#panel #write-panel .item {
+    background: #007bff;
+}
+#panel #play-panel .item {
+    background: rgb(42, 135, 14);
+}
+#canvas {
+    display: none;
+    cursor: crosshair;
+    position: absolute;
+    bottom: 0px;
+    background: rgba(42, 135, 14, 0.2);
+}
+#recognize-result {
     display: none;
 }
-.item .img img {
-    width: 500px;
+
+#box {
+    box-sizing: border-box;
+    height: 92%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0;
+    position: relative;
+}
+#box .title {
+    text-align: center;
+    font-size: 12px;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+    font-weight: 900;
+}
+#box .content {
+    padding: 8px 0;
+    font-size: 10px;
+    white-space: normal;
+    line-height: 20px;
+}
+#box .content .main-point {
+    color: #409eff;
+    font-weight: 900;
+}
+#box .content p.active {
+    color: #fff;
+    font-weight: 900;
+    background: rgb(88, 204, 2);
 }

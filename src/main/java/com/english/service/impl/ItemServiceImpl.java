@@ -8,6 +8,7 @@ import com.english.model.ItemHtml;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemService;
+import com.english.manager.ThreadManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
 
 @Service
 public class ItemServiceImpl implements ItemService {
 
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     ItemMapper itemMapper;
@@ -89,24 +89,32 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void itemsToJsonFiles(List<Item> itemList, Integer index) {
-        try {
-            List<ItemHtml> list = new ArrayList<>();
-            for (Item item : itemList) {
-                ItemHtml itemHtml = new ItemHtml();
-                itemHtml.setEn(item.getName());
-                itemHtml.setCn(item.getCommon());
-                if (item.getTts().getId() != null) {
-                    itemHtml.setTts(item.getTts().getSpeech());
+    public void generateJSONFile(List<Item> itemList, Integer index) {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    List<ItemHtml> list = new ArrayList<>();
+                    for (Item item : itemList) {
+                        ItemHtml itemHtml = new ItemHtml();
+                        itemHtml.setEn(item.getName());
+                        itemHtml.setCn(item.getCommon());
+                        if (item.getTts().getId() != null) {
+                            itemHtml.setTts(item.getTts().getSpeech());
+                        }
+                        list.add(itemHtml);
+                    }
+                    String filePath = String.format("%s/html/json/%s.json", System.getProperty("user.dir"), index);
+                    File file = new File(filePath);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(file, list);
+
+                    serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
                 }
-                list.add(itemHtml);
             }
-            String filePath = System.getProperty("user.dir") + "/html/json/" + index + ".json";
-            File file = new File(filePath);
-            objectMapper.writeValue(file, list);
-            serviceLogger.info("Json created. " + filePath);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        };
+        ThreadManager.getInstance().execute(timerTask);
     }
 }

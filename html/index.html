@@ -4,42 +4,13 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>English</title>
-        <link type="text/css" rel="stylesheet" href="css/sheet.css?v=2" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <div id="practice">
-            <div class="item">
-                <ul id="en"></ul>
-            </div>
-            <div class="item">
-                <ul id="cn"></ul>
-            </div>
-            <audio id="listPlayer" style="display: none"></audio>
-            <canvas id="canvas"></canvas>
+        <div id="index-box">
+            <a class="item" href="./item.html" style="background-color: #409eff">单词</a>
+            <a class="item" href="./grammar.html" style="background-color: rgb(88, 204, 2)">语法</a>
+            <a class="item" href="./grammar.html" style="background-color: rgb(204, 0, 0)">翻译</a>
         </div>
-        <div id="page">
-            <div id="write-panel">
-                <div class="item" onclick="canvas.recognize()">&#128269;</div>
-                <div class="item" onclick="canvas.erase()">&#129529;</div>
-                <div class="item" onclick="canvasShow()">&#9997;</div>
-                <div id="recognize-result">result</div>
-            </div>
-            <div id="play-panel">
-                <div id="playBtn" class="item" onclick="doPlay()">&#9654;</div>
-            </div>
-            <div id="page-panel">
-                <div id="prevBtn" class="page-item">&#10096;</div>
-                <div class="page-item">
-                    <input id="curpage" value="1" />
-                    <span>&nbsp;&#8260;&nbsp;</span>
-                    <span id="total">100</span>
-                </div>
-                <div id="nextBtn" class="page-item btn">&#10097;</div>
-            </div>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="js/public.js"></script>
-        <script src="js/handwriting.canvas.js?a=20240509" type="text/javascript"></script>
-        <script src="js/handwriting-recognition-google.js?a=20240509811"></script>
     </body>
 </html>

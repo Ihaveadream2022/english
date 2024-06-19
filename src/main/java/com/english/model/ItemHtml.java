@@ -1,7 +1,7 @@
 package com.english.model;
 
-public class ItemHtml
-{
+public class ItemHtml {
+
     private String en;
 
     private String cn;

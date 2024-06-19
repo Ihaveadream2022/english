@@ -21,8 +21,8 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -40,27 +40,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception
-    {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder()
-    {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception
-    {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception
-    {
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+            .cors().and()
             .csrf().disable()
             // 禁用HTTP响应标头缓存
             .headers()
@@ -74,10 +71,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
             // 过滤请求
             .authorizeRequests()
             // 允许匿名访问的URL
-            .antMatchers("/login", "/captcha", "/items/generate").permitAll()
+            .antMatchers("/login", "/captcha").permitAll()
             // 允许匿名访问的静态资源URL
             .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
-            .antMatchers("/druid-console/**").permitAll()
             // 其他所有请求全部需要鉴权认证
             .anyRequest().authenticated();
         /* 访问/logout触发退出登录. logoutSuccessHandler()设置退出处理器. */

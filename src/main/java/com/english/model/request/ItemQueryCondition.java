@@ -1,7 +1,7 @@
 package com.english.model.request;
 
-public class ItemQueryCondition extends QueryCondition
-{
+public class ItemQueryCondition extends QueryCondition {
+
     private String keyword;
 
     private String category;

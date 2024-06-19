@@ -1,6 +1,6 @@
 package com.english.controller;
 
-import com.english.thread.ThreadManager;
+import com.english.manager.ThreadManager;
 import com.english.util.FileUtil;
 import com.english.util.encrypt.Digest;
 import org.springframework.beans.factory.annotation.Value;

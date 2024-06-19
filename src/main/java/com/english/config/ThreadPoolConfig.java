@@ -7,11 +7,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 @Configuration
-public class ThreadPoolConfig
-{
+public class ThreadPoolConfig {
     @Bean(name = "scheduledExecutorService")
-    protected ScheduledExecutorService scheduledExecutorService()
-    {
+    protected ScheduledExecutorService scheduledExecutorService() {
         int corePoolSize = 50;
         return new ScheduledThreadPoolExecutor(corePoolSize);
     }

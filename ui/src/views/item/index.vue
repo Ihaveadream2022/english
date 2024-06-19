@@ -11,12 +11,7 @@
             <el-form :inline="true" :model="table.searchForm" ref="searchForm" class="demo-form-inline" label-width="100px" size="mini">
                 <div class="inpBox">
                     <el-form-item label="Keyword :" prop="keyword">
-                        <el-input placeholder="" v-model="table.searchForm.keyword" @keyup.enter.native="handleEnter"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Category :" prop="category">
-                        <el-select v-model="table.searchForm.category" placeholder="Please Select">
-                            <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
+                        <el-input placeholder="keyword" v-model="table.searchForm.keyword" @keyup.enter.native="handleEnter"></el-input>
                     </el-form-item>
                 </div>
                 <div class="searchBtnBox">
@@ -29,9 +24,6 @@
                     <el-form-item>
                         <el-button type="primary" @click="editDialogOpen">Create</el-button>
                     </el-form-item>
-                    <!-- <el-form-item>
-                        <el-button type="primary" @click="ttsGenerate">Generate All Audio</el-button>
-                    </el-form-item> -->
                     <el-form-item>
                         <el-button type="primary" @click="itemGenerate">Generate All Json</el-button>
                     </el-form-item>
@@ -46,18 +38,18 @@
                 <el-table-column prop="name" min-width="200" label="Name"> </el-table-column>
                 <el-table-column prop="common" min-width="150" label="common"></el-table-column>
                 <el-table-column prop="pronounce" min-width="100" label="Pronounce"> </el-table-column>
-                <el-table-column prop="catetory" min-width="80" label="catetory">
-                    <template slot-scope="scope">{{ categoryList[scope.row.category]["label"] }} </template>
-                </el-table-column>
                 <el-table-column prop="verb" min-width="150" label="Verb" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="noun" min-width="150" label="Noun" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="adjective" min-width="150" label="Adjective" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column prop="adverb" min-width="150" label="Adverb" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column label="Operation" min-width="120">
+                <el-table-column prop="conjunction" min-width="150" label="Conjunction" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column prop="preposition" min-width="150" label="Preposition" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column label="Operation" min-width="300">
                     <template slot-scope="scope">
-                        <div>
-                            <el-button type="text" size="mini" @click="editDialogEdit(scope.row)">Edit</el-button>
-                            <el-button type="text" size="mini" @click="editDelete(scope.row)">Delete</el-button>
+                        <div class="panel">
+                            <el-button type="primary" size="mini" @click="editDialogEdit(scope.row)">Edit</el-button>
+                            <el-button type="danger" size="mini" @click="editDelete(scope.row)">Delete</el-button>
+                            <el-button type="primary" size="mini" @click="exampleEditDialog(scope.row)">Example</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -66,67 +58,114 @@
         <div>
             <el-pagination background @size-change="pagerHandleSizeChange" @current-change="pagerHandleCurrentChange" :current-page="table.searchForm.pageNo" :page-sizes="[10, 20, 50, 100]" :page-size="table.searchForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="table.total"> </el-pagination>
         </div>
-        <!-- 新建或编辑弹窗 -->
+        <!-- 新建或编辑单词弹窗 -->
         <el-dialog :title="editDialog.title" :close-on-click-modal="false" :close-on-press-escape="false" class="vehm" :visible.sync="editDialog.visible" @close="editDialogClose" @opened="editDialogOpen" width="1200px" top="0" center>
             <span>
                 <el-form :inline="true" :rules="editDialog.rules" :model="editDialog.form" ref="editDialogForm" class="demo-form-inline jiaoyan" label-width="120px" size="mini">
-                    <el-form-item label="Name:" prop="name">
+                    <el-form-item label="词名:" prop="name">
                         <el-input placeholder="" v-model="editDialog.form.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="Pronounce:" prop="pronounce">
+                    <el-form-item label="发音:" prop="pronounce">
                         <el-input placeholder="" v-model="editDialog.form.pronounce"></el-input>
                     </el-form-item>
-                    <el-form-item label="Common:" prop="common">
+                    <el-form-item label="常见含义:" prop="common">
                         <el-input placeholder="" v-model="editDialog.form.common"></el-input>
                     </el-form-item>
-                    <el-form-item label="Catetory:" prop="category">
-                        <el-select placeholder="Please Select" v-model="editDialog.form.category">
-                            <el-option v-for="item in categoryList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-divider content-position="left">Noun</el-divider>
-                    <el-form-item label="Noun Plural:" prop="nounPlural">
-                        <el-input placeholder="" v-model="editDialog.form.nounPlural"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Noun:" prop="noun">
-                        <el-input placeholder="" type="textarea" v-model="editDialog.form.noun" maxlength="1024"></el-input>
-                    </el-form-item>
-                    <el-divider content-position="left">Verb</el-divider>
-                    <el-form-item label="Past Tense:" prop="verbPastTense" class="vb">
-                        <el-input placeholder="" v-model="editDialog.form.verbPastTense"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Past Participle:" prop="verbPastParticiple" class="vb">
-                        <el-input placeholder="" v-model="editDialog.form.verbPastParticiple"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Present Participle:" prop="verbPresentParticiple" class="vb">
-                        <el-input placeholder="" v-model="editDialog.form.verbPresentParticiple"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Third Person Singular:" prop="verbThirdPersonSingular" class="vb">
-                        <el-input placeholder="" v-model="editDialog.form.verbThirdPersonSingular"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Verb:" prop="verb" class="vb">
-                        <el-input placeholder="" type="textarea" v-model="editDialog.form.verb" maxlength="1024"></el-input>
-                    </el-form-item>
-                    <el-divider content-position="left">Adjective & Adverb</el-divider>
-                    <el-form-item label="Adjective:" prop="adjective">
-                        <el-input placeholder="" type="textarea" v-model="editDialog.form.adjective" maxlength="1024"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Adverb:" prop="adverb">
-                        <el-input placeholder="" type="textarea" v-model="editDialog.form.adverb" maxlength="1024"></el-input>
-                    </el-form-item>
-                    <el-divider content-position="left">Comment</el-divider>
-                    <el-form-item label="Comment:" prop="comment">
-                        <el-input placeholder="" type="textarea" v-model="editDialog.form.comment" maxlength="1024"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Paste:">
-                        <el-input placeholder="" type="textarea" v-model="copiedText" maxlength="1024" ref="parseBox"></el-input>
-                    </el-form-item>
+                    <br />
+                    <div>
+                        <el-form-item label="复数:" prop="nounPlural">
+                            <el-input placeholder="" v-model="editDialog.form.nounPlural"></el-input>
+                        </el-form-item>
+                        <el-form-item label="第三人称:" prop="verbThirdPersonSingular" class="vb">
+                            <el-input placeholder="" v-model="editDialog.form.verbThirdPersonSingular"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="过去式:" prop="verbPastTense" class="vb">
+                            <el-input placeholder="" v-model="editDialog.form.verbPastTense"></el-input>
+                        </el-form-item>
+                        <el-form-item label="过去分词:" prop="verbPastParticiple" class="vb">
+                            <el-input placeholder="" v-model="editDialog.form.verbPastParticiple"></el-input>
+                        </el-form-item>
+                        <el-form-item label="现在分词:" prop="verbPresentParticiple" class="vb">
+                            <el-input placeholder="" v-model="editDialog.form.verbPresentParticiple"></el-input>
+                        </el-form-item>
+                    </div>
+                    <el-descriptions direction="vertical" :column="2" :labelStyle="{ background: '#409EFF', color: '#fff', 'text-align': 'center' }" border>
+                        <el-descriptions-item label="名词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.noun" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="动词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.verb" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="形容词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.adjective" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="副词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.adverb" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="介词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.preposition" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="连词">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.conjunction" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="Comment">
+                            <el-input placeholder="" type="textarea" v-model="editDialog.form.comment" maxlength="1024"></el-input>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="Paste">
+                            <el-input placeholder="" type="textarea" v-model="copiedText" maxlength="1024" ref="parseBox"></el-input>
+                        </el-descriptions-item>
+                    </el-descriptions>
                 </el-form>
             </span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editParseData">Parse</el-button>
                 <el-button @click="editDialog.visible = false">Cancle</el-button>
                 <el-button type="primary" @click="editDialogSave">Confirm</el-button>
+            </span>
+        </el-dialog>
+        <!-- 新建或编辑示例弹窗 -->
+        <el-dialog :title="dataExampleDialog.title" :close-on-click-modal="false" :close-on-press-escape="false" class="vehm" :visible.sync="dataExampleDialog.visible" @close="exampleEditDialogClose" @opened="exampleEditDialogOpen" width="1200px" top="0" center>
+            <el-descriptions :title="dataExampleDialog.form.name + ' | ' + dataExampleDialog.form.common" direction="vertical" :column="2" :labelStyle="{ background: '#409EFF', color: '#fff', 'text-align': 'center' }" border>
+                <el-descriptions-item label="名词">
+                    {{ dataExampleDialog.form.noun ? dataExampleDialog.form.noun : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="动词">
+                    {{ dataExampleDialog.form.verb ? dataExampleDialog.form.verb : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="形容词">
+                    {{ dataExampleDialog.form.adjective ? dataExampleDialog.form.adjective : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="副词">
+                    {{ dataExampleDialog.form.adverb ? dataExampleDialog.form.adverb : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="介词">
+                    {{ dataExampleDialog.form.preposition ? dataExampleDialog.form.preposition : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="连词">
+                    {{ dataExampleDialog.form.conjunction ? dataExampleDialog.form.conjunction : "无" }}
+                </el-descriptions-item>
+                <el-descriptions-item label="示例">
+                    <div v-for="(example, index) in dataExampleDialog.examplesArray" :key="index" class="example-item">
+                        <div v-for="(value, key) in example" :key="key" class="example-item-inner">
+                            <el-divider content-position="left">{{ key }}</el-divider>
+                            <el-button type="danger" @click="exampleDelete(key)" icon="el-icon-delete" size="mini"></el-button>
+                            <el-input placeholder="" type="textarea" :value="value" maxlength="1024"></el-input>
+                        </div>
+                    </div>
+                </el-descriptions-item>
+                <el-descriptions-item label="添加示例">
+                    <div class="example-panel">
+                        <el-input placeholder="" v-model="dataExampleDialog.exampleKey"></el-input>
+                        <el-input placeholder="" v-model="dataExampleDialog.exampleContent" type="textarea" maxlength="1024" style="margin: 10px 0; border-radius: 4px; border: 1px solid rgb(88, 204, 2)"></el-input>
+                        <el-button type="primary" @click="appendExamples">+</el-button>
+                    </div>
+                </el-descriptions-item>
+            </el-descriptions>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dataExampleDialog.visible = false">Cancle</el-button>
+                <el-button type="primary" @click="exampleEditDialogSave">Confirm</el-button>
             </span>
         </el-dialog>
     </div>
@@ -177,13 +216,25 @@
                     },
                 },
                 editDialog: {
-                    title: "Create a Item",
+                    title: "Create Item",
                     operation: "add",
                     form: {},
                     visible: false,
                     rules: {
                         name: [{ required: true, message: "Please input item name", trigger: "blur" }],
                     },
+                },
+                dataExampleDialog: {
+                    title: "Create Example",
+                    operation: "add",
+                    form: {},
+                    visible: false,
+                    rules: {
+                        name: [{ required: true, message: "Please input item name", trigger: "blur" }],
+                    },
+                    exampleKey: "",
+                    exampleContent: "",
+                    examplesArray: [],
                 },
             };
         },
@@ -200,14 +251,26 @@
             editDialogClose() {
                 this.$nextTick(() => {
                     this.editDialog.form = {};
-                    this.editDialog.title = "Create a Item";
+                    this.editDialog.title = "Create Item";
                     this.editDialog.operation = "add";
                     this.copiedText = "";
+                });
+            },
+            exampleEditDialogClose() {
+                this.$nextTick(() => {
+                    this.dataExampleDialog.form = {};
+                    this.dataExampleDialog.exampleKey = "";
+                    this.dataExampleDialog.exampleContent = "";
+                    this.dataExampleDialog.examplesArray = [];
+                    this.dataExampleDialog.title = "Create Example";
                 });
             },
             // 编辑窗口: 打开. 通用设置
             editDialogOpen() {
                 this.editDialog.visible = true;
+            },
+            exampleEditDialogOpen() {
+                this.dataExampleDialog.visible = true;
             },
             ttsGenerate() {
                 const loading = this.$loading({
@@ -255,10 +318,18 @@
             },
             // 编辑窗口: 编辑. 同时触发editDialogOpen()
             editDialogEdit(row) {
-                this.editDialog.title = "Edit a Item";
+                this.editDialog.title = "Edit Item";
                 this.editDialog.visible = true;
                 this.editDialog.operation = "edit";
                 this.editDialog.form = row;
+            },
+            exampleEditDialog(row) {
+                this.dataExampleDialog.title = "Edit Examples";
+                this.dataExampleDialog.visible = true;
+                this.dataExampleDialog.form = row;
+                this.dataExampleDialog.examplesArray = JSON.parse(row.examples) ? JSON.parse(row.examples) : [];
+
+                console.log(this.dataExampleDialog);
             },
             editDialogDelete(row) {},
             editDialogSave() {
@@ -337,6 +408,47 @@
                         }
                     }
                 });
+            },
+            exampleEditDialogSave() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: "Loading...",
+                });
+                this.dataExampleDialog.form.examples = JSON.stringify(this.dataExampleDialog.examplesArray);
+                itemEdit(this.dataExampleDialog.form)
+                    .then(
+                        (res) => {
+                            Message({
+                                message: `${res.message}`,
+                                type: "success",
+                                duration: 800,
+                                onClose: () => {
+                                    loading.close();
+                                    this.dataExampleDialog.examplesArray = [];
+                                    this.dataExampleDialog.visible = false;
+                                    this.tableGetList(this.table.searchForm);
+                                },
+                            });
+                        },
+                        (res) => {
+                            Message({
+                                message: `${res.message}`,
+                                type: "error",
+                                duration: 1500,
+                                onClose: () => {
+                                    loading.close();
+                                },
+                            });
+                        },
+                    )
+                    .catch((error) => {
+                        this.$message({
+                            showClose: true,
+                            message: error instanceof Object && error.message !== undefined ? error.message : "Cannot parse response",
+                            type: "error",
+                            onClose() {},
+                        });
+                    });
             },
             editParseData() {
                 if (this.copiedText) {
@@ -579,6 +691,26 @@
             handleEnter() {
                 this.tableSearch();
             },
+            appendExamples() {
+                console.log(this.dataExampleDialog.exampleKey);
+                console.log(this.dataExampleDialog.exampleContent);
+                let obj = {};
+                obj[this.dataExampleDialog.exampleKey] = this.dataExampleDialog.exampleContent;
+                console.log(obj);
+
+                this.dataExampleDialog.examplesArray.unshift(obj);
+
+                console.log(this.dataExampleDialog.examplesArray);
+            },
+            exampleDelete(key) {
+                this.dataExampleDialog.examplesArray = this.dataExampleDialog.examplesArray.filter((v, k, a) => {
+                    if (v.hasOwnProperty(key)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+            },
         },
     };
 </script>
@@ -670,7 +802,7 @@
                 padding: 12px 28px;
             }
             .el-button--text {
-                color: rgb(88, 204, 2);
+                color: rgb(204, 0, 0);
             }
             .el-button--text:focus,
             .el-button--text:hover {
@@ -684,6 +816,16 @@
             }
             .el-table--enable-row-hover .el-table__body tr:hover > td {
                 background-color: rgba(14, 110, 236, 0.3) !important;
+            }
+            .panel {
+                margin: 2px 0 !important;
+                .el-button--primary {
+                    background: #409eff;
+                }
+                .el-button--danger {
+                    color: #fff;
+                    background: rgb(204, 0, 0);
+                }
             }
         }
     }
@@ -732,12 +874,13 @@
         ::v-deep .el-input__inner,
         ::v-deep .el-textarea__inner {
             padding: 4px 8px;
-            width: 160px !important;
         }
         ::v-deep .el-textarea__inner {
-            width: 300px !important;
-            height: 100px;
+            width: 100% !important;
+            height: 120px;
             margin-bottom: 0 !important;
+            border: 0;
+            resize: none;
         }
         .el-divider__text {
             color: #fff;
@@ -758,7 +901,6 @@
         }
         .el-form-item.vb {
             ::v-deep .el-form-item__label {
-                width: 160px !important;
             }
         }
         .el-form-item.parse {
@@ -770,6 +912,40 @@
             ::v-deep .el-textarea__inner {
                 width: 98% !important;
                 margin: 0 auto;
+            }
+        }
+        ::v-deep .el-descriptions .is-bordered .el-descriptions-item__cell {
+            width: 50%;
+            padding: 10px !important;
+
+            .example-item {
+                background: #ccc;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                .example-item-inner {
+                    position: relative;
+                    .el-button {
+                        position: absolute;
+                        top: -16px;
+                        right: 0;
+                        color: #fff;
+                    }
+                    .el-input {
+                        border: 1px solid rgb(88, 204, 2);
+                    }
+                }
+            }
+
+            .example-panel {
+                .el-textarea {
+                    .el-textarea__inner {
+                        height: 86px;
+                    }
+                }
             }
         }
     }

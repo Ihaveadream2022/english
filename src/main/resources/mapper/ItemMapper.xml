@@ -20,6 +20,7 @@
 		<result property="pronoun" column="pronoun" />
 		<result property="preposition" column="preposition" />
 		<result property="comment" column="comment" />
+		<result property="examples" column="examples" />
 		<association property="tts" javaType="ItemTts" resultMap="ItemTtsMapper" />
 	</resultMap>
 	<resultMap type="ItemTts" id="ItemTtsMapper">
@@ -36,7 +37,11 @@
 				`item`.`noun` LIKE concat('%', #{keyword}, '%') OR
 				`item`.`verb` LIKE concat('%', #{keyword}, '%') OR
 				`item`.`adjective` LIKE concat('%', #{keyword}, '%') OR
-				`item`.`adverb` LIKE concat('%', #{keyword}, '%'))
+				`item`.`adverb` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`preposition` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`conjunction` LIKE concat('%', #{keyword}, '%') OR
+				`item`.`comment` LIKE concat('%', #{keyword}, '%')
+				)
 			</if>
 			<if test="category != null and category != ''">AND `item`.`category` = #{category}</if>
 		</trim>
@@ -126,6 +131,7 @@
 			<if test="pronoun != null">,`pronoun` = #{pronoun}</if>
 			<if test="preposition != null">,`preposition` = #{preposition}</if>
 			<if test="comment != null">,`comment` = #{comment}</if>
+			<if test="examples != null">,`examples` = #{examples}</if>
 		</set>
 		where `id` = #{id}
 	</update>

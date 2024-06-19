@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.GrammarMapper">
+	<resultMap type="Grammar" id="GrammarMapper">
+		<id property="id" column="id" />
+		<result property="sort" column="sort" />
+		<result property="name" column="name" />
+		<result property="content" column="content" />
+	</resultMap>
+	<!-- Select -->
+	<sql id="selectWhere">
+		<trim prefix="WHERE 1=1 AND (" suffix=")" prefixOverrides="AND">
+			<if test="keyword != null and keyword != ''">AND (
+				`name` LIKE concat('%', #{keyword}, '%') OR
+				`content` LIKE concat('%', #{keyword}, '%')
+				)
+			</if>
+		</trim>
+	</sql>
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(id) AS `total` FROM `grammar` <include refid="selectWhere" />
+	</select>
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="GrammarMapper">
+		SELECT * FROM `grammar` <include refid="selectWhere" /> ORDER BY `id` DESC
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset},#{pageSize}
+			</if>
+		</if>
+	</select>
+	<select id="findByName" parameterType="String" resultMap="GrammarMapper">
+		SELECT * FROM `grammar` WHERE `name` = #{name} LIMIT 1
+	</select>
+	<!-- Select -->
+	<!-- Insert -->
+	<insert id="insert" parameterType="Grammar" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `grammar`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			`name`
+			<if test="sort != null and sort > 0">,`sort`</if>
+			<if test="content != null">,`content`</if>
+		</trim> VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			#{name}
+			<if test="sort != null and sort > 0">,#{sort}</if>
+			<if test="content != null">,#{content}</if>
+		</trim>
+	</insert>
+	<!-- Insert -->
+	<!-- Update -->
+	<update id="update" parameterType="Grammar">
+		update `grammar`
+		<set>
+			<if test="name != null and name != ''">,`name` = #{name}</if>
+			<if test="sort != null and sort >=0">,`sort` = #{sort}</if>
+			<if test="content != null">,`content` = #{content}</if>
+		</set>
+		where `id` = #{id}
+	</update>
+	<!-- Update -->
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `grammar` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
+	</delete>
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `grammar`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+</mapper>

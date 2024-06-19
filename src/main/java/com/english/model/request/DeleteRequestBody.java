@@ -1,7 +1,7 @@
 package com.english.model.request;
 
-public class DeleteRequestBody
-{
+public class DeleteRequestBody {
+
     private Long id;
 
     private Long[] ids;

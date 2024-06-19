@@ -36,6 +36,11 @@ const routes = [
                 path: "/item",
                 component: () => import(/* webpackChunkName: 'dynamic' */ "@/views/item/index.vue"),
             },
+            {
+                name: "grammar",
+                path: "/grammar",
+                component: () => import(/* webpackChunkName: 'dynamic' */ "@/views/grammar/index.vue"),
+            },
         ],
     },
     {
