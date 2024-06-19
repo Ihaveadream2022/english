@@ -13,6 +13,8 @@ public class AppConfig {
     // Git仓库目录
     private String gitRepositoryPath;
 
+    private String token;
+
     public String getName() {
         return name;
     }
@@ -27,5 +29,13 @@ public class AppConfig {
 
     public void setGitRepositoryPath(String gitRepositoryPath) {
         this.gitRepositoryPath = gitRepositoryPath;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

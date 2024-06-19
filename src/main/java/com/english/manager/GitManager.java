@@ -1,5 +1,6 @@
 package com.english.manager;
 
+import com.english.config.AppConfig;
 import com.english.util.SpringUtil;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -10,6 +11,7 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,7 +24,10 @@ public class GitManager {
 
     private final Logger logger = LoggerFactory.getLogger("SERVICE");
 
-    private final Git git = (Git) SpringUtil.getBean("JGitService");;
+    private final Git git = (Git) SpringUtil.getBean("JGitService");
+
+    @Autowired
+    AppConfig appConfig;
 
     private GitManager() {};
 
