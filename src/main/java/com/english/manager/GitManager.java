@@ -1,10 +1,7 @@
 package com.english.manager;
 
 import com.english.util.SpringUtil;
-import org.eclipse.jgit.api.CommitCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PushCommand;
-import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -76,21 +73,24 @@ public class GitManager {
             /* Git Add */
             modifiedFiles.forEach(v -> {
                 try {
-                    git.add().addFilepattern(v).call();
+                    AddCommand addCommand = git.add();
+                    addCommand.addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
                 }
             });
             missingFiles.forEach(v -> {
                 try {
-                    git.rm().addFilepattern(v).call();
+                    RmCommand rmCommand = git.rm();
+                    rmCommand.addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
                 }
             });
             untrackedFiles.forEach(v -> {
                 try {
-                    git.add().addFilepattern(v).call();
+                    AddCommand addCommand = git.add();
+                    addCommand.addFilepattern(v).call();
                 } catch (GitAPIException e) {
                     throw new RuntimeException(e);
                 }
@@ -100,7 +100,7 @@ public class GitManager {
             CommitCommand commitCommand = git.commit();
             commitCommand.setMessage("Commit Message").call();
             commitCommand.setCommitter(new PersonIdent("Your Name", "your.email@example.com"));
-            commitCommand.setSign(true);
+            commitCommand.call();
 
             /* Git Push */
             PushCommand pushCommand = git.push();
