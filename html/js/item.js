@@ -8,7 +8,7 @@ const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
 const listPlayer = document.getElementById("listPlayer");
 const playBtn = document.getElementById("playBtn");
-var colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
+var colors = [];
 var playAudioSources = [];
 var playAudioSourcesCurrentIndex = 0;
 var playIsPlaying = false;
@@ -118,9 +118,6 @@ function initUI(en, cn) {
         liElement.textContent = word.cn;
         ulElementCn.appendChild(liElement);
     });
-}
-function nextPromp() {
-    confirm("Congratulations! Whether to show explanation?");
 }
 function shuffleArray(originArray) {
     const array = originArray.slice();

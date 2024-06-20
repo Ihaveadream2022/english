@@ -9,6 +9,7 @@ p,
 li {
     padding: 0;
     margin: 0;
+    list-style-type: none;
 }
 html,
 body {
@@ -162,6 +163,16 @@ body {
 #panel #play-panel .item {
     background: rgb(42, 135, 14);
 }
+#panel #tips-panel {
+    box-sizing: border-box;
+    flex: 1;
+    background: rgb(64, 158, 255);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    font-size: 9px;
+}
 #canvas {
     display: none;
     cursor: crosshair;
@@ -202,4 +213,71 @@ body {
     color: #fff;
     font-weight: 900;
     background: rgb(88, 204, 2);
+}
+
+#example {
+    box-sizing: border-box;
+    height: 92%;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+#example-ul {
+    height: 100%;
+    /* display: flex; */
+    /* flex-direction: column;
+    justify-content: space-around;
+    align-items: center; */
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#example-ul li.item {
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start; */
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 4px solid #333;
+}
+#example-ul .item .option,
+#example-ul .item .sentence {
+    width: 100%;
+    box-sizing: border-box;
+}
+#example-ul .item .sentence {
+    border-bottom: 1px solid;
+    font-size: 12px;
+    padding: 6px;
+    line-height: 20px;
+}
+#example-ul .item .sentence .missing {
+    color: #409eff;
+}
+#example-ul .item .option {
+    /* flex: 1; */
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center; */
+}
+#example-ul .option-ul {
+    /* flex: 1; */
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    /* align-items: center; */
+}
+#example-ul .option-ul li {
+    flex: 1;
+    /* height: 100%; */
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    font-size: 10px;
+    box-sizing: border-box;
+    padding: 5px 2px;
 }

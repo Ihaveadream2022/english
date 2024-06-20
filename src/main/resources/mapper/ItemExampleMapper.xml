@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.ItemExampleMapper">
+	<resultMap type="ItemExample" id="ItemExampleMapper">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="key" column="key" />
+		<result property="example" column="example" />
+		<association property="item" javaType="Item" resultMap="ItemMapper" />
+	</resultMap>
+	<resultMap type="Item" id="ItemMapper">
+		<result property="noun" column="i_noun" />
+		<result property="verb" column="i_verb" />
+		<result property="adjective" column="i_adjective" />
+		<result property="adverb" column="i_adverb" />
+		<result property="conjunction" column="i_conjunction" />
+		<result property="pronoun" column="i_pronoun" />
+		<result property="preposition" column="i_preposition" />
+	</resultMap>
+	<!-- Select -->
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(id) AS `total` FROM `item_example`
+	</select>
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="ItemExampleMapper">
+		SELECT
+		`item_example`.`id`,
+		`item_example`.`name`,
+		`item_example`.`key`,
+		`item_example`.`example`,
+		`item`.`noun` AS `i_noun`,
+		`item`.`verb` AS `i_verb`,
+		`item`.`adjective` AS `i_adjective`,
+		`item`.`adverb` AS `i_adverb`,
+		`item`.`conjunction` AS `i_conjunction`,
+		`item`.`pronoun` AS `i_pronoun`,
+		`item`.`preposition` AS `i_preposition` FROM `item_example` INNER JOIN `item` ON `item`.`name` = `item_example`.`name` ORDER BY `item_example`.`id` DESC
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset},#{pageSize}
+			</if>
+		</if>
+	</select>
+	<!-- Select -->
+	<!-- Batch Delete -->
+	<delete id="batchDelete" parameterType="String">
+		DELETE FROM `item_example` WHERE `name` = #{name}
+	</delete>
+	<!-- Batch Delete -->
+	<!-- Batch Insert -->
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `item_example` (`name`,`key`,`example`) VALUES
+		<foreach item="itemExample" collection="itemExampleList" open="" separator="," close="">
+			(#{itemExample.name},#{itemExample.key},#{itemExample.example})
+		</foreach>
+	</insert>
+	<!-- Batch Insert -->
+</mapper>

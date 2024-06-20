@@ -106,7 +106,7 @@ public class ItemController {
             Map<String, Object> data = itemService.pageList(queryCondition);
             List<Item> list = (List<Item>) data.get("list");
             if (list.size() > 0) {
-                itemService.generateJSONFile(list, page);
+                itemService.writeJSONFile(list, page);
             }
             page++;
             continueFlag = list.size() > 0;

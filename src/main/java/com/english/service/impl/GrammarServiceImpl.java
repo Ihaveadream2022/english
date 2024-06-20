@@ -31,8 +31,6 @@ public class GrammarServiceImpl implements GrammarService {
     GrammarMapper grammarMapper;
 
     public HashMap<String, Object> pageList(QueryCondition queryCondition) {
-
-        Integer a = queryCondition.getOffset();
         HashMap<String, Object> data = new HashMap<>();
 
         List<Grammar> list = grammarMapper.selectLimited(queryCondition);

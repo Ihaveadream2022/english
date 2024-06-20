@@ -130,7 +130,6 @@ export const itemEdit = (data) =>
         url: segments.urlAss + "/items/" + data.id,
         data: data,
     });
-
 export const itemDelete = (data) =>
     requestBase.request({
         method: "delete",
@@ -140,6 +139,19 @@ export const itemGenerate = () =>
     requestBase.request({
         method: "get",
         url: segments.urlAss + "/items/generate",
+    });
+
+// Item Example
+export const itemExampleEdit = (data) =>
+    requestBase.request({
+        method: "post",
+        url: segments.urlAss + "/item-examples",
+        data: data,
+    });
+export const itemExampleGenerate = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/item-examples/generate",
     });
 
 // Grammar

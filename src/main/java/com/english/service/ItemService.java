@@ -24,5 +24,5 @@ public interface ItemService
 
     public Long batchDelete(DeleteRequestBody deleteRequestBody);
 
-    public void generateJSONFile(List<Item> itemList, Integer index);
+    public void writeJSONFile(List<Item> itemList, Integer index);
 }

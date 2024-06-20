@@ -19,6 +19,8 @@ public class StringUtil {
         content = content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"); // abcdef
         content = content.replace("【", "<span class=\"main-point\">【");
         content = content.replace("】", "】</span>");
+        content = content.replace("[", "<span class=\"missing\">[");
+        content = content.replace("]", "]</span>");
         content = content + "</p>";
 
         return content;

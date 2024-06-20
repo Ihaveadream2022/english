@@ -25,7 +25,10 @@
                         <el-button type="primary" @click="editDialogOpen">Create</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="itemGenerate">Generate All Json</el-button>
+                        <el-button type="primary" @click="itemGenerate">Generate Item JSON Files</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="itemExampleGenerate">Generate Item Example JSON Files</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="speechPlayHandle">{{ speech.text }}</el-button>
@@ -147,11 +150,11 @@
                     {{ dataExampleDialog.form.conjunction ? dataExampleDialog.form.conjunction : "无" }}
                 </el-descriptions-item>
                 <el-descriptions-item label="示例">
-                    <div v-for="(example, index) in dataExampleDialog.examplesArray" :key="index" class="example-item">
-                        <div v-for="(value, key) in example" :key="key" class="example-item-inner">
-                            <el-divider content-position="left">{{ key }}</el-divider>
-                            <el-button type="danger" @click="exampleDelete(key)" icon="el-icon-delete" size="mini"></el-button>
-                            <el-input placeholder="" type="textarea" :value="value" maxlength="1024"></el-input>
+                    <div v-for="example in dataExampleDialog.form.examples" :key="example.id" class="example-item">
+                        <div class="example-item-inner">
+                            <el-divider content-position="left">{{ example.key }}</el-divider>
+                            <el-button type="danger" @click="exampleDelete(example)" icon="el-icon-delete" size="mini"></el-button>
+                            <el-input placeholder="" type="textarea" :value="example.example" maxlength="1024"></el-input>
                         </div>
                     </div>
                 </el-descriptions-item>
@@ -172,7 +175,7 @@
 </template>
 <script>
     /* eslint-disable */
-    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, ttsGenerate } from "@/api/request";
+    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, itemExampleGenerate, itemExampleEdit, ttsGenerate } from "@/api/request";
     import { Message } from "element-ui";
     export default {
         data() {
@@ -234,7 +237,6 @@
                     },
                     exampleKey: "",
                     exampleContent: "",
-                    examplesArray: [],
                 },
             };
         },
@@ -259,10 +261,10 @@
             exampleEditDialogClose() {
                 this.$nextTick(() => {
                     this.dataExampleDialog.form = {};
+                    this.dataExampleDialog.title = "Create Example";
                     this.dataExampleDialog.exampleKey = "";
                     this.dataExampleDialog.exampleContent = "";
-                    this.dataExampleDialog.examplesArray = [];
-                    this.dataExampleDialog.title = "Create Example";
+                    this.tableGetList(this.table.searchForm);
                 });
             },
             // 编辑窗口: 打开. 通用设置
@@ -316,8 +318,31 @@
                     },
                 );
             },
+            itemExampleGenerate() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: "Loading...",
+                });
+                itemExampleGenerate().then(
+                    (res) => {
+                        loading.close();
+                        this.$message({
+                            message: "success",
+                            type: "success",
+                        });
+                    },
+                    (res) => {
+                        loading.close();
+                        this.$message({
+                            message: "success",
+                            type: "success",
+                        });
+                    },
+                );
+            },
             // 编辑窗口: 编辑. 同时触发editDialogOpen()
             editDialogEdit(row) {
+                console.log(row, "row:");
                 this.editDialog.title = "Edit Item";
                 this.editDialog.visible = true;
                 this.editDialog.operation = "edit";
@@ -327,9 +352,6 @@
                 this.dataExampleDialog.title = "Edit Examples";
                 this.dataExampleDialog.visible = true;
                 this.dataExampleDialog.form = row;
-                this.dataExampleDialog.examplesArray = JSON.parse(row.examples) ? JSON.parse(row.examples) : [];
-
-                console.log(this.dataExampleDialog);
             },
             editDialogDelete(row) {},
             editDialogSave() {
@@ -414,8 +436,7 @@
                     lock: true,
                     text: "Loading...",
                 });
-                this.dataExampleDialog.form.examples = JSON.stringify(this.dataExampleDialog.examplesArray);
-                itemEdit(this.dataExampleDialog.form)
+                itemExampleEdit({ name: this.dataExampleDialog.form.name, examples: this.dataExampleDialog.form.examples })
                     .then(
                         (res) => {
                             Message({
@@ -424,7 +445,6 @@
                                 duration: 800,
                                 onClose: () => {
                                     loading.close();
-                                    this.dataExampleDialog.examplesArray = [];
                                     this.dataExampleDialog.visible = false;
                                     this.tableGetList(this.table.searchForm);
                                 },
@@ -692,24 +712,22 @@
                 this.tableSearch();
             },
             appendExamples() {
-                console.log(this.dataExampleDialog.exampleKey);
-                console.log(this.dataExampleDialog.exampleContent);
                 let obj = {};
-                obj[this.dataExampleDialog.exampleKey] = this.dataExampleDialog.exampleContent;
-                console.log(obj);
-
-                this.dataExampleDialog.examplesArray.unshift(obj);
-
-                console.log(this.dataExampleDialog.examplesArray);
+                obj["name"] = this.dataExampleDialog.form.name;
+                obj["key"] = this.dataExampleDialog.exampleKey;
+                obj["example"] = this.dataExampleDialog.exampleContent;
+                this.dataExampleDialog.form.examples.unshift(obj);
+                console.log(this.dataExampleDialog.form);
             },
-            exampleDelete(key) {
-                this.dataExampleDialog.examplesArray = this.dataExampleDialog.examplesArray.filter((v, k, a) => {
-                    if (v.hasOwnProperty(key)) {
+            exampleDelete(example) {
+                this.dataExampleDialog.form.examples = this.dataExampleDialog.form.examples.filter((v, k, a) => {
+                    if (v.id == example.id) {
                         return false;
                     } else {
                         return true;
                     }
                 });
+                console.log(this.dataExampleDialog.form);
             },
         },
     };

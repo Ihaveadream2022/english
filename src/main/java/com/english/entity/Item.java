@@ -1,89 +1,67 @@
 package com.english.entity;
 
+import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 public class Item {
 
     private Long id;
 
-    /**
-     * 0-default
-     * 1-country
-     * 2-abbreviation
-     * 3-celebrity
-     * 4-basketball
-     * 5-political
-     * 6-shape
-     * 7-geography
-     * 8-military
-     * 9-animals
-     * 10-food
-     * 11-plants
-     * 12-color
-     * 13-disease
-     * 14-symbol
-     * 15-celebrity
-     * 16-fruit
-     * 17-tool
-     * 18-brand
-     * 19-condiment
-     */
     private Short category;
 
     @NotBlank(message = "name is required")
-    @Size(min = 0, max = 64, message = "name length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "name length is between 1 and 64")
     private String name;
 
-    @Size(min = 0, max = 64, message = "pronounce length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "pronounce length is between 1 and 64")
     private String pronounce;
 
-    @Size(min = 0, max = 64, message = "common length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "common length is between 1 and 64")
     private String common;
 
-    @Size(min = 0, max = 1024, message = "noun length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "noun length is between 1 and 1024")
     private String noun;
 
-    @Size(min = 0, max = 64, message = "nounPlural length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "nounPlural length is between 1 and 64")
     private String nounPlural;
 
-    @Size(min = 0, max = 1024, message = "verb length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "verb length is between 1 and 1024")
     private String verb;
 
-    @Size(min = 0, max = 64, message = "verbPastTense length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "verbPastTense length is between 1 and 64")
     private String verbPastTense;
 
-    @Size(min = 0, max = 64, message = "verbPastParticiple length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "verbPastParticiple length is between 1 and 64")
     private String verbPastParticiple;
 
-    @Size(min = 0, max = 64, message = "verbPresentParticiple length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "verbPresentParticiple length is between 1 and 64")
     private String verbPresentParticiple;
 
-    @Size(min = 0, max = 64, message = "verbThirdPersonSingular length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "verbThirdPersonSingular length is between 1 and 64")
     private String verbThirdPersonSingular;
 
-    @Size(min = 0, max = 1024, message = "adjective length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "adjective length is between 1 and 1024")
     private String adjective;
 
-    @Size(min = 0, max = 1024, message = "adverb length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "adverb length is between 1 and 1024")
     private String adverb;
 
-    @Size(min = 0, max = 1024, message = "conjunction length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "conjunction length is between 1 and 1024")
     private String conjunction;
 
-    @Size(min = 0, max = 1024, message = "pronoun length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "pronoun length is between 1 and 1024")
     private String pronoun;
 
-    @Size(min = 0, max = 1024, message = "preposition length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "preposition length is between 1 and 1024")
     private String preposition;
 
-    @Size(min = 0, max = 1024, message = "comment length is between 0 and 1024")
+    @Length(min = 1, max = 1024, message = "comment length is between 1 and 1024")
     private String comment;
 
-    @Size(min = 0, max = 1024, message = "examples length is between 0 and 1024")
-    private String examples;
-
     private ItemTts tts;
+
+    private List<ItemExample> examples;
 
     public Long getId() {
         return id;
@@ -189,8 +167,7 @@ public class Item {
         return verbPresentParticiple;
     }
 
-    public void setVerbPresentParticiple(String verbPresentParticiple)
-    {
+    public void setVerbPresentParticiple(String verbPresentParticiple) {
         this.verbPresentParticiple = verbPresentParticiple;
     }
 
@@ -199,8 +176,7 @@ public class Item {
         return verbThirdPersonSingular;
     }
 
-    public void setVerbThirdPersonSingular(String verbThirdPersonSingular)
-    {
+    public void setVerbThirdPersonSingular(String verbThirdPersonSingular) {
         this.verbThirdPersonSingular = verbThirdPersonSingular;
     }
 
@@ -270,13 +246,11 @@ public class Item {
         this.tts = tts;
     }
 
-    public String getExamples()
-    {
+    public List<ItemExample> getExamples() {
         return examples;
     }
 
-    public void setExamples(String examples)
-    {
+    public void setExamples(List<ItemExample> examples) {
         this.examples = examples;
     }
 }

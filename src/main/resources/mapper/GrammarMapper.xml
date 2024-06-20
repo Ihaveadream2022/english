@@ -49,13 +49,13 @@
 	<!-- Insert -->
 	<!-- Update -->
 	<update id="update" parameterType="Grammar">
-		update `grammar`
+		UPDATE `grammar`
 		<set>
 			<if test="name != null and name != ''">,`name` = #{name}</if>
 			<if test="sort != null and sort >=0">,`sort` = #{sort}</if>
 			<if test="content != null">,`content` = #{content}</if>
 		</set>
-		where `id` = #{id}
+		WHERE `id` = #{id}
 	</update>
 	<!-- Update -->
 	<!-- Delete -->

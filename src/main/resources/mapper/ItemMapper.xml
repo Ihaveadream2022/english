@@ -20,13 +20,18 @@
 		<result property="pronoun" column="pronoun" />
 		<result property="preposition" column="preposition" />
 		<result property="comment" column="comment" />
-		<result property="examples" column="examples" />
 		<association property="tts" javaType="ItemTts" resultMap="ItemTtsMapper" />
+		<collection property="examples" ofType="ItemExample">
+			<result property="id" column="ie_id" />
+			<result property="name" column="ie_name" />
+			<result property="key" column="ie_key" />
+			<result property="example" column="ie_example" />
+		</collection>
 	</resultMap>
 	<resultMap type="ItemTts" id="ItemTtsMapper">
-		<result property="id" column="item_tts_id" />
-		<result property="name" column="item_tts_name" />
-		<result property="speech" column="item_tts_speech" />
+		<result property="id" column="it_id" />
+		<result property="name" column="it_name" />
+		<result property="speech" column="it_speech" />
 	</resultMap>
 	<!-- Select -->
 	<sql id="selectWhere">
@@ -43,7 +48,6 @@
 				`item`.`comment` LIKE concat('%', #{keyword}, '%')
 				)
 			</if>
-			<if test="category != null and category != ''">AND `item`.`category` = #{category}</if>
 		</trim>
 	</sql>
 	<select id="count" parameterType="QueryCondition" >
@@ -52,10 +56,17 @@
 	<select id="selectLimited" parameterType="QueryCondition" resultMap="ItemMapper">
 		SELECT
 		    `item`.*,
-			`item_tts`.`id` AS `item_tts_id`,
-		    `item_tts`.`name` AS `item_tts_name`,
-		    `item_tts`.`speech` AS `item_tts_speech`
-		FROM `item` LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name` <include refid="selectWhere" /> ORDER BY `item`.`id` DESC
+			`item_tts`.`id` AS `it_id`,
+		    `item_tts`.`name` AS `it_name`,
+		    `item_tts`.`speech` AS `it_speech`,
+			`item_example`.`id` AS `ie_id`,
+			`item_example`.`name` AS `ie_name`,
+			`item_example`.`key` AS `ie_key`,
+			`item_example`.`example` AS `ie_example`
+		FROM `item`
+		    LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
+			LEFT JOIN `item_example` ON `item_example`.`name` = `item`.`name`
+			<include refid="selectWhere" /> ORDER BY `item`.`id` DESC,`item_example`.`id` DESC
 		<if test="pageSize != null and pageSize > 0">
 			<if test="offset != null and offset >= 0">
 				LIMIT #{offset},#{pageSize}
@@ -112,7 +123,7 @@
 	<!-- Insert -->
 	<!-- Update -->
 	<update id="update" parameterType="Item">
-		update `item`
+		UPDATE `item`
 		<set>
 			<if test="name != null and name != ''">,`name` = #{name}</if>
 			<if test="category != null and category >=0">,`category` = #{category}</if>
@@ -131,9 +142,8 @@
 			<if test="pronoun != null">,`pronoun` = #{pronoun}</if>
 			<if test="preposition != null">,`preposition` = #{preposition}</if>
 			<if test="comment != null">,`comment` = #{comment}</if>
-			<if test="examples != null">,`examples` = #{examples}</if>
 		</set>
-		where `id` = #{id}
+		WHERE `id` = #{id}
 	</update>
 	<!-- Update -->
 	<!-- Delete -->

@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void generateJSONFile(List<Item> itemList, Integer index) {
+    public void writeJSONFile(List<Item> itemList, Integer index) {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
