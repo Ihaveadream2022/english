@@ -3,7 +3,7 @@ if (window.location.host.includes("github")) {
 } else {
     var domainPrefix = "";
 }
-const exampleUl = document.getElementById("example-ul");
+const scrollElm = document.getElementById("scroll");
 const tipsElem = document.getElementById("tips");
 var colors = [];
 document.addEventListener("DOMContentLoaded", function () {
@@ -53,18 +53,59 @@ function fetchData(page) {
             return response.json();
         })
         .then((data) => {
-            const exampleArr = shuffleArray(data);
-            initUI(exampleArr);
-            var opionLis = $(".option-ul li");
-            opionLis.click(function () {
-                const key = $(this).parents(".item").data("key");
-                const value = $(this).text();
-                const wholeText = $(this).data("text");
-                tipsElem.textContent = wholeText;
-                console.log(key);
-                console.log(value);
-                if (key == value) {
-                    $(this).css({ background: "#000", "font-weight": "900", color: "#fff" });
+            colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
+            initUI(data);
+            var opionSpans = $(".option-span");
+            opionSpans.click(function () {
+                var thisValue = $(this).data("text");
+                var sentenceItemActive = $(".sentence-item.active");
+                var sentenceItemActiveValue = sentenceItemActive.data("text");
+                tipsElem.textContent = thisValue;
+                $(".option-span").removeClass("active");
+                $(this).addClass("active");
+                if (sentenceItemActiveValue !== undefined) {
+                    if (sentenceItemActiveValue == thisValue) {
+                        console.log("BINGO");
+                        if ($(this).hasClass("matched")) {
+                            var backgroundColor = $(this).css("background-color");
+                            sentenceItemActive.css({ background: backgroundColor, "font-weight": "900", color: "#fff" });
+                            sentenceItemActive.addClass("matched");
+                        } else {
+                            const randomIndex = Math.floor(Math.random() * colors.length);
+                            const randomColor = colors.splice(randomIndex, 1)[0];
+                            $(this).css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                            $(this).addClass("matched");
+                            sentenceItemActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                            sentenceItemActive.addClass("matched");
+                        }
+                    }
+                }
+            });
+            var sentenceItem = $(".sentence-item");
+            sentenceItem.click(function () {
+                if (!$(this).hasClass("matched")) {
+                    $(".sentence-item").removeClass("active");
+                    $(this).addClass("active");
+                    var optionSpanActive = $(".option-span.active");
+                    var optionSpanActiveValue = optionSpanActive.data("text");
+                    if (optionSpanActiveValue !== undefined) {
+                        var thisValue = $(this).data("text");
+                        if (optionSpanActiveValue == thisValue) {
+                            console.log("BINGO");
+                            if (optionSpanActive.hasClass("matched")) {
+                                var backgroundColor = optionSpanActive.css("background-color");
+                                $(this).css({ background: backgroundColor, "font-weight": "900", color: "#fff" });
+                                $(this).addClass("matched");
+                            } else {
+                                const randomIndex = Math.floor(Math.random() * colors.length);
+                                const randomColor = colors.splice(randomIndex, 1)[0];
+                                $(this).css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                                $(this).addClass("matched");
+                                optionSpanActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                                optionSpanActive.addClass("matched");
+                            }
+                        }
+                    }
                 }
             });
         })
@@ -73,42 +114,54 @@ function fetchData(page) {
         });
 }
 function initUI(data) {
-    exampleUl.innerHTML = "";
-    for (var i = 0; i < data.length; i++) {
-        const sentenceDiv = document.createElement("div");
-        sentenceDiv.setAttribute("class", "sentence");
-        sentenceDiv.innerHTML = data[i].example;
+    scrollElm.innerHTML = "";
 
-        const optionDiv = document.createElement("div");
-        optionDiv.setAttribute("class", "option");
-        for (var j = 0; j < data[i].meaning.length; j++) {
-            const optionUl = document.createElement("ul");
-            optionUl.setAttribute("class", "option-ul");
-            var colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
-            for (var k = 0; k < data[i].meaning[j].length; k++) {
-                const randomIndex = Math.floor(Math.random() * colors.length);
-                const randomColor = colors.splice(randomIndex, 1)[0];
+    const nameDiv = document.createElement("div");
+    nameDiv.setAttribute("class", "name");
+    nameDiv.textContent = data.name;
+    scrollElm.appendChild(nameDiv);
+
+    const optionDiv = document.createElement("div");
+    optionDiv.setAttribute("class", "option");
+    for (var i = 0; i < data.meanings.length; i++) {
+        const optionUl = document.createElement("ul");
+        optionUl.setAttribute("class", "option-ul");
+        var optionLiEmpty;
+        for (var k = 0; k < data.meanings[i].length; k++) {
+            if (k === 0) {
                 const optionLi = document.createElement("li");
-                optionLi.style.backgroundColor = randomColor;
-                if (k === 0) {
-                    optionLi.style.backgroundColor = "#fff";
-                    optionLi.style.fontWeight = "900";
-                }
-                optionLi.textContent = data[i].meaning[j][k].substr(0, 8);
-                optionLi.setAttribute("data-text", data[i].meaning[j][k]);
+                optionLi.setAttribute("class", "option-li type");
+                optionLi.textContent = data.meanings[i][k];
                 optionUl.appendChild(optionLi);
+            } else {
+                if (k % 2 == 1) {
+                    optionLiEmpty = document.createElement("li");
+                    optionLiEmpty.setAttribute("class", "option-li");
+                }
+                const optionSpan = document.createElement("span");
+                optionSpan.setAttribute("class", "option-span");
+                optionSpan.setAttribute("data-text", data.meanings[i][0] + "-" + data.meanings[i][k]);
+                optionSpan.textContent = data.meanings[i][k].substr(0, 8);
+                optionLiEmpty.appendChild(optionSpan);
+                if (k % 2 == 0) {
+                    optionUl.appendChild(optionLiEmpty);
+                }
             }
-            optionDiv.appendChild(optionUl);
         }
-
-        const itemLi = document.createElement("li");
-        itemLi.setAttribute("class", "item");
-        itemLi.setAttribute("data-key", data[i].key);
-        itemLi.appendChild(sentenceDiv);
-        itemLi.appendChild(optionDiv);
-
-        exampleUl.appendChild(itemLi);
+        optionDiv.appendChild(optionUl);
     }
+    scrollElm.appendChild(optionDiv);
+
+    const sentenceDiv = document.createElement("div");
+    sentenceDiv.setAttribute("class", "sentence");
+    for (var i = 0; i < data.examples.length; i++) {
+        const sentenceItemDiv = document.createElement("div");
+        sentenceItemDiv.setAttribute("class", "sentence-item");
+        sentenceItemDiv.setAttribute("data-text", data.examples[i].key);
+        sentenceItemDiv.innerHTML = data.examples[i].example;
+        sentenceDiv.appendChild(sentenceItemDiv);
+    }
+    scrollElm.appendChild(sentenceDiv);
 }
 function shuffleArray(originArray) {
     const array = originArray.slice();

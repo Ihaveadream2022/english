@@ -1,16 +1,16 @@
 package com.english.model;
 
+import com.english.entity.ItemExample;
+
 import java.util.List;
 
 public class ItemExampleHtml {
 
     private String name;
 
-    private String example;
+    private List<String[]> meanings;
 
-    private String key;
-
-    private List<String[]> meaning;
+    private List<ItemExample> examples;
 
     public String getName() {
         return name;
@@ -20,27 +20,19 @@ public class ItemExampleHtml {
         this.name = name;
     }
 
-    public String getExample() {
-        return example;
+    public List<String[]> getMeanings() {
+        return meanings;
     }
 
-    public void setExample(String example) {
-        this.example = example;
+    public void setMeanings(List<String[]> meanings) {
+        this.meanings = meanings;
     }
 
-    public String getKey() {
-        return key;
+    public List<ItemExample> getExamples() {
+        return examples;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public List<String[]> getMeaning() {
-        return meaning;
-    }
-
-    public void setMeaning(List<String[]> meaning) {
-        this.meaning = meaning;
+    public void setExamples(List<ItemExample> examples) {
+        this.examples = examples;
     }
 }

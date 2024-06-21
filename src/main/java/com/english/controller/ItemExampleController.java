@@ -7,6 +7,7 @@ import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.model.request.UpdateItemExampleBody;
 import com.english.service.impl.ItemExampleServiceImpl;
+import com.english.service.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,9 @@ import java.util.Map;
 @RequestMapping("/item-examples")
 public class ItemExampleController {
 
+    @Autowired
+    ItemServiceImpl itemService;
+    
     @Autowired
     ItemExampleServiceImpl itemExampleService;
 
@@ -31,17 +35,23 @@ public class ItemExampleController {
     @GetMapping("/generate")
     @SuppressWarnings("unchecked")
     public void generate() {
+        int index = 1;
         Integer page = 1;
-        Integer pageSize = 5;
+        Integer pageSize = 10;
         boolean continueFlag = false;
         QueryCondition queryCondition = new ItemQueryCondition();
         do {
             queryCondition.setPageNo(page);
             queryCondition.setPageSize(pageSize);
-            Map<String, Object> data = itemExampleService.pageList(queryCondition);
-            List<ItemExample> list = (List<ItemExample>) data.get("list");
+            Map<String, Object> data = itemService.pageList(queryCondition);
+            List<Item> list = (List<Item>) data.get("list");
             if (list.size() > 0) {
-                itemExampleService.writeJSONFile(list, page);
+                for (Item item : list) {
+                    if (item.getExamples().size() > 0) {
+                        itemExampleService.writeJSONFile(item, index);
+                        index++;
+                    }
+                }
             }
             page++;
             continueFlag = list.size() > 0;
