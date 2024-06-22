@@ -90,13 +90,13 @@ public class ItemExampleServiceImpl implements ItemExampleService {
     public List<String[]> splitMeaning(Item item) {
         List<String[]> result = new ArrayList<>();
         List<String> pending = new ArrayList<>();
-        if (item.getNoun() != null) pending.add(item.getNoun().replace("n.","名词n.;"));
-        if (item.getVerb() != null) pending.add(item.getVerb().replace("v.","动词v.;"));
-        if (item.getAdjective() != null) pending.add(item.getAdjective().replace("adj.","形容词adj.;"));
-        if (item.getAdverb() != null) pending.add(item.getAdverb().replace("adv.","副词adv.;"));
-        if (item.getConjunction() != null) pending.add(item.getConjunction().replace("conj.","连词conj.;"));
-        if (item.getPreposition() != null) pending.add(item.getPreposition().replace("prep.","介词prep.;"));
-        if (item.getPronoun() != null) pending.add(item.getPronoun().replace("pron.","代词pron.;"));
+        if (item.getNoun() != null) pending.add(item.getNoun().replace("n.","n.;"));
+        if (item.getVerb() != null) pending.add(item.getVerb().replace("v.","v.;"));
+        if (item.getAdjective() != null) pending.add(item.getAdjective().replace("adj.","adj.;"));
+        if (item.getAdverb() != null) pending.add(item.getAdverb().replace("adv.","adv.;"));
+        if (item.getConjunction() != null) pending.add(item.getConjunction().replace("conj.","conj.;"));
+        if (item.getPreposition() != null) pending.add(item.getPreposition().replace("prep.","prep.;"));
+        if (item.getPronoun() != null) pending.add(item.getPronoun().replace("pron.","pron.;"));
         for (String str: pending) {
             result.add(str.split(";"));
         }

@@ -720,8 +720,9 @@
                 console.log(this.dataExampleDialog.form);
             },
             exampleDelete(example) {
+                console.log(example);
                 this.dataExampleDialog.form.examples = this.dataExampleDialog.form.examples.filter((v, k, a) => {
-                    if (v.id == example.id) {
+                    if (v.key == example.key) {
                         return false;
                     } else {
                         return true;

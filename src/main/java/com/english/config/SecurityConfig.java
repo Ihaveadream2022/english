@@ -71,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 过滤请求
             .authorizeRequests()
             // 允许匿名访问的URL
-            .antMatchers("/login", "/captcha").permitAll()
+            .antMatchers("/login", "/captcha", "/open/**").permitAll()
             // 允许匿名访问的静态资源URL
             .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
             // 其他所有请求全部需要鉴权认证

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -20,25 +21,76 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.TimeZone;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.lang.Runnable;
 
 
 @RequestMapping("/open")
 @RestController
-public class TestController
-{
-    @GetMapping(value = "/video", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void getAudio(HttpServletResponse response) throws IOException {
+public class TestController {
+
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+
+        // 创建一个二维数组来存储子问题的解
+        int[][] dp = new int[m + 1][n + 1];
+
+        // 填充 dp 表
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        // 返回 LCS 的长度
+        return dp[m][n];
+    }
+
+    @GetMapping("/test")
+    public void getAudio(@RequestParam String a1, @RequestParam String a2) {
 
 
-        String input = Digest.digestMD5("画");
-        String firstFour = input.substring(0, Math.min(input.length(), 4));
-        String lastFour = input.substring(Math.max(input.length() - 4, 0));
-        System.out.println(firstFour + lastFour);
+        List<String> stringList = Arrays.asList("a","b","c","d","e","f","g");
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<ul>");
+
+        for (int i = 0; i < stringList.size() -1; i++) {
+            if (i%2==0) stringBuilder.append("<li>"); // The bottom number is the frequency.
+            stringBuilder.append("<span>").append(stringList.get(i)).append("</span>");
+            if (i%2==1) stringBuilder.append("</li>");
+        }
+
+        stringBuilder.append("</ul>");
+        System.out.println(stringBuilder.toString());
+
+//        String text1 = a1;
+//        String text2 = a2;
+//        System.out.println("Length of LCS: " + longestCommonSubsequence(text1, text2)); // 输出：3
+
+//        String text1 = "abcde";
+//        String text2 = "ace";
+//        System.out.println("Length of LCS: " + longestCommonSubsequence(text1, text2)); // 输出：3
+//
+//        text1 = "abc";
+//        text2 = "abc";
+//        System.out.println("Length of LCS: " + longestCommonSubsequence(text1, text2)); // 输出：3
+//
+//        text1 = "abc";
+//        text2 = "def";
+//        System.out.println("Length of LCS: " + longestCommonSubsequence(text1, text2)); // 输出：0
+
+
+//        String input = Digest.digestMD5("画");
+//        String firstFour = input.substring(0, Math.min(input.length(), 4));
+//        String lastFour = input.substring(Math.max(input.length() - 4, 0));
+//        System.out.println(firstFour + lastFour);
 
 
 //        String downloadFileName = "download2.mp3";
@@ -49,9 +101,9 @@ public class TestController
 
         //FileUtil.writeBytes("abc.mp3", response.getOutputStream());
 
-        FileOutputStream fos = new FileOutputStream("output_file.mp3");
-        String bs = "//MoxAAMyFokAU8QAMsZzk7Lmo3NsLYIecZdAjgKgTBGN6vQxDFY8OA+s/8EAwJAQdLhjIQQBB3BAMCQMc+UDCqzm5aRhADj//MoxAcN+Jp8AZs4AEVxciA04TAgYx+pNsEZ3GUzAMFCIYbGlgARee/dLgMEdDmcgMMdGVHGEgTSpcdu/9HClxe7AGcrRg3H//MoxAoOeSrMAY9AADI/enPvnkVVvNTf9RzFKv6JUcz/Hv2YiSoqLB0LR0HwYLPufLgrgkxv////////0v//Z8UYFg5r0zWh//MoxAsOCPLQAc84APx/rVsyXizKOBeYhihAEi9M/+n9ScIGROt1Xn+c4j2ANun///IcMcT8o44AylX9aABQrf1CydbbRihf//MoxA0OYb7UAGtElA8yrqMg/jLr9S/7P1lDAFNgrHf0Mp////YxPhmA3bb//9GEhPS9HU6VEIEclf1mADqKX4yI79VBlkM5//MoxA4PWcbYAGqKlMSgODhIrTqb/MRvGCwKJ/Wd/3/R2/df6kJpUOiQmaFaz+8h/9gYrALH/LNIRKZECv0CyDSSWb6Y7vyo//MoxAsOop7UAJKKuBtrJkZoD40R0mLf/N/iUNlqYaikR3+rf0/2/kX9woev1I/8v9H/l/36aIPbhvjeqlq7w/cJweEVxUEB//MoxAsNERbQAIoOcMtdf4dhV5XWZEwOnmsiO9fp+dOqyIPSQ1CQ6Ku4a6P6TukFf//+swj66vWgXwANAY1RjUigrqHoYKJu//MoxBEMSIq8AJDETPqJtU0RO/JYhDSyLKv//TX/7fMrX0XUvL9psRsJmQ+LVZJIBBJJJJGBuUMLHaVGfR5y6xC9+F75go50//MoxBoMWCbuXghEAk7WsaKdveu4wN/do/71iSWNXeeui8FTarhYEyhR9g6ysPrFBlU+PRfwHNMP0/Xu08atkvH28n//vy6R//MoxCMK6AbAAADEADzXtCrWCVTQraavHZBXyDEc7jPFIBCp+KWKk6BOUFEJOvNGshJxgABw53V9TqfpPV+SkYEHEDWym/9///MoxDIM0QLMAHpKcPoVdWoG6PVko+G+V3JzX54MlVOTw45iYaUwQKYd57d1+kqKyjmCPWtP/9eXUQJ////p8jABF9A8O5Uz//MoxDkMAQ7cAGmEcMhdZUXJYcCUqOzQoMnzlM9FdEVSVKAAuwsQ7FSz////+t2oc48xFc4qoojWE222stu1wAHmgwscsBZZ//MoxEQNOc7cAFHKlHCJehjluAPUWnwQEY5zSsqv8OOrQTi4PB9nPU6Ub0+WFXiJ9qLqGACqn3GTf9nYxogBlLijwQhpBBG6//MoxEoM8PMuXjlEcuUTPumapxyycon6JjhB10lvsZ1mpcBAINIcEA5BJGm3JOsfgsx1Qdzyv+/SdBo4C1KHvPpujM98zt9z//MoxFEMQP7MAFBMcGqBWxxMH4Gn0i/T6v9wSPmBUnWy222OyWy2gbpiw8AbZSBsZ3tjrnbCTrdnnzJsbOU4TM4YRFGKKiMD//MoxFsMmPsGWGjMchokFJbDeeQsRB3Z+nIzpEiwJAqGQlb//u/6FQEBJBxJRIQAeBxLbLiBiSWUlEsloutaLcqCJCUSBqJo//MoxGMQkLsCX0swAoMl5JGRCjnkWSRyZ+BlJqKkQ01J0UkIJEGRq/ol4spEG+tv9aSkjYmDdlKSqWZGyX/uZLLpa3Lf/4HL//MoxFsXGe6M9Y2QAH1qTZEAf//+YcX///+q8NtciorRQfIHQfOHILQ9KBsaULWoqar+5P//63FqTEFNRTMuOTkuNaqqqqqq//MoxDkKYRmENcFAAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
-        FileUtil.writeBase64ToOutputStream(bs, fos);
+//        FileOutputStream fos = new FileOutputStream("output_file.mp3");
+//        String bs = "//MoxAAMyFokAU8QAMsZzk7Lmo3NsLYIecZdAjgKgTBGN6vQxDFY8OA+s/8EAwJAQdLhjIQQBB3BAMCQMc+UDCqzm5aRhADj//MoxAcN+Jp8AZs4AEVxciA04TAgYx+pNsEZ3GUzAMFCIYbGlgARee/dLgMEdDmcgMMdGVHGEgTSpcdu/9HClxe7AGcrRg3H//MoxAoOeSrMAY9AADI/enPvnkVVvNTf9RzFKv6JUcz/Hv2YiSoqLB0LR0HwYLPufLgrgkxv////////0v//Z8UYFg5r0zWh//MoxAsOCPLQAc84APx/rVsyXizKOBeYhihAEi9M/+n9ScIGROt1Xn+c4j2ANun///IcMcT8o44AylX9aABQrf1CydbbRihf//MoxA0OYb7UAGtElA8yrqMg/jLr9S/7P1lDAFNgrHf0Mp////YxPhmA3bb//9GEhPS9HU6VEIEclf1mADqKX4yI79VBlkM5//MoxA4PWcbYAGqKlMSgODhIrTqb/MRvGCwKJ/Wd/3/R2/df6kJpUOiQmaFaz+8h/9gYrALH/LNIRKZECv0CyDSSWb6Y7vyo//MoxAsOop7UAJKKuBtrJkZoD40R0mLf/N/iUNlqYaikR3+rf0/2/kX9woev1I/8v9H/l/36aIPbhvjeqlq7w/cJweEVxUEB//MoxAsNERbQAIoOcMtdf4dhV5XWZEwOnmsiO9fp+dOqyIPSQ1CQ6Ku4a6P6TukFf//+swj66vWgXwANAY1RjUigrqHoYKJu//MoxBEMSIq8AJDETPqJtU0RO/JYhDSyLKv//TX/7fMrX0XUvL9psRsJmQ+LVZJIBBJJJJGBuUMLHaVGfR5y6xC9+F75go50//MoxBoMWCbuXghEAk7WsaKdveu4wN/do/71iSWNXeeui8FTarhYEyhR9g6ysPrFBlU+PRfwHNMP0/Xu08atkvH28n//vy6R//MoxCMK6AbAAADEADzXtCrWCVTQraavHZBXyDEc7jPFIBCp+KWKk6BOUFEJOvNGshJxgABw53V9TqfpPV+SkYEHEDWym/9///MoxDIM0QLMAHpKcPoVdWoG6PVko+G+V3JzX54MlVOTw45iYaUwQKYd57d1+kqKyjmCPWtP/9eXUQJ////p8jABF9A8O5Uz//MoxDkMAQ7cAGmEcMhdZUXJYcCUqOzQoMnzlM9FdEVSVKAAuwsQ7FSz////+t2oc48xFc4qoojWE222stu1wAHmgwscsBZZ//MoxEQNOc7cAFHKlHCJehjluAPUWnwQEY5zSsqv8OOrQTi4PB9nPU6Ub0+WFXiJ9qLqGACqn3GTf9nYxogBlLijwQhpBBG6//MoxEoM8PMuXjlEcuUTPumapxyycon6JjhB10lvsZ1mpcBAINIcEA5BJGm3JOsfgsx1Qdzyv+/SdBo4C1KHvPpujM98zt9z//MoxFEMQP7MAFBMcGqBWxxMH4Gn0i/T6v9wSPmBUnWy222OyWy2gbpiw8AbZSBsZ3tjrnbCTrdnnzJsbOU4TM4YRFGKKiMD//MoxFsMmPsGWGjMchokFJbDeeQsRB3Z+nIzpEiwJAqGQlb//u/6FQEBJBxJRIQAeBxLbLiBiSWUlEsloutaLcqCJCUSBqJo//MoxGMQkLsCX0swAoMl5JGRCjnkWSRyZ+BlJqKkQ01J0UkIJEGRq/ol4spEG+tv9aSkjYmDdlKSqWZGyX/uZLLpa3Lf/4HL//MoxFsXGe6M9Y2QAH1qTZEAf//+YcX///+q8NtciorRQfIHQfOHILQ9KBsaULWoqar+5P//63FqTEFNRTMuOTkuNaqqqqqq//MoxDkKYRmENcFAAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
+//        FileUtil.writeBase64ToOutputStream(bs, fos);
 
 //        try {
 //            System.out.println(System.getProperty("user.dir"));

@@ -14,49 +14,49 @@ public class Item {
     @Length(min = 1, max = 64, message = "name length is between 1 and 64")
     private String name;
 
-    @Length(min = 1, max = 64, message = "pronounce length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "pronounce length is between 0 and 64")
     private String pronounce;
 
-    @Length(min = 1, max = 64, message = "common length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "common length is between 0 and 64")
     private String common;
 
-    @Length(min = 1, max = 1024, message = "noun length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "noun length is between 0 and 1024")
     private String noun;
 
-    @Length(min = 1, max = 64, message = "nounPlural length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "nounPlural length is between 0 and 64")
     private String nounPlural;
 
-    @Length(min = 1, max = 1024, message = "verb length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "verb length is between 0 and 1024")
     private String verb;
 
-    @Length(min = 1, max = 64, message = "verbPastTense length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "verbPastTense length is between 0 and 64")
     private String verbPastTense;
 
-    @Length(min = 1, max = 64, message = "verbPastParticiple length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "verbPastParticiple length is between 0 and 64")
     private String verbPastParticiple;
 
-    @Length(min = 1, max = 64, message = "verbPresentParticiple length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "verbPresentParticiple length is between 0 and 64")
     private String verbPresentParticiple;
 
-    @Length(min = 1, max = 64, message = "verbThirdPersonSingular length is between 1 and 64")
+    @Length(min = 0, max = 64, message = "verbThirdPersonSingular length is between 0 and 64")
     private String verbThirdPersonSingular;
 
-    @Length(min = 1, max = 1024, message = "adjective length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "adjective length is between 0 and 1024")
     private String adjective;
 
-    @Length(min = 1, max = 1024, message = "adverb length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "adverb length is between 0 and 1024")
     private String adverb;
 
-    @Length(min = 1, max = 1024, message = "conjunction length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "conjunction length is between 0 and 1024")
     private String conjunction;
 
-    @Length(min = 1, max = 1024, message = "pronoun length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "pronoun length is between 0 and 1024")
     private String pronoun;
 
-    @Length(min = 1, max = 1024, message = "preposition length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "preposition length is between 0 and 1024")
     private String preposition;
 
-    @Length(min = 1, max = 1024, message = "comment length is between 1 and 1024")
+    @Length(min = 0, max = 1024, message = "comment length is between 0 and 1024")
     private String comment;
 
     private ItemTts tts;

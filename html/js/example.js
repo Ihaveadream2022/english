@@ -140,11 +140,24 @@ function initUI(data) {
                 }
                 const optionSpan = document.createElement("span");
                 optionSpan.setAttribute("class", "option-span");
-                optionSpan.setAttribute("data-text", data.meanings[i][0] + "-" + data.meanings[i][k]);
+                optionSpan.setAttribute("data-text", data.meanings[i][0] + data.meanings[i][k]);
                 optionSpan.textContent = data.meanings[i][k].substr(0, 8);
                 optionLiEmpty.appendChild(optionSpan);
                 if (k % 2 == 0) {
                     optionUl.appendChild(optionLiEmpty);
+                }
+                if (k == data.meanings[i].length - 1) {
+                    console.log(data.meanings[i][k]);
+                    console.log(data.meanings[i].length);
+                    console.log((data.meanings[i].length - 1) % 2);
+                    if ((data.meanings[i].length - 1) % 2 != 0) {
+                        const optionSpanEmpty = document.createElement("span");
+                        optionSpanEmpty.setAttribute("class", "option-span");
+                        optionSpanEmpty.setAttribute("data-text", "nothing");
+                        optionSpanEmpty.innerHTML = "&nbsp;";
+                        optionLiEmpty.appendChild(optionSpanEmpty);
+                        optionUl.appendChild(optionLiEmpty);
+                    }
                 }
             }
         }
