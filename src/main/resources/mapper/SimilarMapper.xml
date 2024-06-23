@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.english.mapper.SimilarMapper">
+	<resultMap type="Similar" id="SimilarMapper">
+		<id property="id" column="id" />
+		<result property="itemIds" column="item_ids" />
+	</resultMap>
+	<!-- Select -->
+	<select id="count" parameterType="QueryCondition" >
+		SELECT count(id) AS `total` FROM `similar`
+	</select>
+	<select id="selectLimited" parameterType="QueryCondition" resultMap="SimilarMapper">
+		SELECT `similar`.`id`,`similar`.`item_ids`,`item`.`name`,`item`.`common`
+		FROM `similar` LEFT JOIN `item` ON FIND_IN_SET(`item`.`id`,`similar`.`item_ids`)
+		ORDER BY `similar`.`id` DESC
+		<if test="pageSize != null and pageSize > 0">
+			<if test="offset != null and offset >= 0">
+				LIMIT #{offset},#{pageSize}
+			</if>
+		</if>
+	</select>
+	<select id="findByItemIds" parameterType="String" resultMap="SimilarMapper">
+		SELECT * FROM `similar` WHERE `item_ids` = #{itemIds} LIMIT 1
+	</select>
+	<!-- Select -->
+	<!-- Insert -->
+	<insert id="insert" parameterType="Similar" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `similar`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">`item_ids`</trim>
+		    VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">#{itemIds}</trim>
+	</insert>
+	<!-- Insert -->
+	<!-- Update -->
+	<update id="update" parameterType="Similar">
+		UPDATE `similar`
+		<set>
+			<if test="itemIds != null and itemIds != ''">`item_ids` = #{itemIds}</if>
+		</set>
+		WHERE `id` = #{id}
+	</update>
+	<!-- Update -->
+	<!-- Delete -->
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `similar` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
+	</delete>
+	<delete id="batchDelete" parameterType="DeleteRequestBody">
+		DELETE FROM `similar`
+		<if test="ids != null and ids.length > 0">
+			WHERE `id` IN
+			<foreach item="id" collection="ids" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</delete>
+	<!-- Delete -->
+</mapper>
