@@ -1,18 +1,27 @@
 package com.english.service.impl;
 
 import com.english.entity.Synonym;
+import com.english.manager.ThreadManager;
 import com.english.mapper.SynonymMapper;
+import com.english.model.SynonymHtml;
+import com.english.model.SynonymHtmlItem;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 import com.english.service.SynonymService;
+import com.english.util.FileUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
 
 @Service
 public class SynonymServiceImpl implements SynonymService {
@@ -80,26 +89,25 @@ public class SynonymServiceImpl implements SynonymService {
         return 0L;
     }
 
-    public void writeJSONFile(Synonym grammar, Integer index) {
-//        TimerTask timerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    GrammarHtml grammarHtml = new GrammarHtml();
-//                    grammarHtml.setName(grammar.getName());
-//                    grammarHtml.setContent(StringUtil.toHTML(grammar.getContent()));
-//
-//                    String path = String.format("%s/html/json/grammar-%s.json", System.getProperty("user.dir"), index);
-//                    File file = new File(path);
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//                    objectMapper.writeValue(file, grammarHtml);
-//
-//                    serviceLogger.info(String.format("JSON file [%s] has been created.", path));
-//                } catch (Exception e) {
-//                    throw new ServiceRuntimeException(e.getMessage());
-//                }
-//            }
-//        };
-//        ThreadManager.getInstance().execute(timerTask);
+    public void writeJSONFile(Synonym synonym, Integer index) {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    String filePath = String.format("%s/html/json/synonym-%s.json", System.getProperty("user.dir"), index);
+                    File file = new File(filePath);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    List<SynonymHtmlItem> list = objectMapper.readValue(synonym.getItems(), new TypeReference<List<SynonymHtmlItem>>() {});
+                    SynonymHtml synonymHtml = new SynonymHtml();
+                    synonymHtml.setMeaning(synonym.getMeaning());
+                    synonymHtml.setItems(list);
+                    objectMapper.writeValue(file, synonymHtml);
+                    serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        ThreadManager.getInstance().execute(timerTask);
     }
 }

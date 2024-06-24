@@ -2,14 +2,17 @@ package com.english.entity;
 
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class Similar {
 
     private Long id;
 
-    @NotBlank(message="itemIds is not blank")
-    @Length(min=1, max=512, message="itemIds length is 1-512")
-    private String itemIds;
+    @NotBlank(message="items is not blank")
+    @Length(min=1, max=512, message="items length is 1-512")
+    private String items;
+
+    private List<Item> itemList;
 
     public Long getId() {
         return id;
@@ -19,11 +22,19 @@ public class Similar {
         this.id = id;
     }
 
-    public String getItemIds() {
-        return itemIds;
+    public String getItems() {
+        return items;
     }
 
-    public void setItemIds(String itemIds) {
-        this.itemIds = itemIds;
+    public void setItems(String items) {
+        this.items = items;
+    }
+
+    public List<Item> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Item> itemList) {
+        this.itemList = itemList;
     }
 }

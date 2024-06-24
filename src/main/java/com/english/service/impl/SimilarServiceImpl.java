@@ -1,19 +1,25 @@
 package com.english.service.impl;
 
+import com.english.entity.Item;
 import com.english.entity.Similar;
-import com.english.entity.Synonym;
+import com.english.manager.ThreadManager;
 import com.english.mapper.SimilarMapper;
+import com.english.model.ItemHtml;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 import com.english.service.SimilarService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
 
 @Service
 public class SimilarServiceImpl implements SimilarService {
@@ -45,7 +51,7 @@ public class SimilarServiceImpl implements SimilarService {
     @Override
     public Boolean exist(Similar similar) {
         long similarId = similar.getId() == null? -1L : similar.getId();
-        Similar one = similarMapper.findByItemIds(similar.getItemIds());
+        Similar one = similarMapper.findByItemIds(similar.getItems());
         return one != null && one.getId() != similarId;
     }
 
@@ -81,26 +87,29 @@ public class SimilarServiceImpl implements SimilarService {
         return 0L;
     }
 
-    public void writeJSONFile(Similar similar, Integer index) {
-//        TimerTask timerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                try {
-//                    GrammarHtml grammarHtml = new GrammarHtml();
-//                    grammarHtml.setName(grammar.getName());
-//                    grammarHtml.setContent(StringUtil.toHTML(grammar.getContent()));
-//
-//                    String path = String.format("%s/html/json/grammar-%s.json", System.getProperty("user.dir"), index);
-//                    File file = new File(path);
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//                    objectMapper.writeValue(file, grammarHtml);
-//
-//                    serviceLogger.info(String.format("JSON file [%s] has been created.", path));
-//                } catch (Exception e) {
-//                    throw new ServiceRuntimeException(e.getMessage());
-//                }
-//            }
-//        };
-//        ThreadManager.getInstance().execute(timerTask);
+    public void writeJSONFile(List<Item> itemList, Integer index) {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    List<ItemHtml> list = new ArrayList<>();
+                    for (Item item : itemList) {
+                        ItemHtml itemHtml = new ItemHtml();
+                        itemHtml.setEn(item.getName());
+                        itemHtml.setCn(item.getCommon());
+                        itemHtml.setTts(item.getTts().getSpeech());
+                        list.add(itemHtml);
+                    }
+                    String filePath = String.format("%s/html/json/similar-%s.json", System.getProperty("user.dir"), index);
+                    File file = new File(filePath);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(file, list);
+                    serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        };
+        ThreadManager.getInstance().execute(timerTask);
     }
 }

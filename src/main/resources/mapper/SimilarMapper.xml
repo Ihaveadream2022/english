@@ -3,39 +3,60 @@
 <mapper namespace="com.english.mapper.SimilarMapper">
 	<resultMap type="Similar" id="SimilarMapper">
 		<id property="id" column="id" />
-		<result property="itemIds" column="item_ids" />
+		<result property="items" column="items" />
+		<collection property="itemList" ofType="Item">
+			<result property="name" column="i_name" />
+			<result property="common" column="i_common" />
+			<association property="tts" javaType="ItemTts" resultMap="ItemTtsMapper" />
+		</collection>
+	</resultMap>
+	<resultMap type="ItemTts" id="ItemTtsMapper">
+		<result property="speech" column="it_speech" />
 	</resultMap>
 	<!-- Select -->
+	<sql id="selectWhere">
+		<trim prefix="WHERE 1=1 AND (" suffix=")" prefixOverrides="AND">
+			<if test="keyword != null and keyword != ''">AND (`items` LIKE concat('%', #{keyword}, '%'))</if>
+		</trim>
+	</sql>
 	<select id="count" parameterType="QueryCondition" >
-		SELECT count(id) AS `total` FROM `similar`
+		SELECT count(`id`) AS `total` FROM `similar` <include refid="selectWhere" />
 	</select>
 	<select id="selectLimited" parameterType="QueryCondition" resultMap="SimilarMapper">
-		SELECT `similar`.`id`,`similar`.`item_ids`,`item`.`name`,`item`.`common`
-		FROM `similar` LEFT JOIN `item` ON FIND_IN_SET(`item`.`id`,`similar`.`item_ids`)
-		ORDER BY `similar`.`id` DESC
-		<if test="pageSize != null and pageSize > 0">
-			<if test="offset != null and offset >= 0">
-				LIMIT #{offset},#{pageSize}
+		SELECT
+		    `similar`.`id`,
+		    `similar`.`items`,
+		    `item`.`name` AS `i_name`,
+		    `item`.`common` AS `i_common`,
+		    `item_tts`.`speech` AS `it_speech`
+		FROM (
+			SELECT id, items FROM similar <include refid="selectWhere" /> ORDER BY id DESC
+			<if test="pageSize != null and pageSize > 0">
+				<if test="offset != null and offset >= 0">
+					LIMIT #{offset},#{pageSize}
+				</if>
 			</if>
-		</if>
+		) AS `similar`
+		    LEFT JOIN `item` ON FIND_IN_SET(`item`.`name`,`similar`.`items`)
+			LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
 	</select>
 	<select id="findByItemIds" parameterType="String" resultMap="SimilarMapper">
-		SELECT * FROM `similar` WHERE `item_ids` = #{itemIds} LIMIT 1
+		SELECT * FROM `similar` WHERE `items` = #{itemIds} LIMIT 1
 	</select>
 	<!-- Select -->
 	<!-- Insert -->
 	<insert id="insert" parameterType="Similar" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO `similar`
-		<trim prefix=" (" suffix=") " prefixOverrides=",">`item_ids`</trim>
+		<trim prefix=" (" suffix=") " prefixOverrides=",">`items`</trim>
 		    VALUES
-		<trim prefix=" (" suffix=") " prefixOverrides=",">#{itemIds}</trim>
+		<trim prefix=" (" suffix=") " prefixOverrides=",">#{items}</trim>
 	</insert>
 	<!-- Insert -->
 	<!-- Update -->
 	<update id="update" parameterType="Similar">
 		UPDATE `similar`
 		<set>
-			<if test="itemIds != null and itemIds != ''">`item_ids` = #{itemIds}</if>
+			<if test="items != null and items != ''">`items` = #{items}</if>
 		</set>
 		WHERE `id` = #{id}
 	</update>

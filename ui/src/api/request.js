@@ -204,3 +204,65 @@ export const GitPush = () =>
         method: "get",
         url: segments.urlAss + "/git/push",
     });
+
+// Synonym
+export const synonymList = (params) =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/synonyms",
+        params: params,
+    });
+export const synonymAdd = (data) =>
+    requestBase.request({
+        method: "post",
+        url: segments.urlAss + "/synonyms",
+        data: data,
+    });
+export const synonymEdit = (data) =>
+    requestBase.request({
+        method: "put",
+        url: segments.urlAss + "/synonyms/" + data.id,
+        data: data,
+    });
+
+export const synonymDelete = (data) =>
+    requestBase.request({
+        method: "delete",
+        url: segments.urlAss + "/synonyms/" + data.id,
+    });
+export const synonymGenerate = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/synonyms/generate",
+    });
+
+// Synonym
+export const similarList = (params) =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/similars",
+        params: params,
+    });
+export const similarAdd = (data) =>
+    requestBase.request({
+        method: "post",
+        url: segments.urlAss + "/similars",
+        data: data,
+    });
+export const similarEdit = (data) =>
+    requestBase.request({
+        method: "put",
+        url: segments.urlAss + "/similars/" + data.id,
+        data: data,
+    });
+
+export const similarDelete = (data) =>
+    requestBase.request({
+        method: "delete",
+        url: segments.urlAss + "/similars/" + data.id,
+    });
+export const similarGenerate = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/similars/generate",
+    });

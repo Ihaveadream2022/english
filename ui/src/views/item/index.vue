@@ -150,7 +150,7 @@
                     {{ dataExampleDialog.form.conjunction ? dataExampleDialog.form.conjunction : "无" }}
                 </el-descriptions-item>
                 <el-descriptions-item label="示例">
-                    <div v-for="(example,index) in dataExampleDialog.form.examples" :key="index" class="example-item">
+                    <div v-for="(example, index) in dataExampleDialog.form.examples" :key="index" class="example-item">
                         <div class="example-item-inner">
                             <el-divider content-position="left">{{ example.key }}</el-divider>
                             <el-button type="danger" @click="exampleDelete(index)" icon="el-icon-delete" size="mini"></el-button>
@@ -721,6 +721,7 @@
             },
             exampleDelete(index) {
                 console.log(index);
+                return;
                 this.dataExampleDialog.form.examples = this.dataExampleDialog.form.examples.filter((v, k, a) => {
                     if (k == index) {
                         return false;
@@ -917,10 +918,6 @@
             padding-left: 10px;
             height: 32px;
             line-height: 32px;
-        }
-        .el-form-item.vb {
-            ::v-deep .el-form-item__label {
-            }
         }
         .el-form-item.parse {
             width: 100% !important;

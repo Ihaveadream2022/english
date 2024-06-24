@@ -1,13 +1,15 @@
 package com.english.controller;
 
+import com.english.entity.Item;
 import com.english.entity.Synonym;
 import com.english.model.JsonResponse;
+import com.english.model.SynonymHtmlItem;
 import com.english.model.request.DeleteRequestBody;
-import com.english.model.request.GrammarQueryCondition;
+import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
-import com.english.service.GrammarService;
-import com.english.service.SynonymService;
+import com.english.model.request.SynonymQueryCondition;
 import com.english.service.impl.SynonymServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +29,9 @@ public class SynonymController {
     SynonymServiceImpl synonymService;
 
     @GetMapping
-    public JsonResponse list(GrammarQueryCondition grammarQueryCondition) {
+    public JsonResponse list(SynonymQueryCondition synonymQueryCondition) {
 
-        Map<String, Object> data = synonymService.pageList(grammarQueryCondition);
+        Map<String, Object> data = synonymService.pageList(synonymQueryCondition);
 
         return JsonResponse.success(data);
     }
@@ -74,22 +76,20 @@ public class SynonymController {
     @GetMapping("/generate")
     @SuppressWarnings("unchecked")
     public void generate() {
-//        Integer page = 1;
-//        Integer pageSize = 10;
-//        boolean continueFlag = false;
-//        QueryCondition grammarQueryCondition = new GrammarQueryCondition();
-//        do {
-//            grammarQueryCondition.setPageNo(page);
-//            grammarQueryCondition.setPageSize(pageSize);
-//            Map<String, Object> data = grammarService.pageList(grammarQueryCondition);
-//            List<Grammar> list = (List<Grammar>) data.get("list");
-//            if (list.size() > 0) {
-//                for (int i = 0; i < list.size(); i++) {
-//                    grammarService.generate(list.get(i), i+1);
-//                }
-//            }
-//            page++;
-//            continueFlag = list.size() > 0;
-//        } while (continueFlag);
+        Integer page = 1;
+        Integer pageSize = 10;
+        boolean continueFlag = false;
+        SynonymQueryCondition synonymQueryCondition = new SynonymQueryCondition();
+        do {
+            synonymQueryCondition.setPageNo(page);
+            synonymQueryCondition.setPageSize(pageSize);
+            Map<String, Object> data = synonymService.pageList(synonymQueryCondition);
+            List<Synonym> list = (List<Synonym>) data.get("list");
+            for (int i = 0; i < list.size(); i++) {
+                synonymService.writeJSONFile(list.get(i), (page - 1) * 10 + i + 1);
+            }
+            page++;
+            continueFlag = list.size() > 0;
+        } while (continueFlag);
     }
 }

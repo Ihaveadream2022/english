@@ -3,16 +3,10 @@ package com.english.util;
 import java.io.*;
 import java.util.Base64;
 
-public class FileUtil
-{
-    /**
-     * Write a file to output stream
-     * @param filePath
-     * @param outputStream
-     * @throws IOException
-     */
-    public static void writeFileToOutputStream(String filePath, OutputStream outputStream)
-    {
+public class FileUtil {
+
+    // Write a file to output stream
+    public static void writeFileToOutputStream(String filePath, OutputStream outputStream) {
         FileInputStream fileInputStream = null;
         try {
             File file = new File(filePath);
@@ -38,14 +32,8 @@ public class FileUtil
         }
     }
 
-    /**
-     * Write a base64 String to output stream
-     * @param base64String
-     * @param outputStream
-     * @throws IOException
-     */
-    public static void writeBase64ToOutputStream(String base64String, OutputStream outputStream)
-    {
+    // Write a base64 String to output stream
+    public static void writeBase64ToOutputStream(String base64String, OutputStream outputStream) {
         ByteArrayInputStream byteArrayInputStream = null;
         try {
             if (base64String == null) {
@@ -71,8 +59,29 @@ public class FileUtil
         }
     }
 
-    public static boolean deleteFile(String filePath)
-    {
+    // Write a string to a file
+    public static void writeStringToFile(String str, File file) {
+        if (str == null) {
+            throw new IllegalArgumentException("str is null");
+        }
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(file);
+            fileWriter.write(str);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static boolean deleteFile(String filePath) {
         boolean flag = false;
         File file = new File(filePath);
         if (file.isFile() && file.exists()) {

@@ -524,9 +524,5 @@
             height: 32px;
             line-height: 32px;
         }
-        .el-form-item.vb {
-            ::v-deep .el-form-item__label {
-            }
-        }
     }
 </style>

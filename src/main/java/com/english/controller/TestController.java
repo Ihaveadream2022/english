@@ -53,22 +53,68 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public void getAudio(@RequestParam String a1, @RequestParam String a2) {
+    public void getAudio(HttpServletResponse response) {
 
 
-        List<String> stringList = Arrays.asList("a","b","c","d","e","f","g");
+//        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition,download-filename");
+//        response.setHeader("Content-disposition", "attachment; filename=a.png");
+//        response.setHeader("download-filename", "a.png");
+//        response.setContentType("audio/mpeg");
+//        byte[] dataBytes = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAEXRFWHRTb2Z0d2FyZQBTbmlwYXN0ZV0Xzt0AAAAWSURBVAiZY5w4sZaBgYGJgYGBgYEBABOyAaMvqaJ9AAAAAElFTkSuQmCC");
+//        try (FileOutputStream fos = new FileOutputStream("a.png")) {
+//            fos.write(dataBytes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<ul>");
-
-        for (int i = 0; i < stringList.size() -1; i++) {
-            if (i%2==0) stringBuilder.append("<li>"); // The bottom number is the frequency.
-            stringBuilder.append("<span>").append(stringList.get(i)).append("</span>");
-            if (i%2==1) stringBuilder.append("</li>");
+        FileOutputStream fileOutputStream = null;
+        try {
+            String base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAEXRFWHRTb2Z0d2FyZQBTbmlwYXN0ZV0Xzt0AAAAWSURBVAiZY5w4sZaBgYGJgYGBgYEBABOyAaMvqaJ9AAAAAElFTkSuQmCC";
+            byte[] dataBytes = Base64.getDecoder().decode(base64Image);
+            fileOutputStream = new FileOutputStream("a.png");
+            fileOutputStream.write(dataBytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        stringBuilder.append("</ul>");
-        System.out.println(stringBuilder.toString());
+//        FileWriter fileWriter = null;
+//        try {
+//            fileWriter = new FileWriter(new File("a.json"));
+//            fileWriter.write("{\"key\":\"value\"}");
+//        } catch (IOException e) {
+//            throw new RuntimeException("Error writing to file: " + e.getMessage(), e);
+//        } finally {
+//            if (fileWriter != null) {
+//                try {
+//                    fileWriter.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+
+//        List<String> stringList = Arrays.asList("a","b","c","d","e","f","g");
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append("<ul>");
+//
+//        for (int i = 0; i < stringList.size() -1; i++) {
+//            if (i%2==0) stringBuilder.append("<li>"); // The bottom number is the frequency.
+//            stringBuilder.append("<span>").append(stringList.get(i)).append("</span>");
+//            if (i%2==1) stringBuilder.append("</li>");
+//        }
+//
+//        stringBuilder.append("</ul>");
+//        System.out.println(stringBuilder.toString());
 
 //        String text1 = a1;
 //        String text2 = a2;
