@@ -66,6 +66,7 @@ function fetchData(page) {
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
             initUI(enArray, cnArray);
             var listItems = $("li");
+            listItems.unbind("click");
             listItems.click(function () {
                 $(this).siblings().removeClass("active");
                 $(this).addClass("active");
@@ -127,29 +128,6 @@ function shuffleArray(originArray) {
     }
     return array;
 }
-function compare() {
-    const ulElementEn = document.getElementById("en");
-    const ulElementCn = document.getElementById("cn");
-    const ulLisCn = ulElementCn.querySelectorAll("li");
-    const cnArray = [];
-    ulLisCn.forEach((li) => {
-        cnArray.push({ en: li.getAttribute("data-en") });
-    });
-    const ulLisEn = ulElementEn.querySelectorAll("li");
-    const enArray = [];
-    ulLisEn.forEach((li) => {
-        enArray.push({ en: li.getAttribute("data-en") });
-    });
-    if (cnArray.length !== enArray.length) {
-        return false;
-    }
-    for (let i = 0; i < cnArray.length; i++) {
-        if (cnArray[i]["en"] !== enArray[i]["en"]) {
-            return false;
-        }
-    }
-    return true;
-}
 function recognize(data) {
     const en = data.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
@@ -165,39 +143,6 @@ function recognize(data) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-fetchData(1);
-// 禁用缩放
-function addMeta() {
-    $("head").append('<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />');
-}
-setTimeout(addMeta, 3000);
-// 禁用双指放大
-document.documentElement.addEventListener(
-    "touchstart",
-    function (event) {
-        if (event.touches.length > 1) {
-            event.preventDefault();
-        }
-    },
-    {
-        passive: false,
-    },
-);
-// 禁用双击放大
-var lastTouchEnd = 0;
-document.documentElement.addEventListener(
-    "touchend",
-    function (event) {
-        var now = Date.now();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-        }
-        lastTouchEnd = now;
-    },
-    {
-        passive: false,
-    },
-);
 function doPlay() {
     if (!playIsPlaying) {
         playIsPlaying = true;
@@ -222,3 +167,4 @@ function playHandler() {
         }
     }
 }
+fetchData(1);

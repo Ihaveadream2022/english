@@ -9,6 +9,7 @@ import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemService;
 import com.english.manager.ThreadManager;
+import com.english.util.StringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,36 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Long insert(Item item) {
+        String noun = StringUtil.replaceFullWidthString(item.getNoun());
+        String verb = StringUtil.replaceFullWidthString(item.getVerb());
+        String adj = StringUtil.replaceFullWidthString(item.getAdjective());
+        String adv = StringUtil.replaceFullWidthString(item.getAdverb());
+        String conj = StringUtil.replaceFullWidthString(item.getConjunction());
+        String prep = StringUtil.replaceFullWidthString(item.getPreposition());
+        item.setNoun(noun);
+        item.setVerb(verb);
+        item.setAdjective(adj);
+        item.setAdverb(adv);
+        item.setConjunction(conj);
+        item.setPreposition(prep);
         return itemMapper.insert(item);
     }
 
     @Override
     @Transactional
     public Long update(Item item) {
+        String noun = StringUtil.replaceFullWidthString(item.getNoun());
+        String verb = StringUtil.replaceFullWidthString(item.getVerb());
+        String adj = StringUtil.replaceFullWidthString(item.getAdjective());
+        String adv = StringUtil.replaceFullWidthString(item.getAdverb());
+        String conj = StringUtil.replaceFullWidthString(item.getConjunction());
+        String prep = StringUtil.replaceFullWidthString(item.getPreposition());
+        item.setNoun(noun);
+        item.setVerb(verb);
+        item.setAdjective(adj);
+        item.setAdverb(adv);
+        item.setConjunction(conj);
+        item.setPreposition(prep);
         return itemMapper.update(item);
     }
 

@@ -25,4 +25,17 @@ public class StringUtil {
 
         return content;
     }
+
+    // Replace Full-Width characters
+    public static String replaceFullWidthString(String fullWithString) {
+        if (fullWithString != null && !fullWithString.equals("")) {
+            fullWithString = fullWithString.replace("，", ",");
+            fullWithString = fullWithString.replace("。", ".");
+            fullWithString = fullWithString.replace("；", ";");
+            fullWithString = fullWithString.replace("）", ")");
+            fullWithString = fullWithString.replace("（", "(");
+            fullWithString = fullWithString.replace("、", ", ");
+        }
+        return fullWithString;
+    }
 }
