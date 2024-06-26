@@ -21,17 +21,17 @@
 		<result property="preposition" column="preposition" />
 		<result property="comment" column="comment" />
 		<association property="tts" javaType="ItemTts" resultMap="ItemTtsMapper" />
-		<collection property="examples" ofType="ItemExample">
-			<result property="id" column="ie_id" />
-			<result property="name" column="ie_name" />
-			<result property="key" column="ie_key" />
-			<result property="example" column="ie_example" />
-		</collection>
+		<association property="example" javaType="ItemExample" resultMap="ItemExampleMapper" />
 	</resultMap>
 	<resultMap type="ItemTts" id="ItemTtsMapper">
-		<result property="id" column="it_id" />
+		<id property="id" column="it_id" />
 		<result property="name" column="it_name" />
 		<result property="speech" column="it_speech" />
+	</resultMap>
+	<resultMap type="ItemExample" id="ItemExampleMapper">
+		<id property="id" column="ie_id" />
+		<result property="name" column="ie_name" />
+		<result property="examples" column="ie_examples" />
 	</resultMap>
 	<!-- Select -->
 	<sql id="selectWhere">
@@ -61,12 +61,11 @@
 		    `item_tts`.`speech` AS `it_speech`,
 			`item_example`.`id` AS `ie_id`,
 			`item_example`.`name` AS `ie_name`,
-			`item_example`.`key` AS `ie_key`,
-			`item_example`.`example` AS `ie_example`
+			`item_example`.`examples` AS `ie_examples`
 		FROM `item`
 		    LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
 			LEFT JOIN `item_example` ON `item_example`.`name` = `item`.`name`
-			<include refid="selectWhere" /> ORDER BY `item`.`id` DESC,`item_example`.`id` DESC
+			<include refid="selectWhere" /> ORDER BY `item`.`id` DESC
 		<if test="pageSize != null and pageSize > 0">
 			<if test="offset != null and offset >= 0">
 				LIMIT #{offset},#{pageSize}
@@ -98,8 +97,7 @@
 			<if test="pronoun != null and pronoun != ''">,`pronoun`</if>
 			<if test="preposition != null and preposition != ''">,`preposition`</if>
 			<if test="comment != null and comment != ''">,`comment`</if>
-		</trim>
-		    VALUES
+		</trim> VALUES
 		<trim prefix=" (" suffix=") " prefixOverrides=",">
 			#{name}
 			<if test="category != null and category != ''">,#{category}</if>

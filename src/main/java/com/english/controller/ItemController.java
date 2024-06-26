@@ -1,12 +1,15 @@
 package com.english.controller;
 
 import com.english.entity.Item;
+import com.english.entity.ItemExample;
 import com.english.entity.ItemTts;
 import com.english.model.JsonResponse;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemService;
+import com.english.service.impl.ItemExampleServiceImpl;
+import com.english.service.impl.ItemServiceImpl;
 import com.english.service.impl.ItemTtsServiceImpl;
 import com.english.manager.ThreadManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,10 @@ import java.util.TimerTask;
 public class ItemController {
 
     @Autowired
-    ItemService itemService;
+    ItemServiceImpl itemService;
+
+    @Autowired
+    ItemExampleServiceImpl itemExampleService;
 
     @Autowired
     ItemTtsServiceImpl itemAudioService;
@@ -44,9 +50,7 @@ public class ItemController {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    ItemTts itemTts = new ItemTts();
-                    itemTts.setName(item.getName());
-                    itemAudioService.dealSpeech(itemTts);
+                    itemAudioService.dealSpeech(item.getTts());
                 }
             };
             ThreadManager.getInstance().execute(timerTask);
@@ -59,7 +63,9 @@ public class ItemController {
 
     @PutMapping("/{id}")
     public JsonResponse update(@PathVariable Long id, @Validated @RequestBody Item item) {
+
         item.setId(id);
+
         if (item.getName() != null && item.getName().trim().length() != 0 && itemService.exist(item)) {
             return JsonResponse.error("The item has been exist");
         }
@@ -69,10 +75,7 @@ public class ItemController {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    ItemTts itemTts = new ItemTts();
-                    itemTts.setId(item.getTts().getId());
-                    itemTts.setName(item.getName());
-                    itemAudioService.dealSpeech(itemTts);
+                    itemAudioService.dealSpeech(item.getTts());
                 }
             };
             ThreadManager.getInstance().execute(timerTask);
@@ -111,5 +114,27 @@ public class ItemController {
             page++;
             continueFlag = list.size() > 0;
         } while (continueFlag);
+
+        int index = 1;
+        Integer examplePage = 1;
+        Integer examplePageSize = 10;
+        boolean exampleContinueFlag = false;
+        QueryCondition exampleQueryCondition = new QueryCondition();
+        do {
+            exampleQueryCondition.setPageNo(examplePage);
+            exampleQueryCondition.setPageSize(examplePageSize);
+            Map<String, Object> data2 = itemExampleService.pageList(exampleQueryCondition);
+            List<ItemExample> itemExampleList = (List<ItemExample>) data2.get("list");
+            if (itemExampleList.size() > 0) {
+                for (ItemExample itemExample : itemExampleList) {
+                    if (itemExample.getExamples() != null) {
+                        itemExampleService.writeJSONFile(itemExample, index);
+                        index++;
+                    }
+                }
+            }
+            examplePage++;
+            exampleContinueFlag = itemExampleList.size() > 0;
+        } while (exampleContinueFlag);
     }
 }

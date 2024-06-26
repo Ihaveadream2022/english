@@ -25,10 +25,7 @@
                         <el-button type="primary" @click="editDialogOpen">Create</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="itemGenerate">Generate Item JSON Files</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="itemExampleGenerate">Generate Item Example JSON Files</el-button>
+                        <el-button type="primary" @click="itemGenerate">Generate JSON Files</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="speechPlayHandle">{{ speech.text }}</el-button>
@@ -150,11 +147,11 @@
                     {{ dataExampleDialog.form.conjunction ? dataExampleDialog.form.conjunction : "无" }}
                 </el-descriptions-item>
                 <el-descriptions-item label="示例">
-                    <div v-for="(example, index) in dataExampleDialog.form.examples" :key="index" class="example-item">
+                    <div v-for="(example, index) in dataExampleDialog.exampleArray" :key="index" class="example-item">
                         <div class="example-item-inner">
                             <el-divider content-position="left">{{ example.key }}</el-divider>
                             <el-button type="danger" @click="exampleDelete(index)" icon="el-icon-delete" size="mini"></el-button>
-                            <el-input placeholder="" type="textarea" :value="example.example" maxlength="1024"></el-input>
+                            <el-input placeholder="" type="textarea" :value="example.value" maxlength="1024"></el-input>
                         </div>
                     </div>
                 </el-descriptions-item>
@@ -175,7 +172,7 @@
 </template>
 <script>
     /* eslint-disable */
-    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, itemExampleGenerate, itemExampleEdit, ttsGenerate } from "@/api/request";
+    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, itemExampleEdit, ttsGenerate } from "@/api/request";
     import { Message } from "element-ui";
     export default {
         data() {
@@ -186,28 +183,6 @@
                     text: "PlayList",
                 },
                 copiedText: "",
-                categoryList: [
-                    { value: 0, label: "default" },
-                    { value: 1, label: "country" },
-                    { value: 2, label: "abbreviation" },
-                    { value: 3, label: "celebrity" },
-                    { value: 4, label: "basketball" },
-                    { value: 5, label: "politics" },
-                    { value: 6, label: "shape" },
-                    { value: 7, label: "geography" },
-                    { value: 8, label: "military" },
-                    { value: 9, label: "animals" },
-                    { value: 10, label: "food" },
-                    { value: 11, label: "plants" },
-                    { value: 12, label: "color" },
-                    { value: 13, label: "disease" },
-                    { value: 14, label: "symbol" },
-                    { value: 15, label: "celebrity" },
-                    { value: 16, label: "fruit" },
-                    { value: 17, label: "tool" },
-                    { value: 18, label: "brand" },
-                    { value: 19, label: "condiment" },
-                ],
                 table: {
                     height: "500px",
                     loading: false,
@@ -235,6 +210,7 @@
                     rules: {
                         name: [{ required: true, message: "Please input item name", trigger: "blur" }],
                     },
+                    exampleArray: [],
                     exampleKey: "",
                     exampleContent: "",
                 },
@@ -262,6 +238,7 @@
                 this.$nextTick(() => {
                     this.dataExampleDialog.form = {};
                     this.dataExampleDialog.title = "Create Example";
+                    this.dataExampleDialog.exampleArray = [];
                     this.dataExampleDialog.exampleKey = "";
                     this.dataExampleDialog.exampleContent = "";
                     this.tableGetList(this.table.searchForm);
@@ -318,28 +295,6 @@
                     },
                 );
             },
-            itemExampleGenerate() {
-                const loading = this.$loading({
-                    lock: true,
-                    text: "Loading...",
-                });
-                itemExampleGenerate().then(
-                    (res) => {
-                        loading.close();
-                        this.$message({
-                            message: "success",
-                            type: "success",
-                        });
-                    },
-                    (res) => {
-                        loading.close();
-                        this.$message({
-                            message: "success",
-                            type: "success",
-                        });
-                    },
-                );
-            },
             // 编辑窗口: 编辑. 同时触发editDialogOpen()
             editDialogEdit(row) {
                 console.log(row, "row:");
@@ -351,6 +306,7 @@
             exampleEditDialog(row) {
                 this.dataExampleDialog.title = "Edit Examples";
                 this.dataExampleDialog.visible = true;
+                this.dataExampleDialog.exampleArray = row.example.examples ? JSON.parse(row.example.examples) : [];
                 this.dataExampleDialog.form = row;
             },
             editDialogDelete(row) {},
@@ -436,7 +392,11 @@
                     lock: true,
                     text: "Loading...",
                 });
-                itemExampleEdit({ name: this.dataExampleDialog.form.name, examples: this.dataExampleDialog.form.examples })
+                itemExampleEdit({
+                    id: this.dataExampleDialog.form.example.id,
+                    name: this.dataExampleDialog.form.example.name,
+                    examples: this.dataExampleDialog.exampleArray.length > 0 ? JSON.stringify(this.dataExampleDialog.exampleArray) : null,
+                })
                     .then(
                         (res) => {
                             Message({
@@ -713,23 +673,21 @@
             },
             appendExamples() {
                 let obj = {};
-                obj["name"] = this.dataExampleDialog.form.name;
                 obj["key"] = this.dataExampleDialog.exampleKey;
-                obj["example"] = this.dataExampleDialog.exampleContent;
-                this.dataExampleDialog.form.examples.unshift(obj);
+                obj["value"] = this.dataExampleDialog.exampleContent;
+                this.dataExampleDialog.exampleArray.unshift(obj);
                 console.log(this.dataExampleDialog.form);
             },
             exampleDelete(index) {
                 console.log(index);
-                return;
-                this.dataExampleDialog.form.examples = this.dataExampleDialog.form.examples.filter((v, k, a) => {
+                this.dataExampleDialog.exampleArray = this.dataExampleDialog.exampleArray.filter((v, k, a) => {
                     if (k == index) {
                         return false;
                     } else {
                         return true;
                     }
                 });
-                console.log(this.dataExampleDialog.form);
+                console.log(this.dataExampleDialog.exampleArray);
             },
         },
     };

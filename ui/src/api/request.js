@@ -144,16 +144,11 @@ export const itemGenerate = () =>
 // Item Example
 export const itemExampleEdit = (data) =>
     requestBase.request({
-        method: "post",
-        url: segments.urlAss + "/item-examples",
+        method: "put",
+        url: segments.urlAss + "/item-examples/" + data.id,
         data: data,
     });
-export const itemExampleGenerate = () =>
-    requestBase.request({
-        method: "get",
-        url: segments.urlAss + "/item-examples/generate",
-    });
-
+    
 // Grammar
 export const grammarList = (params) =>
     requestBase.request({

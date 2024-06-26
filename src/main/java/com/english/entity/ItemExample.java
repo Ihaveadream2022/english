@@ -8,16 +8,11 @@ public class ItemExample {
     private Long id;
 
     @NotBlank(message = "name is required")
-    @Length(min = 1, max = 64, message = "name length is between 0 and 64")
+    @Length(min = 1, max = 64, message = "name length is between 1 and 64")
     private String name;
 
-    @NotBlank(message = "key is required")
-    @Length(min = 1, max = 64, message = "key length is between 0 and 64")
-    private String key;
-
-    @NotBlank(message = "example is required")
-    @Length(min = 1, max = 1024, message = "example length is between 0 and 1024")
-    private String example;
+    @Length(min = 0, max = 10240, message = "examples length is between 0 and 10240")
+    private String examples;
 
     private Item item;
 
@@ -37,20 +32,12 @@ public class ItemExample {
         this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getExamples() {
+        return examples;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getExample() {
-        return example;
-    }
-
-    public void setExample(String example) {
-        this.example = example;
+    public void setExamples(String examples) {
+        this.examples = examples;
     }
 
     public Item getItem() {

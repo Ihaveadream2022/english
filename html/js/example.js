@@ -172,7 +172,7 @@ function initUI(data) {
         const sentenceItemDiv = document.createElement("div");
         sentenceItemDiv.setAttribute("class", "sentence-item");
         sentenceItemDiv.setAttribute("data-text", data.examples[i].key);
-        sentenceItemDiv.innerHTML = data.examples[i].example;
+        sentenceItemDiv.innerHTML = data.examples[i].value;
         sentenceDiv.appendChild(sentenceItemDiv);
     }
     scrollElm.appendChild(sentenceDiv);

@@ -4,11 +4,13 @@
 	<resultMap type="ItemExample" id="ItemExampleMapper">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
-		<result property="key" column="key" />
-		<result property="example" column="example" />
+		<result property="examples" column="examples" />
 		<association property="item" javaType="Item" resultMap="ItemMapper" />
 	</resultMap>
 	<resultMap type="Item" id="ItemMapper">
+		<id property="id" column="i_id" />
+		<result property="name" column="i_name" />
+		<result property="common" column="i_common" />
 		<result property="noun" column="i_noun" />
 		<result property="verb" column="i_verb" />
 		<result property="adjective" column="i_adjective" />
@@ -25,33 +27,48 @@
 		SELECT
 		`item_example`.`id`,
 		`item_example`.`name`,
-		`item_example`.`key`,
-		`item_example`.`example`,
+		`item_example`.`examples`,
+		`item`.`id` AS `i_id`,
+		`item`.`name` AS `i_name`,
+		`item`.`common` AS `i_common`,
 		`item`.`noun` AS `i_noun`,
 		`item`.`verb` AS `i_verb`,
 		`item`.`adjective` AS `i_adjective`,
 		`item`.`adverb` AS `i_adverb`,
 		`item`.`conjunction` AS `i_conjunction`,
 		`item`.`pronoun` AS `i_pronoun`,
-		`item`.`preposition` AS `i_preposition` FROM `item_example` INNER JOIN `item` ON `item`.`name` = `item_example`.`name` ORDER BY `item_example`.`id` DESC
+		`item`.`preposition` AS `i_preposition`
+		FROM `item_example` LEFT JOIN `item` ON `item`.`name` = `item_example`.`name`
+		ORDER BY `item_example`.`id` DESC
 		<if test="pageSize != null and pageSize > 0">
 			<if test="offset != null and offset >= 0">
 				LIMIT #{offset},#{pageSize}
 			</if>
 		</if>
 	</select>
+	<select id="findByName" parameterType="String" resultMap="ItemExampleMapper">
+		SELECT * FROM `item_example` WHERE `name` = #{name} LIMIT 1
+	</select>
 	<!-- Select -->
+	<!-- Insert -->
+	<insert id="insert" parameterType="ItemExample" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `item_example`
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			`name`,`examples`
+		</trim> VALUES
+		<trim prefix=" (" suffix=") " prefixOverrides=",">
+			#{name},#{examples}
+		</trim>
+	</insert>
+	<!-- Insert -->
+	<!-- Update -->
+	<update id="update" parameterType="ItemExample">
+		UPDATE `item_example` SET `examples` = #{examples} WHERE `id` = #{id}
+	</update>
+	<!-- Update -->
 	<!-- Batch Delete -->
-	<delete id="batchDelete" parameterType="String">
-		DELETE FROM `item_example` WHERE `name` = #{name}
+	<delete id="delete" parameterType="DeleteRequestBody">
+		DELETE FROM `item_example` <if test="id != null and id > 0">WHERE `id` = #{id}</if>
 	</delete>
 	<!-- Batch Delete -->
-	<!-- Batch Insert -->
-	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO `item_example` (`name`,`key`,`example`) VALUES
-		<foreach item="itemExample" collection="itemExampleList" open="" separator="," close="">
-			(#{itemExample.name},#{itemExample.key},#{itemExample.example})
-		</foreach>
-	</insert>
-	<!-- Batch Insert -->
 </mapper>

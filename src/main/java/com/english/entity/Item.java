@@ -2,7 +2,6 @@ package com.english.entity;
 
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 public class Item {
 
@@ -61,7 +60,7 @@ public class Item {
 
     private ItemTts tts;
 
-    private List<ItemExample> examples;
+    private ItemExample example;
 
     public Long getId() {
         return id;
@@ -246,11 +245,11 @@ public class Item {
         this.tts = tts;
     }
 
-    public List<ItemExample> getExamples() {
-        return examples;
+    public ItemExample getExample() {
+        return example;
     }
 
-    public void setExamples(List<ItemExample> examples) {
-        this.examples = examples;
+    public void setExample(ItemExample example) {
+        this.example = example;
     }
 }

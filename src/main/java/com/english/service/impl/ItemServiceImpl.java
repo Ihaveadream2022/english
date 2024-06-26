@@ -1,8 +1,8 @@
 package com.english.service.impl;
 
 import com.english.entity.Item;
+import com.english.entity.ItemExample;
 import com.english.entity.ItemTts;
-import com.english.entity.User;
 import com.english.mapper.ItemMapper;
 import com.english.model.ItemHtml;
 import com.english.model.request.DeleteRequestBody;
@@ -31,6 +31,12 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     ItemMapper itemMapper;
 
+    @Autowired
+    ItemTtsServiceImpl itemTtsService;
+
+    @Autowired
+    ItemExampleServiceImpl itemExampleService;
+
     public HashMap<String, Object> pageList(QueryCondition queryCondition) {
         Integer a = queryCondition.getOffset();
         HashMap<String, Object> data = new HashMap<>();
@@ -46,6 +52,7 @@ public class ItemServiceImpl implements ItemService {
         return data;
     }
 
+    @Override
     public Item findByName(String name) {
         return itemMapper.findByName(name);
     }
@@ -53,36 +60,27 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Long insert(Item item) {
-        String noun = StringUtil.replaceFullWidthString(item.getNoun());
-        String verb = StringUtil.replaceFullWidthString(item.getVerb());
-        String adj = StringUtil.replaceFullWidthString(item.getAdjective());
-        String adv = StringUtil.replaceFullWidthString(item.getAdverb());
-        String conj = StringUtil.replaceFullWidthString(item.getConjunction());
-        String prep = StringUtil.replaceFullWidthString(item.getPreposition());
-        item.setNoun(noun);
-        item.setVerb(verb);
-        item.setAdjective(adj);
-        item.setAdverb(adv);
-        item.setConjunction(conj);
-        item.setPreposition(prep);
-        return itemMapper.insert(item);
+        filter(item);
+        Long row = itemMapper.insert(item);
+
+        ItemTts itemTts = new ItemTts();
+        itemTts.setName(item.getName());
+        itemTtsService.insert(itemTts);
+
+        ItemExample itemExample = new ItemExample();
+        itemExample.setName(item.getName());
+        itemExampleService.insert(itemExample);
+
+        item.setTts(itemTts);
+        item.setExample(itemExample);
+
+        return row;
     }
 
     @Override
     @Transactional
     public Long update(Item item) {
-        String noun = StringUtil.replaceFullWidthString(item.getNoun());
-        String verb = StringUtil.replaceFullWidthString(item.getVerb());
-        String adj = StringUtil.replaceFullWidthString(item.getAdjective());
-        String adv = StringUtil.replaceFullWidthString(item.getAdverb());
-        String conj = StringUtil.replaceFullWidthString(item.getConjunction());
-        String prep = StringUtil.replaceFullWidthString(item.getPreposition());
-        item.setNoun(noun);
-        item.setVerb(verb);
-        item.setAdjective(adj);
-        item.setAdverb(adv);
-        item.setConjunction(conj);
-        item.setPreposition(prep);
+        filter(item);
         return itemMapper.update(item);
     }
 
@@ -111,6 +109,21 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return 0L;
+    }
+
+    public void filter(Item item) {
+        String noun = StringUtil.replaceFullWidthString(item.getNoun());
+        String verb = StringUtil.replaceFullWidthString(item.getVerb());
+        String adj = StringUtil.replaceFullWidthString(item.getAdjective());
+        String adv = StringUtil.replaceFullWidthString(item.getAdverb());
+        String conj = StringUtil.replaceFullWidthString(item.getConjunction());
+        String prep = StringUtil.replaceFullWidthString(item.getPreposition());
+        item.setNoun(noun);
+        item.setVerb(verb);
+        item.setAdjective(adj);
+        item.setAdverb(adv);
+        item.setConjunction(conj);
+        item.setPreposition(prep);
     }
 
     @Override

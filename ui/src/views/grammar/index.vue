@@ -22,7 +22,7 @@
                         <el-button type="primary" @click="editDialogOpen">Create</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="grammarGenerate">Generate All Json</el-button>
+                        <el-button type="primary" @click="grammarGenerate">Generate JSON Files</el-button>
                     </el-form-item>
                 </div>
             </el-form>

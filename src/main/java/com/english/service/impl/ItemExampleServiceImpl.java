@@ -2,12 +2,15 @@ package com.english.service.impl;
 
 import com.english.entity.Item;
 import com.english.entity.ItemExample;
+import com.english.exception.ServiceRuntimeException;
 import com.english.manager.ThreadManager;
 import com.english.mapper.ItemExampleMapper;
 import com.english.model.ItemExampleHtml;
+import com.english.model.KeyValue;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemExampleService;
 import com.english.util.StringUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,45 +42,55 @@ public class ItemExampleServiceImpl implements ItemExampleService {
     }
 
     @Override
+    public ItemExample findByName(String name) {
+        return itemExampleMapper.findByName(name);
+    }
+
+    @Override
     @Transactional
-    public void update(String name, List<ItemExample> itemExampleList) {
-        if (check(name, itemExampleList)) {
-            itemExampleMapper.batchDelete(name);
-            if (itemExampleList.size() > 0) {
-                itemExampleMapper.batchInsert(itemExampleList);
-            }
+    public Long insert(ItemExample itemExample) {
+        boolean isExist = exist(itemExample);
+        if (isExist) {
+            throw new ServiceRuntimeException("The item example has been existed.");
         }
+        return itemExampleMapper.insert(itemExample);
     }
 
-    public boolean check(String name, List<ItemExample> itemExampleList) {
-        if (itemExampleList.size() > 0) {
-            for (ItemExample itemExample : itemExampleList) {
-                if (!itemExample.getName().equals(name)) {
-                    return false;
-                }
-            }
+    @Override
+    @Transactional
+    public Long update(ItemExample itemExample) {
+        boolean isExist = exist(itemExample);
+        if (isExist) {
+            throw new ServiceRuntimeException("The item example has been existed.");
         }
-        return true;
+        return itemExampleMapper.update(itemExample);
     }
 
-    public void writeJSONFile(Item item, Integer index) {
+    public Boolean exist(ItemExample itemExample) {
+        long id = itemExample.getId() == null? -1L : itemExample.getId();
+        ItemExample one = itemExampleMapper.findByName(itemExample.getName());
+        return one != null && one.getId() != id;
+    }
+
+    public void writeJSONFile(ItemExample itemExample, Integer index) {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
-                    ItemExampleHtml itemExampleHtml = new ItemExampleHtml();
-                    itemExampleHtml.setName(item.getName());
-                    itemExampleHtml.setMeanings(splitMeaning(item));
-                    List<ItemExample> itemExampleList = item.getExamples().stream().map(v->{
-                        v.setExample(StringUtil.toHTML(v.getExample()));
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    List<KeyValue> keyValueList = objectMapper.readValue(itemExample.getExamples(), new TypeReference<List<KeyValue>>() {});
+                    List<KeyValue> keyValueListFilter = keyValueList.stream().map(v->{
+                        v.setValue(StringUtil.toHTML(v.getValue()));
                         return v;
                     }).collect(Collectors.toList());
-                    itemExampleHtml.setExamples(itemExampleList);
+                    ItemExampleHtml itemExampleHtml = new ItemExampleHtml();
+                    itemExampleHtml.setName(itemExample.getItem().getName());
+                    itemExampleHtml.setMeanings(splitMeaning(itemExample.getItem()));
+                    itemExampleHtml.setExamples(keyValueListFilter);
+
                     String filePath = String.format("%s/html/json/item-example-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
-                    ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(file, itemExampleHtml);
-
                     logger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
                     throw new RuntimeException(e.getMessage());

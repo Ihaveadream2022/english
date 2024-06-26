@@ -32,8 +32,7 @@
 		INSERT INTO `item_tts`
 		<trim prefix=" (" suffix=") " prefixOverrides=",">
 			`name`,`speech`
-		</trim>
-		    VALUES
+		</trim>VALUES
 		<trim prefix=" (" suffix=") " prefixOverrides=",">
 			#{name},#{speech}
 		</trim>

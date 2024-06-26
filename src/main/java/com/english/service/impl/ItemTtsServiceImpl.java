@@ -55,20 +55,28 @@ public class ItemTtsServiceImpl implements ItemTtsService {
     @Override
     @Transactional
     public Long insert(ItemTts itemTts) {
+        boolean isExist = exist(itemTts);
+        if (isExist) {
+            throw new ServiceRuntimeException("The item tts has been existed.");
+        }
         return itemTtsMapper.insert(itemTts);
     }
 
     @Override
     @Transactional
     public Long update(ItemTts itemTts) {
+        boolean isExist = exist(itemTts);
+        if (isExist) {
+            throw new ServiceRuntimeException("The item tts has been existed.");
+        }
         return itemTtsMapper.update(itemTts);
     }
 
     @Override
     public Boolean exist(ItemTts itemTts) {
-        Long wordId = itemTts.getId() == null? -1L : itemTts.getId();
+        long wordId = itemTts.getId() == null? -1L : itemTts.getId();
         ItemTts one = itemTtsMapper.findByName(itemTts.getName());
-        return one != null && one.getId().longValue() != wordId.longValue();
+        return one != null && one.getId() != wordId;
     }
 
     @Override
@@ -116,14 +124,10 @@ public class ItemTtsServiceImpl implements ItemTtsService {
             // Delete the audio
             FileUtil.deleteFile(savePath);
 
-            // Insert item speech
+            // Update item speech
             if (base64String != null) {
                 itemTts.setSpeech(base64String);
-                if (itemTts.getId() != null) {
-                    itemTtsMapper.update(itemTts);
-                } else {
-                    itemTtsMapper.insert(itemTts);
-                }
+                itemTtsMapper.update(itemTts);
             }
         } catch (Exception e) {
             throw new ServiceRuntimeException(e.getMessage());

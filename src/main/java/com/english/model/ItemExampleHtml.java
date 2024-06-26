@@ -1,7 +1,5 @@
 package com.english.model;
 
-import com.english.entity.ItemExample;
-
 import java.util.List;
 
 public class ItemExampleHtml {
@@ -10,7 +8,7 @@ public class ItemExampleHtml {
 
     private List<String[]> meanings;
 
-    private List<ItemExample> examples;
+    private List<KeyValue> examples;
 
     public String getName() {
         return name;
@@ -28,11 +26,11 @@ public class ItemExampleHtml {
         this.meanings = meanings;
     }
 
-    public List<ItemExample> getExamples() {
+    public List<KeyValue> getExamples() {
         return examples;
     }
 
-    public void setExamples(List<ItemExample> examples) {
+    public void setExamples(List<KeyValue> examples) {
         this.examples = examples;
     }
 }
