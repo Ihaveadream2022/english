@@ -85,7 +85,7 @@ function fetchData(page) {
                     const randomIndex = Math.floor(Math.random() * colors.length);
                     const randomColor = colors.splice(randomIndex, 1)[0];
                     enActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
-                    cnAvtive.css({ background: randomColor,  "font-weight": "900", color: "#fff" });
+                    cnAvtive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
                 }
             });
         })
@@ -146,12 +146,15 @@ function recognize(data) {
     const en = data.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
     const randomColor = colors.splice(randomIndex, 1)[0];
-    $('[data-en="' + en + '"]').each(function (i, element) {
-        $(this).css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-        canvas.erase();
-        var audio = $("#audio-" + en).get(0);
-        audio.load();
-        audio.play();
+    canvas.erase();
+    $('[data-en="' + en + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
+    playAudioSources.forEach((v, k, ar) => {
+        const enThis = v.en.replace(/\s+/g, "_");
+        if (enThis == en) {
+            listPlayer.src = "data:audio/mp3;base64," + v.tts;
+            listPlayer.load();
+            listPlayer.play();
+        }
     });
 }
 function getRandomInt(min, max) {
@@ -205,7 +208,7 @@ function doPlay() {
 }
 function playHandler() {
     if (playAudioSources.length > 0) {
-        listPlayer.src =  "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
+        listPlayer.src = "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
         listPlayer.load();
         listPlayer.play();
         playAudioSourcesCurrentIndex++;

@@ -1,11 +1,11 @@
 const practice = document.getElementById("practice");
+const synonym = document.getElementById("synonym");
 const canvasElem = document.getElementById("canvas");
 const recognizeResult = document.getElementById("recognize-result");
-const width = practice.clientWidth;
-const height = practice.clientHeight;
+const width = (practice && practice.clientWidth) || (synonym && synonym.clientWidth);
+const height = (practice && practice.clientHeight) || (synonym && synonym.clientHeight);
 canvasElem.width = width;
 canvasElem.height = height;
-
 function canvasShow() {
     if (canvasElem.style.display === "none" || canvasElem.style.display === "") {
         canvasElem.style.display = "block";
