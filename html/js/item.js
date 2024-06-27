@@ -63,7 +63,7 @@ function fetchData(page) {
             const enArray = shuffleArray(words);
             const cnArray = shuffleArray(words);
             playAudioSources = enArray;
-            console.log(playAudioSources)
+            console.log(playAudioSources);
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
             initUI(enArray, cnArray);
             var listItems = $("li");
@@ -87,7 +87,7 @@ function fetchData(page) {
                     const randomIndex = Math.floor(Math.random() * colors.length);
                     const randomColor = colors.splice(randomIndex, 1)[0];
                     enActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
-                    cnAvtive.css({ background: randomColor,  "font-weight": "900", color: "#fff" });
+                    cnAvtive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
                 }
             });
         })
@@ -125,12 +125,15 @@ function recognize(data) {
     const en = data.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
     const randomColor = colors.splice(randomIndex, 1)[0];
-    $('[data-en="' + en + '"]').each(function (i, element) {
-        $(this).css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-        canvas.erase();
-        var audio = $("#audio-" + en).get(0);
-        audio.load();
-        audio.play();
+    canvas.erase();
+    $('[data-en="' + en + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
+    playAudioSources.forEach((v, k, ar) => {
+        const enThis = v.en.replace(/\s+/g, "_");
+        if (enThis == en) {
+            listPlayer.src = "data:audio/mp3;base64," + v.tts;
+            listPlayer.load();
+            listPlayer.play();
+        }
     });
 }
 function getRandomInt(min, max) {
