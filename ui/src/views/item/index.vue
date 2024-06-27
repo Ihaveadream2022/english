@@ -282,9 +282,10 @@
                 this.editDialog.form = row;
             },
             exampleEditDialog(row) {
+                console.log(row)
                 this.dataExampleDialog.title = "Edit Examples";
                 this.dataExampleDialog.visible = true;
-                this.dataExampleDialog.exampleArray = row.example.examples ? JSON.parse(row.example.examples) : [];
+                this.dataExampleDialog.exampleArray = (row.example && row.example.examples) ? JSON.parse(row.example.examples) : [];
                 this.dataExampleDialog.form = row;
             },
             editDialogDelete(row) {},
