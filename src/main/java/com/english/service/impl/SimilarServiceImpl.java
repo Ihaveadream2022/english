@@ -97,7 +97,7 @@ public class SimilarServiceImpl implements SimilarService {
                         ItemHtml itemHtml = new ItemHtml();
                         itemHtml.setEn(item.getName());
                         itemHtml.setCn(item.getCommon());
-                        itemHtml.setTts(item.getTts().getSpeech());
+                        itemHtml.setTts(String.format("%s.mp3", item.getName()));
                         list.add(itemHtml);
                     }
                     String filePath = String.format("%s/html/json/similar-%s.json", System.getProperty("user.dir"), index);

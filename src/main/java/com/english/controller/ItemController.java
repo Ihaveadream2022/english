@@ -1,23 +1,18 @@
 package com.english.controller;
 
 import com.english.entity.Item;
-import com.english.entity.ItemExample;
-import com.english.entity.ItemTts;
 import com.english.model.JsonResponse;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
-import com.english.service.ItemService;
 import com.english.service.impl.ItemExampleServiceImpl;
 import com.english.service.impl.ItemServiceImpl;
 import com.english.service.impl.ItemTtsServiceImpl;
-import com.english.manager.ThreadManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
 
 @RestController
 @RequestMapping("/items")
@@ -30,7 +25,7 @@ public class ItemController {
     ItemExampleServiceImpl itemExampleService;
 
     @Autowired
-    ItemTtsServiceImpl itemAudioService;
+    ItemTtsServiceImpl itemTtsService;
 
     @GetMapping
     public JsonResponse list(ItemQueryCondition itemQueryCondition) {
@@ -47,13 +42,7 @@ public class ItemController {
         }
         Long rows = itemService.insert(item);
         if (rows > 0) {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    itemAudioService.dealSpeech(item.getTts());
-                }
-            };
-            ThreadManager.getInstance().execute(timerTask);
+            itemTtsService.createAudio(item.getTts());
 
             return JsonResponse.success();
         }
@@ -72,13 +61,7 @@ public class ItemController {
 
         Long rows = itemService.update(item);
         if (rows > 0) {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    itemAudioService.dealSpeech(item.getTts());
-                }
-            };
-            ThreadManager.getInstance().execute(timerTask);
+            itemTtsService.createAudio(item.getTts());
 
             return JsonResponse.success();
         }
@@ -99,6 +82,7 @@ public class ItemController {
     @GetMapping("/generate")
     @SuppressWarnings("unchecked")
     public void generate() {
+        int indexExample = 1;
         Integer page = 1;
         Integer pageSize = 10;
         boolean continueFlag = false;
@@ -110,31 +94,18 @@ public class ItemController {
             List<Item> list = (List<Item>) data.get("list");
             if (list.size() > 0) {
                 itemService.writeJSONFile(list, page);
+                for (Item item: list) {
+                    if (item.getExample() != null && item.getExample().getExamples() != null) {
+                        itemExampleService.writeJSONFile(item, indexExample);
+                        indexExample++;
+                    }
+                    if (item.getTts().getAudio() != null) {
+                        itemTtsService.writeBinaryFile(item.getTts());
+                    }
+                }
             }
             page++;
             continueFlag = list.size() > 0;
         } while (continueFlag);
-
-        int index = 1;
-        Integer examplePage = 1;
-        Integer examplePageSize = 10;
-        boolean exampleContinueFlag = false;
-        QueryCondition exampleQueryCondition = new QueryCondition();
-        do {
-            exampleQueryCondition.setPageNo(examplePage);
-            exampleQueryCondition.setPageSize(examplePageSize);
-            Map<String, Object> data2 = itemExampleService.pageList(exampleQueryCondition);
-            List<ItemExample> itemExampleList = (List<ItemExample>) data2.get("list");
-            if (itemExampleList.size() > 0) {
-                for (ItemExample itemExample : itemExampleList) {
-                    if (itemExample.getExamples() != null) {
-                        itemExampleService.writeJSONFile(itemExample, index);
-                        index++;
-                    }
-                }
-            }
-            examplePage++;
-            exampleContinueFlag = itemExampleList.size() > 0;
-        } while (exampleContinueFlag);
     }
 }

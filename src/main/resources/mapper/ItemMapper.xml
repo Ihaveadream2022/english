@@ -26,7 +26,7 @@
 	<resultMap type="ItemTts" id="ItemTtsMapper">
 		<id property="id" column="it_id" />
 		<result property="name" column="it_name" />
-		<result property="speech" column="it_speech" />
+		<result property="audio" column="it_audio" />
 	</resultMap>
 	<resultMap type="ItemExample" id="ItemExampleMapper">
 		<id property="id" column="ie_id" />
@@ -58,7 +58,7 @@
 		    `item`.*,
 			`item_tts`.`id` AS `it_id`,
 		    `item_tts`.`name` AS `it_name`,
-		    `item_tts`.`speech` AS `it_speech`,
+			`item_tts`.`audio` AS `it_audio`,
 			`item_example`.`id` AS `ie_id`,
 			`item_example`.`name` AS `ie_name`,
 			`item_example`.`examples` AS `ie_examples`

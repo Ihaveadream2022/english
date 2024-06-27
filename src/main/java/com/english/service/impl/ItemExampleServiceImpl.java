@@ -2,6 +2,7 @@ package com.english.service.impl;
 
 import com.english.entity.Item;
 import com.english.entity.ItemExample;
+import com.english.exception.GlobalExceptionHandler;
 import com.english.exception.ServiceRuntimeException;
 import com.english.manager.ThreadManager;
 import com.english.mapper.ItemExampleMapper;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ItemExampleServiceImpl implements ItemExampleService {
+
+    private final Logger frameworkLogger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private final Logger logger = LoggerFactory.getLogger("SERVICE");
 
@@ -72,27 +75,27 @@ public class ItemExampleServiceImpl implements ItemExampleService {
         return one != null && one.getId() != id;
     }
 
-    public void writeJSONFile(ItemExample itemExample, Integer index) {
+    public void writeJSONFile(Item item, Integer index) {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
-                    List<KeyValue> keyValueList = objectMapper.readValue(itemExample.getExamples(), new TypeReference<List<KeyValue>>() {});
+                    List<KeyValue> keyValueList = objectMapper.readValue(item.getExample().getExamples(), new TypeReference<List<KeyValue>>() {});
                     List<KeyValue> keyValueListFilter = keyValueList.stream().map(v->{
                         v.setValue(StringUtil.toHTML(v.getValue()));
                         return v;
                     }).collect(Collectors.toList());
                     ItemExampleHtml itemExampleHtml = new ItemExampleHtml();
-                    itemExampleHtml.setName(itemExample.getItem().getName());
-                    itemExampleHtml.setMeanings(splitMeaning(itemExample.getItem()));
+                    itemExampleHtml.setName(item.getName());
+                    itemExampleHtml.setMeanings(splitMeaning(item));
                     itemExampleHtml.setExamples(keyValueListFilter);
-
                     String filePath = String.format("%s/html/json/item-example-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
                     objectMapper.writeValue(file, itemExampleHtml);
-                    logger.info(String.format("JSON file [%s] has been created.", filePath));
+                    logger.info(String.format("JSON example file [%s] has been created.", filePath));
                 } catch (Exception e) {
+                    frameworkLogger.error(e.getMessage(), e);
                     throw new RuntimeException(e.getMessage());
                 }
             }

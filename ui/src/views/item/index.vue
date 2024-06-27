@@ -172,7 +172,7 @@
 </template>
 <script>
     /* eslint-disable */
-    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, itemExampleEdit, ttsGenerate } from "@/api/request";
+    import { itemList, itemAdd, itemEdit, itemDelete, itemGenerate, itemExampleEdit } from "@/api/request";
     import { Message } from "element-ui";
     export default {
         data() {
@@ -250,28 +250,6 @@
             },
             exampleEditDialogOpen() {
                 this.dataExampleDialog.visible = true;
-            },
-            ttsGenerate() {
-                const loading = this.$loading({
-                    lock: true,
-                    text: "Loading...",
-                });
-                ttsGenerate().then(
-                    (res) => {
-                        loading.close();
-                        this.$message({
-                            message: "success",
-                            type: "success",
-                        });
-                    },
-                    (res) => {
-                        loading.close();
-                        this.$message({
-                            message: "success",
-                            type: "success",
-                        });
-                    },
-                );
             },
             itemGenerate() {
                 const loading = this.$loading({
@@ -633,9 +611,10 @@
                 this.tableGetList(this.table.searchForm);
             },
             speechPlayOne(row) {
+                console.log(process.env);
                 if (row.tts) {
                     const audio = this.$refs.audio;
-                    audio.src = "data:audio/wav;base64," + row.tts.speech;
+                    audio.src = process.env.VUE_APP_ASSETS_HOST + "/audio/" + row.name + ".mp3";
                     audio.load();
                     audio.play();
                 }
@@ -643,7 +622,7 @@
             speechPlayList() {
                 if (this.table.tableList.length > 0) {
                     const audio = this.$refs.audioList;
-                    audio.src = "data:audio/wav;base64," + this.table.tableList[this.speech.currentIndex].tts.speech;
+                    audio.src = process.env.VUE_APP_ASSETS_HOST + "/audio/" + this.table.tableList[this.speech.currentIndex].name + ".mp3";
                     audio.load();
                     audio.play();
                     this.speech.currentIndex++;

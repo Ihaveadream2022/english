@@ -188,12 +188,6 @@ export const placeholder = (params) =>
         params: params,
     });
 
-export const ttsGenerate = () =>
-    requestBase.request({
-        method: "get",
-        url: segments.urlAss + "/tts/generate",
-    });
-
 export const GitPush = () =>
     requestBase.request({
         method: "get",

@@ -11,7 +11,7 @@
 		</collection>
 	</resultMap>
 	<resultMap type="ItemTts" id="ItemTtsMapper">
-		<result property="speech" column="it_speech" />
+		<result property="audio" column="it_audio" />
 	</resultMap>
 	<!-- Select -->
 	<sql id="selectWhere">
@@ -28,7 +28,7 @@
 		    `similar`.`items`,
 		    `item`.`name` AS `i_name`,
 		    `item`.`common` AS `i_common`,
-		    `item_tts`.`speech` AS `it_speech`
+		    `item_tts`.`audio` AS `it_audio`
 		FROM (
 			SELECT id, items FROM similar <include refid="selectWhere" /> ORDER BY id DESC
 			<if test="pageSize != null and pageSize > 0">

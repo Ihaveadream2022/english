@@ -1,12 +1,12 @@
 package com.english.entity;
 
-public class ItemTts
-{
+public class ItemTts {
+
     private Long id;
 
     private String name;
 
-    private String speech;
+    private byte[] audio;
 
     public Long getId() {
         return id;
@@ -24,11 +24,11 @@ public class ItemTts
         this.name = name;
     }
 
-    public String getSpeech() {
-        return speech;
+    public byte[] getAudio() {
+        return audio;
     }
 
-    public void setSpeech(String speech) {
-        this.speech = speech;
+    public void setAudio(byte[] audio) {
+        this.audio = audio;
     }
 }

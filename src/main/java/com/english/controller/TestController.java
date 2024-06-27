@@ -2,12 +2,15 @@ package com.english.controller;
 
 import com.english.entity.Item;
 import com.english.entity.ItemExample;
+import com.english.entity.ItemTts;
 import com.english.manager.ThreadManager;
 import com.english.model.KeyValue;
 import com.english.model.request.ItemQueryCondition;
+import com.english.model.request.ItemTtsQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.impl.ItemExampleServiceImpl;
 import com.english.service.impl.ItemServiceImpl;
+import com.english.service.impl.ItemTtsServiceImpl;
 import com.english.util.FileUtil;
 import com.english.util.encrypt.Digest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,49 +95,77 @@ public class TestController {
     @Autowired
     ItemServiceImpl itemService;
 
+    @Autowired
+    ItemTtsServiceImpl itemTtsService;
+
     @GetMapping("/test")
-    public void getAudio(@RequestParam Integer total, @RequestParam Integer today, HttpServletResponse response) throws IOException {
+    public void getAudio(@RequestParam Integer total, @RequestParam Integer today, @RequestParam String name, HttpServletResponse response) throws IOException {
 
 
-        QueryCondition queryCondition = new ItemQueryCondition();
-        queryCondition.setPageNo(1);
-        queryCondition.setPageSize(500);
-        Map<String, Object> data = itemExampleService.pageList(queryCondition);
-        List<ItemExample> list = (List<ItemExample>) data.get("list");
 
-        Map<String,List<KeyValue>> map = new HashMap<String,List<KeyValue>>();
 
-        list.forEach(v-> {
-            List<KeyValue> strList = map.get(v.getName());
-            if (strList == null) {
-                strList = new ArrayList<KeyValue>();
-            }
+        response.setContentType("audio/mp3");
 
-                KeyValue keyValue = new KeyValue();
-//                keyValue.setKey(v.getKey());
-//            keyValue.setValue(v.getExample());
-//                strList.add(keyValue);
 
-            map.put(v.getName(), strList);
+        ItemTts itemTts = itemTtsService.findByName(name);
 
-        });
+        try (OutputStream outputStream = response.getOutputStream()) {
+            outputStream.write(itemTts.getAudio());
+        }
 
-        map.forEach((k,v)->{
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonStr = objectMapper.writeValueAsString(v);
+//        QueryCondition queryCondition = new ItemTtsQueryCondition();
+//        queryCondition.setPageNo(1);
+//        queryCondition.setPageSize(500);
+//        itemTtsService.pageList(queryCondition);
+//        Map<String, Object> data = itemTtsService.pageList(queryCondition);
+//        List<ItemTts> list = (List<ItemTts>) data.get("list");
+//        list.forEach(v->{
+//            byte[] bytes = Base64.getDecoder().decode(v.getSpeech());
+//            v.setAudio(bytes);
+//            itemTtsService.update(v);
+//        });
 
-                System.out.println(k + ": " +jsonStr);
-//                ItemExample itemExample = itemExampleService.findByName(k);
-//                itemExample.setExamples(jsonStr);
-//                itemExampleService.update(itemExample);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-        });
 
-        System.out.println(map);
+//        QueryCondition queryCondition = new ItemQueryCondition();
+//        queryCondition.setPageNo(1);
+//        queryCondition.setPageSize(500);
+//        Map<String, Object> data = itemExampleService.pageList(queryCondition);
+//        List<ItemExample> list = (List<ItemExample>) data.get("list");
+//
+//        Map<String,List<KeyValue>> map = new HashMap<String,List<KeyValue>>();
+//
+//        list.forEach(v-> {
+//            List<KeyValue> strList = map.get(v.getName());
+//            if (strList == null) {
+//                strList = new ArrayList<KeyValue>();
+//            }
+//
+//                KeyValue keyValue = new KeyValue();
+////                keyValue.setKey(v.getKey());
+////            keyValue.setValue(v.getExample());
+////                strList.add(keyValue);
+//
+//            map.put(v.getName(), strList);
+//
+//        });
+
+//        map.forEach((k,v)->{
+//            try {
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                String jsonStr = objectMapper.writeValueAsString(v);
+//
+//                System.out.println(k + ": " +jsonStr);
+////                ItemExample itemExample = itemExampleService.findByName(k);
+////                itemExample.setExamples(jsonStr);
+////                itemExampleService.update(itemExample);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        });
+//
+//        System.out.println(map);
 
 
 

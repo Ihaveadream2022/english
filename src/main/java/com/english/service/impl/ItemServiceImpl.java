@@ -3,6 +3,7 @@ package com.english.service.impl;
 import com.english.entity.Item;
 import com.english.entity.ItemExample;
 import com.english.entity.ItemTts;
+import com.english.exception.GlobalExceptionHandler;
 import com.english.mapper.ItemMapper;
 import com.english.model.ItemHtml;
 import com.english.model.request.DeleteRequestBody;
@@ -26,6 +27,8 @@ import java.util.TimerTask;
 @Service
 public class ItemServiceImpl implements ItemService {
 
+    private final Logger frameworkLogger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
     @Autowired
@@ -137,9 +140,7 @@ public class ItemServiceImpl implements ItemService {
                         ItemHtml itemHtml = new ItemHtml();
                         itemHtml.setEn(item.getName());
                         itemHtml.setCn(item.getCommon());
-                        if (item.getTts().getId() != null) {
-                            itemHtml.setTts(item.getTts().getSpeech());
-                        }
+                        itemHtml.setTts(String.format("%s.mp3", item.getName()));
                         list.add(itemHtml);
                     }
                     String filePath = String.format("%s/html/json/%s.json", System.getProperty("user.dir"), index);
@@ -149,6 +150,7 @@ public class ItemServiceImpl implements ItemService {
 
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
+                    frameworkLogger.error(e.getMessage(), e);
                     throw new RuntimeException(e.getMessage());
                 }
             }

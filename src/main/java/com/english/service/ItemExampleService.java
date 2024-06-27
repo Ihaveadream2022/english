@@ -1,7 +1,7 @@
 package com.english.service;
 
+import com.english.entity.Item;
 import com.english.entity.ItemExample;
-import java.util.List;
 
 public interface ItemExampleService {
     public ItemExample findByName(String name);
@@ -10,6 +10,6 @@ public interface ItemExampleService {
 
     public Long update(ItemExample itemExample);
 
-    public void writeJSONFile(ItemExample itemExample, Integer index);
+    public void writeJSONFile(Item item, Integer index);
 }
 

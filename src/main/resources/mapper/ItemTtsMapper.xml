@@ -4,7 +4,7 @@
 	<resultMap type="ItemTts" id="ItemTtsMapper">
 		<result property="id" column="id" />
 		<result property="name" column="name" />
-		<result property="speech" column="speech" />
+		<result property="audio" column="audio" />
 	</resultMap>
 	<!-- Select -->
 	<sql id="selectWhere">
@@ -31,10 +31,10 @@
 	<insert id="insert" parameterType="ItemTts" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO `item_tts`
 		<trim prefix=" (" suffix=") " prefixOverrides=",">
-			`name`,`speech`
+			`name`,`audio`
 		</trim>VALUES
 		<trim prefix=" (" suffix=") " prefixOverrides=",">
-			#{name},#{speech}
+			#{name},#{audio}
 		</trim>
 	</insert>
 	<!-- Insert -->
@@ -42,7 +42,7 @@
 	<update id="update" parameterType="ItemTts">
 		UPDATE `item_tts`
 		<set>
-			<if test="speech != null">`speech` = #{speech}</if>
+			<if test="audio != null">,`audio` = #{audio}</if>
 		</set>
 		WHERE `id` = #{id}
 	</update>
