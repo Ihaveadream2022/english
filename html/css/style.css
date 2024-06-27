@@ -106,7 +106,8 @@ body {
     color: #000;
     background-color: #fff;
 }
-#practice #recognize-result {
+#practice #recognize-result,
+#synonym #recognize-result {
     position: absolute;
     top: 0;
     left: 0;
