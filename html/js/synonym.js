@@ -57,7 +57,7 @@ function fetchData(page) {
             return response.json();
         })
         .then((data) => {
-            const words = data.items;
+            const words = data.itemHtmlList;
             const enArray = shuffleArray(words);
             const cnArray = shuffleArray(words);
             playAudioSources = enArray;
@@ -95,7 +95,7 @@ function initUI(meaning, enList, cnList) {
         const en = word.en.replace(/\s+/g, "_");
         const sourceElement = document.createElement("source");
         sourceElement.type = "audio/mp3";
-        sourceElement.src = domainPrefix + "/audio/" + word.en + ".mp3";
+        sourceElement.src = "data:audio/mp3;base64," + word.tts;
 
         const audioElement = document.createElement("audio");
         audioElement.id = `audio-${en}`;
@@ -141,7 +141,7 @@ function doPlay() {
 }
 function playHandler() {
     if (playAudioSources.length > 0) {
-        listPlayer.src = domainPrefix + "/audio/" + playAudioSources[playAudioSourcesCurrentIndex].en + ".mp3";
+        listPlayer.src = "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
         listPlayer.load();
         listPlayer.play();
         playAudioSourcesCurrentIndex++;

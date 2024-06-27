@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
@@ -121,13 +122,14 @@ public class ItemTtsServiceImpl implements ItemTtsService {
                     // Read audio and convert to Base64 String
                     Path path = Paths.get(filePath);
                     byte[] bytes = Files.readAllBytes(path);
+                    String byteBase64 = Base64.getEncoder().encodeToString(bytes);
 
                     // Delete the audio
-                    // FileUtil.deleteFile(filePath);
+                     FileUtil.deleteFile(filePath);
 
                     // Update item audio
-                    if (bytes.length > 0) {
-                        itemTts.setAudio(bytes);
+                    if (byteBase64 != null && byteBase64.length() > 0) {
+                        itemTts.setAudio(byteBase64);
                         itemTtsMapper.update(itemTts);
                     }
                 } catch (Exception e) {
@@ -145,7 +147,8 @@ public class ItemTtsServiceImpl implements ItemTtsService {
             public void run() {
                 String filePath = String.format("%s/html/audio/%s.mp3", System.getProperty("user.dir"), itemTts.getName().replace(" ","_"));
                 try (FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
-                    fileOutputStream.write(itemTts.getAudio());
+                    byte[] bytes = Base64.getDecoder().decode(itemTts.getAudio());
+                    fileOutputStream.write(bytes);
                     serviceLogger.info("Write binary file successfully: " + filePath);
                 } catch (IOException e) {
                     throw new ServiceRuntimeException(e.getMessage());

@@ -611,10 +611,9 @@
                 this.tableGetList(this.table.searchForm);
             },
             speechPlayOne(row) {
-                console.log(process.env);
                 if (row.tts) {
                     const audio = this.$refs.audio;
-                    audio.src = process.env.VUE_APP_ASSETS_HOST + "/audio/" + row.name + ".mp3";
+                    audio.src = "data:audio/wav;base64," + row.tts.audio;
                     audio.load();
                     audio.play();
                 }
@@ -622,7 +621,7 @@
             speechPlayList() {
                 if (this.table.tableList.length > 0) {
                     const audio = this.$refs.audioList;
-                    audio.src = process.env.VUE_APP_ASSETS_HOST + "/audio/" + this.table.tableList[this.speech.currentIndex].name + ".mp3";
+                    audio.src = "data:audio/wav;base64," + this.table.tableList[this.speech.currentIndex].tts.audio;
                     audio.load();
                     audio.play();
                     this.speech.currentIndex++;

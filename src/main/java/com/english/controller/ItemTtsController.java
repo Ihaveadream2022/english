@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Base64;
 
 @RequestMapping("/tts")
 @RestController
@@ -30,7 +31,8 @@ public class ItemTtsController {
             response.setHeader("download-filename", downloadFileName.toString());
             response.setContentType("audio/mpeg");
             try (OutputStream outputStream = response.getOutputStream()) {
-                outputStream.write(itemTts.getAudio());
+                byte[] bytes = Base64.getDecoder().decode(itemTts.getAudio());
+                outputStream.write(bytes);
             } catch (Exception e) {
                 throw new ServiceRuntimeException(e.getMessage());
             }

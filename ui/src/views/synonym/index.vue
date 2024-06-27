@@ -119,6 +119,7 @@
                     this.editDialog.title = "Create Synonym";
                     this.editDialog.dataEn = "";
                     this.editDialog.dataCn = "";
+                    this.editDialog.operation = "add";
                     this.tableGetList(this.table.searchForm);
                 });
             },

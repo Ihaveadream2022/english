@@ -6,7 +6,7 @@ public class SynonymHtml {
 
     private String meaning;
 
-    private List<SynonymHtmlItem> items;
+    private List<ItemHtml> itemHtmlList;
 
     public String getMeaning() {
         return meaning;
@@ -16,11 +16,11 @@ public class SynonymHtml {
         this.meaning = meaning;
     }
 
-    public List<SynonymHtmlItem> getItems() {
-        return items;
+    public List<ItemHtml> getItemHtmlList() {
+        return itemHtmlList;
     }
 
-    public void setItems(List<SynonymHtmlItem> items) {
-        this.items = items;
+    public void setItemHtmlList(List<ItemHtml> itemHtmlList) {
+        this.itemHtmlList = itemHtmlList;
     }
 }

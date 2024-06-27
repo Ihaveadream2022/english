@@ -28,7 +28,7 @@ import java.util.TimerTask;
 public class ItemServiceImpl implements ItemService {
 
     private final Logger frameworkLogger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    
+
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
     @Autowired
@@ -140,14 +140,13 @@ public class ItemServiceImpl implements ItemService {
                         ItemHtml itemHtml = new ItemHtml();
                         itemHtml.setEn(item.getName());
                         itemHtml.setCn(item.getCommon());
-                        itemHtml.setTts(String.format("%s.mp3", item.getName()));
+                        itemHtml.setTts(item.getTts().getAudio());
                         list.add(itemHtml);
                     }
                     String filePath = String.format("%s/html/json/%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(file, list);
-
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
                     frameworkLogger.error(e.getMessage(), e);

@@ -99,9 +99,6 @@ public class ItemController {
                         itemExampleService.writeJSONFile(item, indexExample);
                         indexExample++;
                     }
-                    if (item.getTts().getAudio() != null) {
-                        itemTtsService.writeBinaryFile(item.getTts());
-                    }
                 }
             }
             page++;

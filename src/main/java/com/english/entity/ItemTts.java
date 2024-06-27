@@ -6,7 +6,7 @@ public class ItemTts {
 
     private String name;
 
-    private byte[] audio;
+    private String audio;
 
     public Long getId() {
         return id;
@@ -24,11 +24,11 @@ public class ItemTts {
         this.name = name;
     }
 
-    public byte[] getAudio() {
+    public String getAudio() {
         return audio;
     }
 
-    public void setAudio(byte[] audio) {
+    public void setAudio(String audio) {
         this.audio = audio;
     }
 }

@@ -95,7 +95,7 @@ function initUI(en, cn) {
         const en = word.en.replace(/\s+/g, "_");
         const sourceElement = document.createElement("source");
         sourceElement.type = "audio/mp3";
-        sourceElement.src =  domainPrefix + "/audio/" +  word.tts;
+        sourceElement.src = "data:audio/mp3;base64," + word.tts;
 
         const audioElement = document.createElement("audio");
         audioElement.id = `audio-${en}`;
@@ -213,7 +213,7 @@ function doPlay() {
 }
 function playHandler() {
     if (playAudioSources.length > 0) {
-        listPlayer.src =  domainPrefix + "/audio/" +  playAudioSources[playAudioSourcesCurrentIndex].tts;
+        listPlayer.src =  "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
         listPlayer.load();
         listPlayer.play();
         playAudioSourcesCurrentIndex++;

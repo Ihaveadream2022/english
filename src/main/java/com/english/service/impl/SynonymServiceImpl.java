@@ -1,15 +1,15 @@
 package com.english.service.impl;
 
+import com.english.entity.ItemTts;
 import com.english.entity.Synonym;
+import com.english.exception.GlobalExceptionHandler;
 import com.english.manager.ThreadManager;
 import com.english.mapper.SynonymMapper;
+import com.english.model.ItemHtml;
 import com.english.model.SynonymHtml;
-import com.english.model.SynonymHtmlItem;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 import com.english.service.SynonymService;
-import com.english.util.FileUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,10 +26,15 @@ import java.util.TimerTask;
 @Service
 public class SynonymServiceImpl implements SynonymService {
 
+    private final Logger frameworkLogger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
     @Autowired
     SynonymMapper synonymMapper;
+
+    @Autowired
+    ItemTtsServiceImpl itemTtsService;
 
     public HashMap<String, Object> pageList(QueryCondition queryCondition) {
         HashMap<String, Object> data = new HashMap<>();
@@ -97,13 +102,20 @@ public class SynonymServiceImpl implements SynonymService {
                     String filePath = String.format("%s/html/json/synonym-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
                     ObjectMapper objectMapper = new ObjectMapper();
-                    List<SynonymHtmlItem> list = objectMapper.readValue(synonym.getItems(), new TypeReference<List<SynonymHtmlItem>>() {});
+                    List<ItemHtml> list = objectMapper.readValue(synonym.getItems(), new TypeReference<List<ItemHtml>>() {});
+                    list.forEach(v->{
+                        ItemTts itemTts = itemTtsService.findByName(v.getEn());
+                        if (itemTts != null && itemTts.getAudio() != null) {
+                            v.setTts(itemTts.getAudio());
+                        }
+                    });
                     SynonymHtml synonymHtml = new SynonymHtml();
                     synonymHtml.setMeaning(synonym.getMeaning());
-                    synonymHtml.setItems(list);
+                    synonymHtml.setItemHtmlList(list);
                     objectMapper.writeValue(file, synonymHtml);
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
+                    frameworkLogger.error(e.getMessage(), e);
                     throw new RuntimeException(e);
                 }
             }

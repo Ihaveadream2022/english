@@ -2,6 +2,7 @@ package com.english.service.impl;
 
 import com.english.entity.Item;
 import com.english.entity.Similar;
+import com.english.exception.GlobalExceptionHandler;
 import com.english.manager.ThreadManager;
 import com.english.mapper.SimilarMapper;
 import com.english.model.ItemHtml;
@@ -23,6 +24,8 @@ import java.util.TimerTask;
 
 @Service
 public class SimilarServiceImpl implements SimilarService {
+
+    private final Logger frameworkLogger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private final Logger serviceLogger = LoggerFactory.getLogger("SERVICE");
 
@@ -97,7 +100,7 @@ public class SimilarServiceImpl implements SimilarService {
                         ItemHtml itemHtml = new ItemHtml();
                         itemHtml.setEn(item.getName());
                         itemHtml.setCn(item.getCommon());
-                        itemHtml.setTts(String.format("%s.mp3", item.getName()));
+                        itemHtml.setTts(item.getTts().getAudio());
                         list.add(itemHtml);
                     }
                     String filePath = String.format("%s/html/json/similar-%s.json", System.getProperty("user.dir"), index);
@@ -106,6 +109,7 @@ public class SimilarServiceImpl implements SimilarService {
                     objectMapper.writeValue(file, list);
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
+                    frameworkLogger.error(e.getMessage(), e);
                     throw new RuntimeException(e.getMessage());
                 }
             }
