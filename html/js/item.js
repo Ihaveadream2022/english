@@ -63,6 +63,7 @@ function fetchData(page) {
             const enArray = shuffleArray(words);
             const cnArray = shuffleArray(words);
             playAudioSources = enArray;
+            console.log(playAudioSources)
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
             initUI(enArray, cnArray);
             var listItems = $("li");
@@ -73,9 +74,14 @@ function fetchData(page) {
                 var enActive = $("#en").find("li.active").eq(0);
                 var cnAvtive = $("#cn").find("li.active").eq(0);
                 if ($(this).parent().attr("id") == "en") {
-                    var audio = $("#audio-" + enActive.data("en")).get(0);
-                    audio.load();
-                    audio.play();
+                    playAudioSources.forEach((v, k, ar) => {
+                        const en = v.en.replace(/\s+/g, "_");
+                        if (en == enActive.data("en")) {
+                            listPlayer.src = "data:audio/mp3;base64," + v.tts;
+                            listPlayer.load();
+                            listPlayer.play();
+                        }
+                    });
                 }
                 if (enActive.data("en") === cnAvtive.data("en")) {
                     const randomIndex = Math.floor(Math.random() * colors.length);
@@ -94,22 +100,9 @@ function initUI(en, cn) {
     ulElementCn.innerHTML = "";
     en.forEach((word) => {
         const en = word.en.replace(/\s+/g, "_");
-        const sourceElement = document.createElement("source");
-        sourceElement.type = "audio/mp3";
-        sourceElement.src = "data:audio/mp3;base64," + word.tts;
-
-        const audioElement = document.createElement("audio");
-        audioElement.id = `audio-${en}`;
-        audioElement.controls = 1;
-        audioElement.style.display = "none"; // 设置样式为不显示
-        audioElement.textContent = "Your browser does not support the audio element.";
-        audioElement.appendChild(sourceElement);
-
         const liElement = document.createElement("li");
         liElement.setAttribute("data-en", en);
         liElement.textContent = word.en;
-        liElement.appendChild(audioElement);
-
         ulElementEn.appendChild(liElement);
     });
     cn.forEach((word) => {

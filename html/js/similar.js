@@ -72,9 +72,14 @@ function fetchData(page) {
                 var enActive = $("#en").find("li.active").eq(0);
                 var cnAvtive = $("#cn").find("li.active").eq(0);
                 if ($(this).parent().attr("id") == "en") {
-                    var audio = $("#audio-" + enActive.data("en")).get(0);
-                    audio.load();
-                    audio.play();
+                    playAudioSources.forEach((v, k, ar) => {
+                        const en = v.en.replace(/\s+/g, "_");
+                        if (en == enActive.data("en")) {
+                            listPlayer.src = "data:audio/mp3;base64," + v.tts;
+                            listPlayer.load();
+                            listPlayer.play();
+                        }
+                    });
                 }
                 if (enActive.data("en") === cnAvtive.data("en")) {
                     const randomIndex = Math.floor(Math.random() * colors.length);
@@ -93,22 +98,9 @@ function initUI(en, cn) {
     ulElementCn.innerHTML = "";
     en.forEach((word) => {
         const en = word.en.replace(/\s+/g, "_");
-        const sourceElement = document.createElement("source");
-        sourceElement.type = "audio/mp3";
-        sourceElement.src = "data:audio/mp3;base64," + word.tts;
-
-        const audioElement = document.createElement("audio");
-        audioElement.id = `audio-${en}`;
-        audioElement.controls = 1;
-        audioElement.style.display = "none"; // 设置样式为不显示
-        audioElement.textContent = "Your browser does not support the audio element.";
-        audioElement.appendChild(sourceElement);
-
         const liElement = document.createElement("li");
         liElement.setAttribute("data-en", en);
         liElement.textContent = word.en;
-        liElement.appendChild(audioElement);
-
         ulElementEn.appendChild(liElement);
     });
     cn.forEach((word) => {
