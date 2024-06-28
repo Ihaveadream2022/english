@@ -143,7 +143,7 @@ public class ItemServiceImpl implements ItemService {
                         itemHtml.setTts(item.getTts().getAudio());
                         list.add(itemHtml);
                     }
-                    String filePath = String.format("%s/html/json/%s.json", System.getProperty("user.dir"), index);
+                    String filePath = String.format("%s/html/json/item-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(file, list);

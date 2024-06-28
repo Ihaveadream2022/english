@@ -90,7 +90,7 @@ public class ItemExampleServiceImpl implements ItemExampleService {
                     itemExampleHtml.setName(item.getName());
                     itemExampleHtml.setMeanings(splitMeaning(item));
                     itemExampleHtml.setExamples(keyValueListFilter);
-                    String filePath = String.format("%s/html/json/item-example-%s.json", System.getProperty("user.dir"), index);
+                    String filePath = String.format("%s/html/json/example-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
                     objectMapper.writeValue(file, itemExampleHtml);
                     logger.info(String.format("JSON example file [%s] has been created.", filePath));

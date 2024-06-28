@@ -95,10 +95,6 @@ body {
     background: rgb(215, 255, 184);
 }
 
-#practice .item li.matched {
-    color: #fff;
-    background-color: rgb(88, 204, 2);
-}
 #practice #en {
     border-right: 1px solid #999;
 }
@@ -384,10 +380,6 @@ body {
     background: rgb(215, 255, 184);
 }
 
-#synonym #items .item li.matched {
-    color: #fff;
-    background-color: rgb(88, 204, 2);
-}
 #synonym #items #en {
     border-right: 1px solid #999;
 }

@@ -1,8 +1,5 @@
-if (window.location.host.includes("github")) {
-    var domainPrefix = "/english/html";
-} else {
-    var domainPrefix = "";
-}
+const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
+const JSONPrefix = window.location.pathname.slice(1, -5);
 const scrollElm = document.getElementById("scroll");
 const tipsElem = document.getElementById("tips");
 var colors = [];
@@ -45,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 function fetchData(page) {
-    fetch(domainPrefix + "/json/item-example-" + page + ".json")
+    fetch(domainPrefix + "/json/" + JSONPrefix + "-" + page + ".json")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -184,29 +181,6 @@ function shuffleArray(originArray) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-}
-function compare() {
-    const ulElementEn = document.getElementById("en");
-    const ulElementCn = document.getElementById("cn");
-    const ulLisCn = ulElementCn.querySelectorAll("li");
-    const cnArray = [];
-    ulLisCn.forEach((li) => {
-        cnArray.push({ en: li.getAttribute("data-en") });
-    });
-    const ulLisEn = ulElementEn.querySelectorAll("li");
-    const enArray = [];
-    ulLisEn.forEach((li) => {
-        enArray.push({ en: li.getAttribute("data-en") });
-    });
-    if (cnArray.length !== enArray.length) {
-        return false;
-    }
-    for (let i = 0; i < cnArray.length; i++) {
-        if (cnArray[i]["en"] !== enArray[i]["en"]) {
-            return false;
-        }
-    }
-    return true;
 }
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;

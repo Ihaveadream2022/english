@@ -1,8 +1,5 @@
-if (window.location.host.includes("github")) {
-    var domainPrefix = "/english/html";
-} else {
-    var domainPrefix = "";
-}
+const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
+const JSONPrefix = window.location.pathname.slice(1, -5);
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
@@ -12,6 +9,8 @@ var colors = [];
 var playAudioSources = [];
 var playAudioSourcesCurrentIndex = 0;
 var playIsPlaying = false;
+
+// Page Bar
 document.addEventListener("DOMContentLoaded", function () {
     // 获取 Pre 和 Next 按钮元素
     var prevBtn = document.getElementById("prevBtn");
@@ -50,50 +49,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-function fetchData(page) {
-    fetch(domainPrefix + "/json/" + page + ".json")
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            const words = data;
-            const enArray = shuffleArray(words);
-            const cnArray = shuffleArray(words);
-            playAudioSources = enArray;
-            console.log(playAudioSources);
-            colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
-            initUI(enArray, cnArray);
-            var listItems = $("li");
-            listItems.unbind("click");
-            listItems.click(function () {
-                $(this).siblings().removeClass("active");
-                $(this).addClass("active");
-                var enActive = $("#en").find("li.active").eq(0);
-                var cnAvtive = $("#cn").find("li.active").eq(0);
-                if ($(this).parent().attr("id") == "en") {
-                    playAudioSources.forEach((v, k, ar) => {
-                        const en = v.en.replace(/\s+/g, "_");
-                        if (en == enActive.data("en")) {
-                            listPlayer.src = "data:audio/mp3;base64," + v.tts;
-                            listPlayer.load();
-                            listPlayer.play();
-                        }
-                    });
-                }
-                if (enActive.data("en") === cnAvtive.data("en")) {
-                    const randomIndex = Math.floor(Math.random() * colors.length);
-                    const randomColor = colors.splice(randomIndex, 1)[0];
-                    enActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
-                    cnAvtive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
-                }
-            });
-        })
-        .catch((error) => {
-            console.error("There was a problem with the fetch operation:", error);
-        });
+
+// Handwriting + Audio
+function recognize(word) {
+    const wordEn = word.replace(/\s+/g, "_");
+    const result = playAudioSources.find(({ en }) => en === wordEn);
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    const randomColor = colors.splice(randomIndex, 1)[0];
+    $('[data-en="' + wordEn + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
+    listPlayer.src = "data:audio/mp3;base64," + result.tts;
+    listPlayer.load();
+    listPlayer.play();
+    canvas.erase();
+}
+// Play Audio
+function doPlay() {
+    if (!playIsPlaying) {
+        playIsPlaying = true;
+        playAudioSourcesCurrentIndex = 0;
+        playBtn.innerHTML = "&#9209;";
+        listPlayer.addEventListener("ended", playHandler, false);
+        this.playHandler();
+    } else {
+        playIsPlaying = false;
+        playBtn.innerHTML = "&#9654;";
+        listPlayer.removeEventListener("ended", playHandler, false);
+    }
+}
+function playHandler() {
+    if (playAudioSources.length > 0) {
+        listPlayer.src = "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
+        listPlayer.load();
+        listPlayer.play();
+        playAudioSourcesCurrentIndex++;
+        if (playAudioSourcesCurrentIndex >= playAudioSources.length) {
+            playAudioSourcesCurrentIndex = 0;
+        }
+    }
+}
+// Functions
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function initUI(en, cn) {
     ulElementEn.innerHTML = "";
@@ -121,46 +117,46 @@ function shuffleArray(originArray) {
     }
     return array;
 }
-function recognize(data) {
-    const en = data.replace(/\s+/g, "_");
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    const randomColor = colors.splice(randomIndex, 1)[0];
-    canvas.erase();
-    $('[data-en="' + en + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-    playAudioSources.forEach((v, k, ar) => {
-        const enThis = v.en.replace(/\s+/g, "_");
-        if (enThis == en) {
-            listPlayer.src = "data:audio/mp3;base64," + v.tts;
-            listPlayer.load();
-            listPlayer.play();
-        }
-    });
-}
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function doPlay() {
-    if (!playIsPlaying) {
-        playIsPlaying = true;
-        playAudioSourcesCurrentIndex = 0;
-        playBtn.innerHTML = "&#9209;";
-        listPlayer.addEventListener("ended", playHandler, false);
-        this.playHandler();
-    } else {
-        playIsPlaying = false;
-        playBtn.innerHTML = "&#9654;";
-        listPlayer.removeEventListener("ended", playHandler, false);
-    }
-}
-function playHandler() {
-    if (playAudioSources.length > 0) {
-        listPlayer.src = "data:audio/mp3;base64," + playAudioSources[playAudioSourcesCurrentIndex].tts;
-        listPlayer.load();
-        listPlayer.play();
-        playAudioSourcesCurrentIndex++;
-        if (playAudioSourcesCurrentIndex >= playAudioSources.length) {
-            playAudioSourcesCurrentIndex = 0;
-        }
-    }
+
+// Fetch Data From a JSON File
+function fetchData(page) {
+    fetch(domainPrefix + "/json/" + JSONPrefix + "-" + page + ".json")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            const enArray = shuffleArray(data);
+            const cnArray = shuffleArray(data);
+            playAudioSources = enArray.map((v) => {
+                return { en: v.en.replace(/\s+/g, "_"), cn: v.cn, tts: v.tts };
+            });
+            colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
+            initUI(enArray, cnArray);
+            var listItems = $("li");
+            listItems.unbind("click");
+            listItems.click(function () {
+                const result = playAudioSources.find(({ en }) => en === $(this).data("en"));
+                listPlayer.src = "data:audio/mp3;base64," + result.tts;
+                listPlayer.load();
+                listPlayer.play();
+
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+                var enActive = $("#en").find("li.active").eq(0);
+                var cnAvtive = $("#cn").find("li.active").eq(0);
+                if (enActive.data("en") === cnAvtive.data("en")) {
+                    const randomIndex = Math.floor(Math.random() * colors.length);
+                    const randomColor = colors.splice(randomIndex, 1)[0];
+                    enActive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                    cnAvtive.css({ background: randomColor, "font-weight": "900", color: "#fff" });
+                }
+            });
+        })
+        .catch((error) => {
+            console.error("There was a problem with the fetch operation:", error);
+        });
 }
 fetchData(1);

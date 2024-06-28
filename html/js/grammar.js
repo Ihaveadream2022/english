@@ -1,8 +1,5 @@
-if (window.location.host.includes("github")) {
-    var domainPrefix = "/english/html";
-} else {
-    var domainPrefix = "";
-}
+const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
+const JSONPrefix = window.location.pathname.slice(1, -5);
 const titleElement = document.getElementById("title");
 const contentElement = document.getElementById("content");
 document.addEventListener("DOMContentLoaded", function () {
@@ -44,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 function fetchData(page) {
-    fetch(domainPrefix + "/json/grammar-" + page + ".json")
+    fetch(domainPrefix + "/json/" + JSONPrefix + "-" + page + ".json")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -65,6 +62,5 @@ function fetchData(page) {
 function initUI(data) {
     titleElement.innerHTML = data.name;
     contentElement.innerHTML = data.content;
-    console.log(data);
 }
 fetchData(1);

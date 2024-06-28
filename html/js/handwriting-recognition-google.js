@@ -1,9 +1,7 @@
-const practice = document.getElementById("practice");
-const synonym = document.getElementById("synonym");
 const canvasElem = document.getElementById("canvas");
 const recognizeResult = document.getElementById("recognize-result");
-const width = (practice && practice.clientWidth) || (synonym && synonym.clientWidth);
-const height = (practice && practice.clientHeight) || (synonym && synonym.clientHeight);
+const width = document.body.clientWidth;
+const height = document.body.clientHeight * 0.92;
 canvasElem.width = width;
 canvasElem.height = height;
 function canvasShow() {
@@ -42,7 +40,6 @@ document.onmousemove = function (e) {
     x = e.clientX;
     y = e.clientY;
 };
-
 document.addEventListener("keydown", (event) => {
     if (event.code === "KeyP") {
         if (!paintMode) {
@@ -52,7 +49,6 @@ document.addEventListener("keydown", (event) => {
         }
     }
 });
-
 document.addEventListener("keyup", (event) => {
     if (event.code === "KeyP") {
         if (paintMode) {
@@ -62,7 +58,6 @@ document.addEventListener("keyup", (event) => {
         }
     }
 });
-
 function sendMouseEvent() {
     var eventName = paintMode ? "mousedown" : "mouseup";
     var element = document.getElementById("canvas");
