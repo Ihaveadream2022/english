@@ -183,7 +183,7 @@
                 speech: {
                     currentIndex: 0,
                     isPlaying: false,
-                    text: "PlayList",
+                    text: "Play",
                 },
                 copiedText: "",
                 table: {
@@ -647,7 +647,7 @@
             },
             speechStopHandle() {
                 this.speech.isPlaying = false;
-                this.speech.text = "Playing";
+                this.speech.text = "Play";
                 this.$refs.audioList.removeEventListener("ended", this.speechPlayList, false);
             },
             handleEnter() {

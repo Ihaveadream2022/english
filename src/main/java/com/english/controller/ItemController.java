@@ -5,6 +5,7 @@ import com.english.model.JsonResponse;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
+import com.english.model.enums.QueryOrder;
 import com.english.service.impl.ItemExampleServiceImpl;
 import com.english.service.impl.ItemServiceImpl;
 import com.english.service.impl.ItemTtsServiceImpl;
@@ -26,7 +27,7 @@ public class ItemController {
 
     @Autowired
     ItemTtsServiceImpl itemTtsService;
-
+    private QueryOrder orderType;
     @GetMapping
     public JsonResponse list(ItemQueryCondition itemQueryCondition) {
 
@@ -90,6 +91,7 @@ public class ItemController {
         do {
             queryCondition.setPageNo(page);
             queryCondition.setPageSize(pageSize);
+            queryCondition.setOrderType(QueryOrder.ASC.getValue());
             Map<String, Object> data = itemService.pageList(queryCondition);
             List<Item> list = (List<Item>) data.get("list");
             if (list.size() > 0) {

@@ -65,7 +65,12 @@
 		FROM `item`
 		    LEFT JOIN `item_tts` ON `item_tts`.`name` = `item`.`name`
 			LEFT JOIN `item_example` ON `item_example`.`name` = `item`.`name`
-			<include refid="selectWhere" /> ORDER BY `item`.`id` DESC
+			<include refid="selectWhere" />
+		<choose>
+			<when test="orderType != null and orderType == 'ASC'">ORDER BY `item`.`id` ASC</when>
+			<when test="orderType != null and orderType == 'DESC'">ORDER BY `item`.`id` DESC</when>
+			<otherwise>ORDER BY `item`.`id` DESC</otherwise>
+		</choose>
 		<if test="pageSize != null and pageSize > 0">
 			<if test="offset != null and offset >= 0">
 				LIMIT #{offset},#{pageSize}

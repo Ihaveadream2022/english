@@ -1,6 +1,6 @@
 package com.english.model.request;
 
-import java.util.List;
+import com.english.model.enums.QueryOrder;
 
 public class QueryCondition {
 
@@ -10,15 +10,7 @@ public class QueryCondition {
 
     private Integer offset;
 
-    private List<String> createTime;
-
-    public List<String> getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(List<String> createTime) {
-        this.createTime = createTime;
-    }
+    private String orderType;
 
     public Integer getPageNo() {
         return pageNo;
@@ -38,5 +30,13 @@ public class QueryCondition {
 
     public Integer getOffset() {
         return pageSize * (pageNo - 1);
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 }
