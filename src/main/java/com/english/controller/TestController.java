@@ -4,6 +4,7 @@ import com.english.entity.Item;
 import com.english.entity.ItemExample;
 import com.english.entity.ItemTts;
 import com.english.manager.ThreadManager;
+import com.english.mapper.ItemMapper;
 import com.english.model.KeyValue;
 import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.ItemTtsQueryCondition;
@@ -36,6 +37,8 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.lang.Runnable;
@@ -79,10 +82,10 @@ public class TestController {
         String[] todayTodo = {"", "1.json", "100.json"};
         int todayIndex = today % 32;
 
-        int todayFileFrom = todayIndex * 100 - 100 + 1;
+        int todayFileFrom = (todayIndex - 1) * 100 + 1;
         int todayFileEnd =  todayIndex * 100;
-        int todayItemsFrom = todayFileEnd*10-1000+1;
-        int todayItemsEnd = todayFileEnd*10;
+        int todayItemsFrom = (todayFileEnd - 100) * 10 + 1;
+        int todayItemsEnd = todayFileEnd * 10;
         if (total <= todayItemsFrom) {
             todayFileFrom = 1;
             todayFileEnd = 100;
@@ -104,9 +107,54 @@ public class TestController {
     @Autowired
     ItemTtsServiceImpl itemTtsService;
 
-    @GetMapping("/test")
-    public void getAudio(@RequestParam Integer total, @RequestParam Integer today, HttpServletResponse response) throws IOException {
 
+
+    @GetMapping("/test")
+    public void getAudio(HttpServletResponse response) throws IOException {
+        Map<String,String> data = new HashMap<>();
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+        String dayStr = localDateTime.format(dayFormatter);
+        int dayInt = dayStr.startsWith("0")? Integer.parseInt(dayStr.substring(1)): Integer.parseInt(dayStr);
+
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+        String monthStr = localDateTime.format(monthFormatter);
+        int monthInt = monthStr.startsWith("0")? Integer.parseInt(monthStr.substring(1)): Integer.parseInt(monthStr);
+
+        QueryCondition queryCondition = new QueryCondition();
+        long total = itemService.count(queryCondition);
+        int pageSize = 1000;
+        int page = (int) Math.ceil((double) total / pageSize);
+        if (total > 1 && total <= 31000) {
+            if (page == 1) {
+                data.put("range", String.format("%s: [%s,%s]: [%s,%s]", dayInt, 1, 1000, "item-1.json", "item-100.json"));
+            } else {
+                int pageCurrent = ((dayInt - 1 ) % page) + 1;
+                int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
+                int itemRangeEnd = pageCurrent * 1000;
+                int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
+                int itemFileRangeEnd =  pageCurrent * 100;
+                data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
+            }
+        } else if (total > 31000 && total <= 62000) {
+            if (monthInt % 2 == 0) {
+                dayInt = dayInt + 31;
+            }
+            int pageCurrent = ((dayInt - 1 ) % page) + 1;
+            int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
+            int itemRangeEnd = pageCurrent * 1000;
+            int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
+            int itemFileRangeEnd =  pageCurrent * 100;
+            data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
+        } else {
+
+        }
+
+//        double page = Math.ceil();
+
+        // 以 页数 为频率  1200 Math.fl1200/1000
 //        String[] todayTodo = calc(total,today);
 
 

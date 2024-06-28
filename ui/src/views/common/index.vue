@@ -1,18 +1,40 @@
 <template>
-    <div class="searchBox" ref="searchBox">
-        <div class="searchBtnBox">
-            <el-button type="primary" @click="GitPush">Git Push To Remote</el-button>
+    <div>
+        <div class="searchBox" ref="searchBox">
+            <div class="searchBtnBox">
+                <el-button type="primary" @click="GitPush">Git Push To Remote</el-button>
+            </div>
+        </div>
+        <div style="width: 500px; margin: 10px">
+            <el-descriptions direction="vertical" :column="1" :labelStyle="{ background: '#409EFF', color: '#fff' }" border>
+                <el-descriptions-item label="单词总数1">
+                    {{ statics.total }}
+                </el-descriptions-item>
+                <el-descriptions-item label="总页数">
+                    {{ statics.totalPage }}
+                </el-descriptions-item>
+                <el-descriptions-item label="今天页数">
+                    {{ statics.nowPage }}
+                </el-descriptions-item>
+                <el-descriptions-item label="今天要背">
+                    {{ statics.todo }}
+                </el-descriptions-item>
+            </el-descriptions>
         </div>
     </div>
 </template>
 <script>
     /* eslint-disable */
-    import { GitPush } from "@/api/request";
+    import { GitPush, IndexTodo } from "@/api/request";
     export default {
         data() {
-            return {};
+            return {
+                statics: {},
+            };
         },
-        created() {},
+        created() {
+            this.indexTodo();
+        },
         mounted() {},
         methods: {
             GitPush() {
@@ -36,6 +58,29 @@
                         });
                     },
                 );
+            },
+            indexTodo() {
+                IndexTodo()
+                    .then(
+                        (res) => {
+                            this.statics = res.data;
+                            console.log("res", res);
+                        },
+                        (res) => {
+                            Message({
+                                message: `${res.message}`,
+                                type: "error",
+                                duration: 1500,
+                            });
+                        },
+                    )
+                    .catch((error) => {
+                        Message({
+                            message: `${error}`,
+                            type: "error",
+                            duration: 1500,
+                        });
+                    });
             },
         },
     };

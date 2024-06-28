@@ -6,8 +6,8 @@ import com.english.model.request.QueryCondition;
 
 import java.util.List;
 
-public interface ItemMapper
-{
+public interface ItemMapper {
+
     public List<Item> selectLimited(QueryCondition queryCondition);
 
     public Long count(QueryCondition queryCondition);

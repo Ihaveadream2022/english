@@ -148,7 +148,7 @@ export const itemExampleEdit = (data) =>
         url: segments.urlAss + "/item-examples/" + data.id,
         data: data,
     });
-    
+
 // Grammar
 export const grammarList = (params) =>
     requestBase.request({
@@ -213,7 +213,6 @@ export const synonymEdit = (data) =>
         url: segments.urlAss + "/synonyms/" + data.id,
         data: data,
     });
-
 export const synonymDelete = (data) =>
     requestBase.request({
         method: "delete",
@@ -225,7 +224,7 @@ export const synonymGenerate = () =>
         url: segments.urlAss + "/synonyms/generate",
     });
 
-// Synonym
+// Similars
 export const similarList = (params) =>
     requestBase.request({
         method: "get",
@@ -244,7 +243,6 @@ export const similarEdit = (data) =>
         url: segments.urlAss + "/similars/" + data.id,
         data: data,
     });
-
 export const similarDelete = (data) =>
     requestBase.request({
         method: "delete",
@@ -254,4 +252,11 @@ export const similarGenerate = () =>
     requestBase.request({
         method: "get",
         url: segments.urlAss + "/similars/generate",
+    });
+
+// Index
+export const IndexTodo = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/index/todo",
     });

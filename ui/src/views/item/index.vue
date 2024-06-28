@@ -195,6 +195,7 @@
                         pageNo: 1,
                         pageSize: 10,
                     },
+                    statics: {},
                 },
                 editDialog: {
                     title: "Create Item",

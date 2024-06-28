@@ -56,6 +56,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public Long count(QueryCondition queryCondition) {
+        return itemMapper.count(queryCondition);
+    }
+
+    @Override
     public Item findByName(String name) {
         return itemMapper.findByName(name);
     }

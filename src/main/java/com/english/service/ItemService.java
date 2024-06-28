@@ -1,16 +1,16 @@
 package com.english.service;
 
 import com.english.entity.Item;
-import com.english.entity.User;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.QueryCondition;
 
 import java.util.HashMap;
 import java.util.List;
 
-public interface ItemService
-{
+public interface ItemService {
     public HashMap<String, Object> pageList(QueryCondition queryCondition);
+
+    public Long count(QueryCondition queryCondition);
 
     public Boolean exist(Item item);
 
