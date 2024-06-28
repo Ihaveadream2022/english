@@ -1,5 +1,5 @@
 const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
-const JSONPrefix = window.location.pathname.slice(1, -5);
+const JSONPrefix = window.location.pathname.split('/').pop().replace(".html","");
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
