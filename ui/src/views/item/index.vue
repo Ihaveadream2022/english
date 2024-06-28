@@ -49,7 +49,10 @@
                         <div class="panel">
                             <el-button type="primary" size="mini" @click="editDialogEdit(scope.row)">Edit</el-button>
                             <el-button type="danger" size="mini" @click="editDelete(scope.row)">Delete</el-button>
-                            <el-button type="primary" size="mini" @click="exampleEditDialog(scope.row)">Example</el-button>
+                            <el-button type="primary" size="mini" @click="exampleEditDialog(scope.row)" class="example-btn">
+                                <span>Example</span>
+                                <span class="example-num">{{ countExamples(scope.row) }}</span>
+                            </el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -282,10 +285,10 @@
                 this.editDialog.form = row;
             },
             exampleEditDialog(row) {
-                console.log(row)
+                console.log(row);
                 this.dataExampleDialog.title = "Edit Examples";
                 this.dataExampleDialog.visible = true;
-                this.dataExampleDialog.exampleArray = (row.example && row.example.examples) ? JSON.parse(row.example.examples) : [];
+                this.dataExampleDialog.exampleArray = row.example && row.example.examples ? JSON.parse(row.example.examples) : [];
                 this.dataExampleDialog.form = row;
             },
             editDialogDelete(row) {},
@@ -668,6 +671,14 @@
                 });
                 console.log(this.dataExampleDialog.exampleArray);
             },
+            countExamples(row) {
+                var total = "";
+                if (row.example && row.example.examples) {
+                    var exampleArr = JSON.parse(row.example.examples);
+                    total = "[" + exampleArr.length + "]";
+                }
+                return total;
+            },
         },
     };
 </script>
@@ -742,6 +753,15 @@
             }
             .el-button--primary {
                 background-color: rgb(88, 204, 2);
+                &.example-btn {
+                    position: relative;
+                    .example-num {
+                        position: absolute;
+                        top: 0px;
+                        right: 0;
+                        color: #fff;
+                    }
+                }
             }
             .el-button--primary:focus,
             .el-button--primary:hover {
