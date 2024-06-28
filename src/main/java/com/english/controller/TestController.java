@@ -111,46 +111,56 @@ public class TestController {
 
     @GetMapping("/test")
     public void getAudio(HttpServletResponse response) throws IOException {
-        Map<String,String> data = new HashMap<>();
 
-        LocalDateTime localDateTime = LocalDateTime.now();
+        String a = "1";
+        int a1 = Integer.parseInt(a); // 1
 
-        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
-        String dayStr = localDateTime.format(dayFormatter);
-        int dayInt = dayStr.startsWith("0")? Integer.parseInt(dayStr.substring(1)): Integer.parseInt(dayStr);
+       int a2 = Integer.valueOf(a); // 1
+//
 
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
-        String monthStr = localDateTime.format(monthFormatter);
-        int monthInt = monthStr.startsWith("0")? Integer.parseInt(monthStr.substring(1)): Integer.parseInt(monthStr);
+        long a3 = Long.parseLong(a);
 
-        QueryCondition queryCondition = new QueryCondition();
-        long total = itemService.count(queryCondition);
-        int pageSize = 1000;
-        int page = (int) Math.ceil((double) total / pageSize);
-        if (total > 1 && total <= 31000) {
-            if (page == 1) {
-                data.put("range", String.format("%s: [%s,%s]: [%s,%s]", dayInt, 1, 1000, "item-1.json", "item-100.json"));
-            } else {
-                int pageCurrent = ((dayInt - 1 ) % page) + 1;
-                int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
-                int itemRangeEnd = pageCurrent * 1000;
-                int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
-                int itemFileRangeEnd =  pageCurrent * 100;
-                data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
-            }
-        } else if (total > 31000 && total <= 62000) {
-            if (monthInt % 2 == 0) {
-                dayInt = dayInt + 31;
-            }
-            int pageCurrent = ((dayInt - 1 ) % page) + 1;
-            int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
-            int itemRangeEnd = pageCurrent * 1000;
-            int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
-            int itemFileRangeEnd =  pageCurrent * 100;
-            data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
-        } else {
-
-        }
+        long a4 = Long.valueOf(a);
+//        Map<String,String> data = new HashMap<>();
+//
+//        LocalDateTime localDateTime = LocalDateTime.now();
+//
+//        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+//        String dayStr = localDateTime.format(dayFormatter);
+//        int dayInt = dayStr.startsWith("0")? Integer.parseInt(dayStr.substring(1)): Integer.parseInt(dayStr);
+//
+//        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+//        String monthStr = localDateTime.format(monthFormatter);
+//        int monthInt = monthStr.startsWith("0")? Integer.parseInt(monthStr.substring(1)): Integer.parseInt(monthStr);
+//
+//        QueryCondition queryCondition = new QueryCondition();
+//        long total = itemService.count(queryCondition);
+//        int pageSize = 1000;
+//        int page = (int) Math.ceil((double) total / pageSize);
+//        if (total > 1 && total <= 31000) {
+//            if (page == 1) {
+//                data.put("range", String.format("%s: [%s,%s]: [%s,%s]", dayInt, 1, 1000, "item-1.json", "item-100.json"));
+//            } else {
+//                int pageCurrent = ((dayInt - 1 ) % page) + 1;
+//                int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
+//                int itemRangeEnd = pageCurrent * 1000;
+//                int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
+//                int itemFileRangeEnd =  pageCurrent * 100;
+//                data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
+//            }
+//        } else if (total > 31000 && total <= 62000) {
+//            if (monthInt % 2 == 0) {
+//                dayInt = dayInt + 31;
+//            }
+//            int pageCurrent = ((dayInt - 1 ) % page) + 1;
+//            int itemRangeFrom = (pageCurrent - 1) * 1000 + 1;
+//            int itemRangeEnd = pageCurrent * 1000;
+//            int itemFileRangeFrom = (pageCurrent - 1) * 100 + 1;
+//            int itemFileRangeEnd =  pageCurrent * 100;
+//            data.put("range", String.format("%s: [%s,%s]: [%s.json,%s.json]", dayInt, itemRangeFrom, itemRangeEnd, itemFileRangeFrom, itemFileRangeEnd));
+//        } else {
+//
+//        }
 
 //        double page = Math.ceil();
 
