@@ -97,12 +97,6 @@ public class ItemController {
             List<Item> list = (List<Item>) data.get("list");
             if (list.size() > 0) {
                 itemService.writeJSONFile(list, page);
-                for (Item item: list) {
-                    if (item.getExample() != null && item.getExample().getExamples() != null) {
-                        itemExampleService.writeJSONFile(item, indexExample);
-                        indexExample++;
-                    }
-                }
             }
             page++;
             continueFlag = list.size() > 0;

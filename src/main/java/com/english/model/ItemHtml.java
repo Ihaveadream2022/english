@@ -1,5 +1,7 @@
 package com.english.model;
 
+import java.util.List;
+
 public class ItemHtml {
 
     private String en;
@@ -7,6 +9,10 @@ public class ItemHtml {
     private String cn;
 
     private String tts;
+
+    private List<String[]> meanings;
+
+    private List<KeyValue> examples;
 
     public String getEn() {
         return en;
@@ -32,5 +38,21 @@ public class ItemHtml {
     public void setTts(String tts)
     {
         this.tts = tts;
+    }
+
+    public List<String[]> getMeanings() {
+        return meanings;
+    }
+
+    public void setMeanings(List<String[]> meanings) {
+        this.meanings = meanings;
+    }
+
+    public List<KeyValue> getExamples() {
+        return examples;
+    }
+
+    public void setExamples(List<KeyValue> examples) {
+        this.examples = examples;
     }
 }

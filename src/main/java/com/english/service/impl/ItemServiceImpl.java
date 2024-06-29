@@ -6,12 +6,14 @@ import com.english.entity.ItemTts;
 import com.english.exception.GlobalExceptionHandler;
 import com.english.mapper.ItemMapper;
 import com.english.model.ItemHtml;
+import com.english.model.KeyValue;
 import com.english.model.request.DeleteRequestBody;
 import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemService;
 import com.english.manager.ThreadManager;
 import com.english.util.StringUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -140,17 +143,26 @@ public class ItemServiceImpl implements ItemService {
             @Override
             public void run() {
                 try {
+                    ObjectMapper objectMapper = new ObjectMapper();
                     List<ItemHtml> list = new ArrayList<>();
                     for (Item item : itemList) {
                         ItemHtml itemHtml = new ItemHtml();
                         itemHtml.setEn(item.getName());
                         itemHtml.setCn(item.getCommon());
                         itemHtml.setTts(item.getTts().getAudio());
+                        itemHtml.setMeanings(splitMeaning(item));
+                        if (item.getExample() != null && item.getExample().getExamples() != null) {
+                            List<KeyValue> keyValueList = objectMapper.readValue(item.getExample().getExamples(), new TypeReference<List<KeyValue>>() {});
+                            List<KeyValue> keyValueListFilter = keyValueList.stream().map(v->{
+                                v.setValue(StringUtil.toHTML(v.getValue()));
+                                return v;
+                            }).collect(Collectors.toList());
+                            itemHtml.setExamples(keyValueListFilter);
+                        }
                         list.add(itemHtml);
                     }
                     String filePath = String.format("%s/html/json/item-%s.json", System.getProperty("user.dir"), index);
                     File file = new File(filePath);
-                    ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(file, list);
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
                 } catch (Exception e) {
@@ -226,5 +238,21 @@ public class ItemServiceImpl implements ItemService {
             }
         };
         ThreadManager.getInstance().execute(timerTask);
+    }
+
+    public List<String[]> splitMeaning(Item item) {
+        List<String[]> result = new ArrayList<>();
+        List<String> pending = new ArrayList<>();
+        if (item.getNoun() != null) pending.add(item.getNoun().replace("n.","n.;"));
+        if (item.getVerb() != null) pending.add(item.getVerb().replace("v.","v.;"));
+        if (item.getAdjective() != null) pending.add(item.getAdjective().replace("adj.","adj.;"));
+        if (item.getAdverb() != null) pending.add(item.getAdverb().replace("adv.","adv.;"));
+        if (item.getConjunction() != null) pending.add(item.getConjunction().replace("conj.","conj.;"));
+        if (item.getPreposition() != null) pending.add(item.getPreposition().replace("prep.","prep.;"));
+        if (item.getPronoun() != null) pending.add(item.getPronoun().replace("pron.","pron.;"));
+        for (String str: pending) {
+            result.add(str.split(";"));
+        }
+        return result;
     }
 }

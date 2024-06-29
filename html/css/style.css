@@ -72,7 +72,8 @@ body {
 #practice .item.large {
     flex: 1.5;
 }
-#practice ul {
+#practice #en,
+#practice #cn {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -90,11 +91,39 @@ body {
     width: 100%;
     box-sizing: border-box;
     padding: 0 4px;
+    position: relative;
+}
+#practice .item li .example-num {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    color: rgb(204, 0, 0);
+    font-weight: 900;
 }
 #practice .item li.active {
     background: rgb(215, 255, 184);
 }
-
+#practice #example .example-tips {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 10px;
+    font-weight: 300;
+}
+#practice #example {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: none;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background: #eee;
+}
+#practice #audioList {
+    display: none;
+}
 #practice #en {
     border-right: 1px solid #999;
 }
@@ -110,77 +139,6 @@ body {
     font-size: 12px;
     background: #fff;
 }
-#panel {
-    height: 8%;
-    overflow: hidden;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0;
-}
-
-#page-panel .page-item {
-    flex: 1;
-    height: 100%;
-    text-align: center;
-    display: flex;
-    list-style-type: none;
-    align-items: center;
-    justify-content: space-around;
-    background-color: rgb(31, 106, 124);
-    color: #fff;
-    font-weight: 900;
-}
-#panel #curpage {
-    width: 30px;
-    height: 8px;
-    text-align: center;
-}
-#panel #write-panel,
-#panel #page-panel,
-#panel #play-panel {
-    height: 100%;
-    width: 50%;
-    overflow: hidden;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0;
-    box-sizing: border-box;
-    flex: 1;
-}
-#panel #write-panel .item,
-#panel #play-panel .item {
-    flex: 1;
-    height: 100%;
-    text-align: center;
-    display: flex;
-    list-style-type: none;
-    align-items: center;
-    justify-content: space-around;
-    color: #fff;
-    font-weight: 900;
-    border-right: 1px solid #999;
-}
-#panel #play-panel {
-    flex: 0.4;
-}
-#panel #write-panel .item {
-    background: #007bff;
-}
-#panel #play-panel .item {
-    background: rgb(42, 135, 14);
-}
-#panel #tips-panel {
-    box-sizing: border-box;
-    flex: 1;
-    background: rgb(64, 158, 255);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 100%;
-    font-size: 9px;
-}
 #canvas {
     display: none;
     cursor: crosshair;
@@ -191,38 +149,6 @@ body {
 #recognize-result {
     display: none;
 }
-
-#box {
-    box-sizing: border-box;
-    height: 92%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 0;
-    position: relative;
-}
-#box .title {
-    text-align: center;
-    font-size: 12px;
-    border-bottom: 1px solid #999;
-    padding: 5px 0;
-    font-weight: 900;
-}
-#box .content {
-    padding: 8px 0;
-    font-size: 10px;
-    white-space: normal;
-    line-height: 20px;
-}
-#box .content .main-point {
-    color: #409eff;
-    font-weight: 900;
-}
-#box .content p.active {
-    color: #fff;
-    font-weight: 900;
-    background: rgb(88, 204, 2);
-}
-
 #example {
     box-sizing: border-box;
     height: 92%;
@@ -230,63 +156,15 @@ body {
     position: relative;
     overflow: hidden;
 }
-#example-ul {
-    height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-#example-ul li.item {
-    width: 100%;
-    box-sizing: border-box;
-    border-bottom: 4px solid #333;
-}
-#example-ul .item .option,
-#example-ul .item .sentence {
-    width: 100%;
-    box-sizing: border-box;
-}
-#example-ul .item .sentence {
-    border-bottom: 1px solid;
-    font-size: 12px;
-    padding: 6px;
-    line-height: 20px;
-}
-#example-ul .item .sentence .missing {
-    color: #409eff;
-}
-#example-ul .option-ul {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-}
-#example-ul .option-ul li {
-    flex: 1;
-    display: flex;
-    text-align: center;
-    justify-content: space-around;
-    align-items: center;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    font-size: 10px;
-    box-sizing: border-box;
-    padding: 5px 2px;
-}
-#example #scroll {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
 #example .name {
     text-align: center;
-    font-weight: 900;
-    padding: 10px 0;
+    padding: 6px 0;
     border-bottom: 1px solid #999;
+    font-size: 14px;
 }
-
 #example .option-ul li {
     text-align: center;
 }
-
 #example .option-li {
     display: flex;
     justify-content: space-around;
@@ -299,7 +177,6 @@ body {
     padding: 2px;
     border-bottom: 1px solid #999;
 }
-
 #example .option-li .option-span {
     width: 100%;
     display: inline-block;
@@ -321,12 +198,12 @@ body {
     margin: 10px 6px;
     border-radius: 4px;
 }
-
 #example .sentence-item .missing {
     color: #409eff;
     font-weight: 900;
 }
 
+/** Synonym **/
 #synonym {
     box-sizing: border-box;
     height: 92%;
@@ -386,4 +263,115 @@ body {
 #synonym #items #cn {
     color: #000;
     background-color: #fff;
+}
+
+/** Grammar **/
+#grammar {
+    box-sizing: border-box;
+    height: 92%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0;
+    position: relative;
+}
+#grammar .title {
+    text-align: center;
+    font-size: 12px;
+    border-bottom: 1px solid #999;
+    padding: 5px 0;
+    font-weight: 900;
+}
+#grammar .content {
+    padding: 8px 0;
+    font-size: 10px;
+    white-space: normal;
+    line-height: 20px;
+}
+#grammar .content .main-point {
+    color: #409eff;
+    font-weight: 900;
+}
+#grammar .content p.active {
+    color: #fff;
+    font-weight: 900;
+    background: rgb(88, 204, 2);
+}
+
+/** Panel **/
+#panel {
+    height: 8%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+}
+
+#page-panel .page-item {
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    background-color: rgb(31, 106, 124);
+    color: #fff;
+    font-weight: 900;
+}
+#panel #curpage {
+    width: 30px;
+    height: 8px;
+    text-align: center;
+}
+#panel #write-panel,
+#panel #page-panel,
+#panel #example-panel,
+#panel #play-panel {
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    box-sizing: border-box;
+    flex: 1;
+}
+#panel #write-panel .item,
+#panel #example-panel .item,
+#panel #play-panel .item {
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    color: #fff;
+    font-weight: 900;
+    border-right: 1px solid #999;
+}
+#panel #play-panel,
+#panel #example-panel {
+    flex: 0.3;
+}
+#panel #write-panel .item {
+    background: #007bff;
+}
+#panel #example-panel .item {
+    background: rgb(204, 0, 0);
+}
+#panel #play-panel .item {
+    background: rgb(42, 135, 14);
+}
+#panel #tips-panel {
+    box-sizing: border-box;
+    flex: 1;
+    background: rgb(64, 158, 255);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    font-size: 9px;
 }

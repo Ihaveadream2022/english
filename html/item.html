@@ -14,9 +14,10 @@
             <div class="item">
                 <ul id="cn"></ul>
             </div>
-            <audio id="listPlayer" style="display: none"></audio>
-            <canvas id="canvas"></canvas>
+            <div id="example"></div>
+            <div id="audioList"></div>
             <div id="recognize-result">result</div>
+            <canvas id="canvas"></canvas>
         </div>
         <div id="panel">
             <div id="write-panel">
@@ -24,8 +25,11 @@
                 <div class="item" onclick="canvas.erase()">&#129529;</div>
                 <div class="item" onclick="canvasShow()">&#9997;</div>
             </div>
+            <div id="example-panel">
+                <div class="item" onclick="exampleUIClear()">X</div>
+            </div>
             <div id="play-panel">
-                <div id="playBtn" class="item" onclick="doPlay()">&#9654;</div>
+                <div id="audioListPlayBtn" class="item" onclick="doPlay()">&#9654;</div>
             </div>
             <div id="page-panel">
                 <div id="prevBtn" class="page-item">&#10096;</div>
