@@ -1,5 +1,5 @@
 const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
-const JSONPrefix = window.location.pathname.slice(1, -5);
+const JSONPrefix = window.location.pathname.split("/").pop().replace(".html", "");
 const h5Meaning = document.getElementById("meaning");
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
@@ -56,18 +56,21 @@ function fetchData(page) {
         .then((data) => {
             const enArray = shuffleArray(data.itemHtmlList);
             const cnArray = shuffleArray(data.itemHtmlList);
+            initUI(data.meaning, enArray, cnArray);
             playAudioSources = enArray.map((v) => {
                 return { en: v.en.replace(/\s+/g, "_"), cn: v.cn, tts: v.tts };
             });
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
-            initUI(data.meaning, enArray, cnArray);
-            var listItems = $("li");
+            var listItems = $("#synonym li");
             listItems.click(function () {
-                const result = playAudioSources.find(({ en }) => en === $(this).data("en"));
-                listPlayer.src = "data:audio/mp3;base64," + result.tts;
-                listPlayer.load();
-                listPlayer.play();
-
+                var isLeftColumn = $(this).parent().attr("id") == "en";
+                var itemValue = $(this).data("en");
+                if (isLeftColumn) {
+                    const result = playAudioSources.find(({ en }) => en === itemValue);
+                    listPlayer.src = "data:audio/mp3;base64," + result.tts;
+                    listPlayer.load();
+                    listPlayer.play();
+                }
                 $(this).siblings().removeClass("active");
                 $(this).addClass("active");
                 var enActive = $("#en").find("li.active").eq(0);

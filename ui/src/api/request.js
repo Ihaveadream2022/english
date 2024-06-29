@@ -140,13 +140,16 @@ export const itemGenerate = () =>
         method: "get",
         url: segments.urlAss + "/items/generate",
     });
-
-// Item Example
 export const itemExampleEdit = (data) =>
     requestBase.request({
         method: "put",
         url: segments.urlAss + "/item-examples/" + data.id,
         data: data,
+    });
+export const itemStatics = () =>
+    requestBase.request({
+        method: "get",
+        url: segments.urlAss + "/items/statics",
     });
 
 // Grammar
@@ -252,11 +255,4 @@ export const similarGenerate = () =>
     requestBase.request({
         method: "get",
         url: segments.urlAss + "/similars/generate",
-    });
-
-// Index
-export const IndexTodo = () =>
-    requestBase.request({
-        method: "get",
-        url: segments.urlAss + "/index/todo",
     });

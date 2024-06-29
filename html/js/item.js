@@ -1,5 +1,5 @@
 const domainPrefix = window.location.host.includes("github") ? "/english/html" : "";
-const JSONPrefix = window.location.pathname.split('/').pop().replace(".html","");
+const JSONPrefix = window.location.pathname.split("/").pop().replace(".html", "");
 const ulElementCn = document.getElementById("cn");
 const ulElementEn = document.getElementById("en");
 const voice = document.getElementById("voice");
@@ -10,8 +10,8 @@ var playAudioSources = [];
 var playAudioSourcesCurrentIndex = 0;
 var playIsPlaying = false;
 
-// Page Bar
-document.addEventListener("DOMContentLoaded", function () {
+// Bind Page Event
+function bindEventPage() {
     // 获取 Pre 和 Next 按钮元素
     var prevBtn = document.getElementById("prevBtn");
     var nextBtn = document.getElementById("nextBtn");
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-});
+}
 
 // Handwriting + Audio
 function recognize(word) {
@@ -118,6 +118,27 @@ function shuffleArray(originArray) {
     return array;
 }
 
+// Fetch Statics
+function fetchStatics(page) {
+    fetch(domainPrefix + "/json/statics.json")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            var curPageElement = document.getElementById("curpage");
+            var totalPageElement = document.getElementById("total");
+            curPageElement.value = data.itemsFileFrom;
+            totalPageElement.textContent = data.itemsFileEnd;
+            bindEventPage();
+            fetchData(data.itemsFileFrom);
+        })
+        .catch((error) => {
+            console.error("There was a problem with the fetch operation:", error);
+        });
+}
 // Fetch Data From a JSON File
 function fetchData(page) {
     fetch(domainPrefix + "/json/" + JSONPrefix + "-" + page + ".json")
@@ -130,19 +151,22 @@ function fetchData(page) {
         .then((data) => {
             const enArray = shuffleArray(data);
             const cnArray = shuffleArray(data);
+            initUI(enArray, cnArray);
             playAudioSources = enArray.map((v) => {
                 return { en: v.en.replace(/\s+/g, "_"), cn: v.cn, tts: v.tts };
             });
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
-            initUI(enArray, cnArray);
-            var listItems = $("li");
+            var listItems = $("#practice li");
             listItems.unbind("click");
             listItems.click(function () {
-                const result = playAudioSources.find(({ en }) => en === $(this).data("en"));
-                listPlayer.src = "data:audio/mp3;base64," + result.tts;
-                listPlayer.load();
-                listPlayer.play();
-
+                var isLeftColumn = $(this).parent().attr("id") == "en";
+                var itemValue = $(this).data("en");
+                if (isLeftColumn) {
+                    const result = playAudioSources.find(({ en }) => en === itemValue);
+                    listPlayer.src = "data:audio/mp3;base64," + result.tts;
+                    listPlayer.load();
+                    listPlayer.play();
+                }
                 $(this).siblings().removeClass("active");
                 $(this).addClass("active");
                 var enActive = $("#en").find("li.active").eq(0);
@@ -159,4 +183,4 @@ function fetchData(page) {
             console.error("There was a problem with the fetch operation:", error);
         });
 }
-fetchData(1);
+fetchStatics();

@@ -76,8 +76,8 @@ public class SynonymController {
     @GetMapping("/generate")
     @SuppressWarnings("unchecked")
     public void generate() {
-        Integer page = 1;
-        Integer pageSize = 10;
+        int page = 1;
+        int pageSize = 10;
         boolean continueFlag = false;
         SynonymQueryCondition synonymQueryCondition = new SynonymQueryCondition();
         do {

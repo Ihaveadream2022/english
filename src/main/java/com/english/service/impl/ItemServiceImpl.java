@@ -7,6 +7,7 @@ import com.english.exception.GlobalExceptionHandler;
 import com.english.mapper.ItemMapper;
 import com.english.model.ItemHtml;
 import com.english.model.request.DeleteRequestBody;
+import com.english.model.request.ItemQueryCondition;
 import com.english.model.request.QueryCondition;
 import com.english.service.ItemService;
 import com.english.manager.ThreadManager;
@@ -19,10 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimerTask;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -153,6 +153,72 @@ public class ItemServiceImpl implements ItemService {
                     ObjectMapper objectMapper = new ObjectMapper();
                     objectMapper.writeValue(file, list);
                     serviceLogger.info(String.format("JSON file [%s] has been created.", filePath));
+                } catch (Exception e) {
+                    frameworkLogger.error(e.getMessage(), e);
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        };
+        ThreadManager.getInstance().execute(timerTask);
+    }
+
+    public Map<String,Object> statics() {
+        Map<String,Object> data = new HashMap<>();
+        int dataTotalPage = 1;
+        int dataTodayPage = 1;
+        long dataTotal = 1L;
+        long dataItemsFrom = 1L;
+        long dataItemsEnd = 1000L;
+        long dataItemsFileFrom = 1L;
+        long dataItemsFileEnd = 100L;
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+        String dayStr = localDateTime.format(dayFormatter);
+        int dayInt = dayStr.startsWith("0")? Integer.parseInt(dayStr.substring(1)): Integer.parseInt(dayStr);
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
+        String monthStr = localDateTime.format(monthFormatter);
+        int monthInt = monthStr.startsWith("0")? Integer.parseInt(monthStr.substring(1)): Integer.parseInt(monthStr);
+
+        ItemQueryCondition itemQueryCondition = new ItemQueryCondition();
+        dataTotal = count(itemQueryCondition);
+        if (dataTotal > 1000 && dataTotal <= 31000) {
+            dataTotalPage = (int) Math.ceil((double) dataTotal / 1000);
+            dataTodayPage = ((dayInt - 1 ) % dataTotalPage) + 1;
+            dataItemsFrom = (dataTodayPage - 1) * 1000L + 1;
+            dataItemsEnd = dataTodayPage * 1000L;
+            dataItemsFileFrom = (dataTodayPage - 1) * 100L + 1;
+            dataItemsFileEnd =  dataTodayPage * 100L;
+        } else if (dataTotal <= 62000) {
+            int dayIntTwoMonth = (monthInt % 2 == 0)? dayInt + 31: dayInt;
+            dataTotalPage = (int) Math.ceil((double) dataTotal / 1000);
+            dataTodayPage = ((dayIntTwoMonth - 1 ) % dataTotalPage) + 1;
+            dataItemsFrom = (dataTodayPage - 1) * 1000L + 1;
+            dataItemsEnd = dataTodayPage * 1000L;
+            dataItemsFileFrom = (dataTodayPage - 1) * 100L + 1;
+            dataItemsFileEnd =  dataTodayPage * 100L;
+        }
+        data.put("total", dataTotal);
+        data.put("totalPage", dataTotalPage);
+        data.put("todayPage", dataTodayPage);
+        data.put("itemsFrom", dataItemsFrom);
+        data.put("itemsEnd", dataItemsEnd);
+        data.put("itemsFileFrom", dataItemsFileFrom);
+        data.put("itemsFileEnd", dataItemsFileEnd);
+        data.put("todo", String.format("%s月%s日: [%s,%s]: [item-%s.json,item-%s.json]", monthInt, dayInt, dataItemsFrom, dataItemsEnd, dataItemsFileFrom, dataItemsFileEnd));
+        return data;
+    }
+
+    public void writeStaticsJSONFile() {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    String filePath = String.format("%s/html/json/statics.json", System.getProperty("user.dir"));
+                    File file = new File(filePath);
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    objectMapper.writeValue(file, statics());
+                    serviceLogger.info(String.format("Statics JSON file has been created.", filePath));
                 } catch (Exception e) {
                     frameworkLogger.error(e.getMessage(), e);
                     throw new RuntimeException(e.getMessage());

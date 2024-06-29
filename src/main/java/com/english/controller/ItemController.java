@@ -84,9 +84,10 @@ public class ItemController {
     @SuppressWarnings("unchecked")
     public void generate() {
         int indexExample = 1;
-        Integer page = 1;
-        Integer pageSize = 10;
+        int page = 1;
+        int pageSize = 10;
         boolean continueFlag = false;
+        itemService.writeStaticsJSONFile();
         QueryCondition queryCondition = new ItemQueryCondition();
         do {
             queryCondition.setPageNo(page);
@@ -106,5 +107,13 @@ public class ItemController {
             page++;
             continueFlag = list.size() > 0;
         } while (continueFlag);
+    }
+
+    @GetMapping("/statics")
+    public JsonResponse statics() {
+
+        Map<String,Object> data = itemService.statics();
+
+        return JsonResponse.success(data);
     }
 }

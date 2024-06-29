@@ -7,14 +7,14 @@
         </div>
         <div style="width: 500px; margin: 10px">
             <el-descriptions direction="vertical" :column="1" :labelStyle="{ background: '#409EFF', color: '#fff' }" border>
-                <el-descriptions-item label="单词总数1">
+                <el-descriptions-item label="单词总数">
                     {{ statics.total }}
                 </el-descriptions-item>
                 <el-descriptions-item label="总页数">
                     {{ statics.totalPage }}
                 </el-descriptions-item>
                 <el-descriptions-item label="今天页数">
-                    {{ statics.nowPage }}
+                    {{ statics.todayPage }}
                 </el-descriptions-item>
                 <el-descriptions-item label="今天要背">
                     {{ statics.todo }}
@@ -25,7 +25,7 @@
 </template>
 <script>
     /* eslint-disable */
-    import { GitPush, IndexTodo } from "@/api/request";
+    import { GitPush, itemStatics } from "@/api/request";
     export default {
         data() {
             return {
@@ -60,7 +60,7 @@
                 );
             },
             indexTodo() {
-                IndexTodo()
+                itemStatics()
                     .then(
                         (res) => {
                             this.statics = res.data;
