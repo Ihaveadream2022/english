@@ -236,6 +236,7 @@
                     this.editDialog.title = "Create Item";
                     this.editDialog.operation = "add";
                     this.copiedText = "";
+                    this.tableGetList(this.table.searchForm);
                 });
             },
             exampleEditDialogClose() {
@@ -430,7 +431,7 @@
                         },
                         {
                             property: "verb",
-                            reg: /(v|vi|vt)\.\s*([^\n]+)/,
+                            reg: /\b(v|vi|vt)\.\s*([^\n]+)/,
                         },
                         {
                             property: "adjective",
