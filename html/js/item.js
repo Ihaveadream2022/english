@@ -161,6 +161,7 @@ function initUI(data) {
             if (audio.readyState == 0) {
                 alert("Please try it later");
             }
+            console.log(audio.currentTime)
             if (audio.currentTime > 0) {
                 audio.load();
             }
