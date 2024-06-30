@@ -7,6 +7,7 @@ const audioListElement = document.getElementById("audioList");
 const audioListPlayBtn = document.getElementById("audioListPlayBtn");
 var audioElements = document.querySelectorAll("audio");
 var audioCallbackHandlers = [];
+var audioLoadedCount = 0;
 var audioListIsPlaying = false;
 var colors = [];
 
@@ -137,7 +138,7 @@ function initUI(data) {
         const en = word.en.replace(/\s+/g, "_");
         const liElement = document.createElement("li");
         liElement.setAttribute("data-en", en);
-        liElement.textContent = word.cn;
+        liElement.innerHTML = word.cn.length > 10 ? '<span style="font-size:10px;">' + word.cn + "</span>" : word.cn;
         ulElementCn.appendChild(liElement);
     });
 
@@ -146,10 +147,17 @@ function initUI(data) {
     listItems.unbind("click");
     listItems.click(function () {
         stopPlay();
-        var itemValue = $(this).data("en");
-        var isLeftColumn = $(this).parent().attr("id") == "en";
+        const itemValue = $(this).data("en");
+        const isLeftColumn = $(this).parent().attr("id") == "en";
         if (isLeftColumn) {
-            $("#audio-" + itemValue)[0].play();
+            const audio = $("#audio-" + itemValue)[0];
+            if (audio.readyState == 0) {
+                alert("Please try it later");
+            }
+            if (audio.currentTime > 0) {
+                audio.load();
+            }
+            audio.play();
         }
         $(this).siblings().removeClass("active");
         $(this).addClass("active");
