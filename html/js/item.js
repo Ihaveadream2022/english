@@ -92,8 +92,11 @@ function stopPlay() {
 }
 function audioCallback(audioID) {
     return function () {
-        const itemNext = document.getElementById(audioID);
-        itemNext.play();
+        const audioNext = document.getElementById(audioID);
+        if (audioNext.currentTime > 0) {
+            audioNext.load();
+        }
+        audioNext.play();
     };
 }
 // Functions
