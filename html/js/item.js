@@ -58,7 +58,9 @@ function recognize(word) {
     const randomColor = colors.splice(randomIndex, 1)[0];
     const audio = $("#audio-" + wordEn)[0];
     $('[data-en="' + wordEn + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-    audio.currentTime = 0;
+    if (audio.currentTime > 0) {
+        audio.load();
+    }
     audio.play();
     canvas.erase();
 }
