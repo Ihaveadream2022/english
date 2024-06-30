@@ -56,8 +56,10 @@ function recognize(word) {
     const wordEn = word.replace(/\s+/g, "_");
     const randomIndex = Math.floor(Math.random() * colors.length);
     const randomColor = colors.splice(randomIndex, 1)[0];
+    const audio = $("#audio-" + wordEn)[0];
     $('[data-en="' + wordEn + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-    $("#audio-" + wordEn)[0].play();
+    audio.currentTime = 0;
+    audio.play();
     canvas.erase();
 }
 // Play Audio
