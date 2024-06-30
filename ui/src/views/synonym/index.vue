@@ -5,7 +5,7 @@
         </div>
         <!-- Search Area -->
         <div class="searchBox" ref="searchBox">
-            <el-form :inline="true" :model="table.searchForm" ref="searchForm" class="demo-form-inline" label-width="100px" size="mini">
+            <el-form :inline="true" :model="table.searchForm" ref="searchForm" class="demo-form-inline" label-width="100px" size="mini" @submit.native.prevent>
                 <div class="inpBox">
                     <el-form-item label="Keyword :" prop="keyword">
                         <el-input placeholder="keyword" v-model="table.searchForm.keyword" @keyup.enter.native="handleEnter"></el-input>

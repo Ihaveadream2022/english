@@ -23,14 +23,16 @@ function bindEventPage() {
     var currentPage = parseInt(curPageElement.value);
     var totalPages = parseInt(totalPageElement.textContent);
     // 添加点击事件监听器
-    prevBtn.addEventListener("click", function () {
+    prevBtn.addEventListener("click", function (e) {
+        e.preventDefault();
         if (currentPage > 1) {
             currentPage--;
             curPageElement.value = currentPage.toString();
             fetchData(currentPage);
         }
     });
-    nextBtn.addEventListener("click", function () {
+    nextBtn.addEventListener("click", function (e) {
+        e.preventDefault();
         if (currentPage < totalPages) {
             currentPage++;
             curPageElement.value = currentPage.toString();
@@ -52,17 +54,22 @@ function bindEventPage() {
 }
 
 // Handwriting + Audio
-function recognize(word) {
-    const wordEn = word.replace(/\s+/g, "_");
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    const randomColor = colors.splice(randomIndex, 1)[0];
-    const audio = $("#audio-" + wordEn)[0];
-    $('[data-en="' + wordEn + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
-    if (audio.currentTime > 0) {
-        audio.load();
-    }
-    audio.play();
-    canvas.erase();
+function recognize(wordString) {
+    const words = wordString.split(", ");
+    words.forEach((word) => {
+        const wordEn = word.replace(/\s+/g, "_");
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        const randomColor = colors.splice(randomIndex, 1)[0];
+        const audio = $("#audio-" + wordEn)[0];
+        if (audio !== undefined) {
+            $('[data-en="' + wordEn + '"]').css({ background: randomColor, "border-color": randomColor, "font-weight": "900", color: "#fff" });
+            if (audio.currentTime > 0) {
+                audio.load();
+            }
+            audio.play();
+        }
+        canvas.erase();
+    });
 }
 // Play Audio
 function doPlay() {
@@ -158,14 +165,16 @@ function initUI(data) {
         const isLeftColumn = $(this).parent().attr("id") == "en";
         if (isLeftColumn) {
             const audio = $("#audio-" + itemValue)[0];
-            if (audio.readyState == 0) {
-                alert("Please try it later");
+            if (audio !== undefined) {
+                if (audio.readyState == 0) {
+                    alert("Please try it later");
+                }
+                console.log(audio.currentTime);
+                if (audio.currentTime > 0) {
+                    audio.load();
+                }
+                audio.play();
             }
-            console.log(audio.currentTime)
-            if (audio.currentTime > 0) {
-                audio.load();
-            }
-            audio.play();
         }
         $(this).siblings().removeClass("active");
         $(this).addClass("active");
@@ -352,12 +361,14 @@ function fetchStatics(page) {
 function fetchData(page) {
     fetch(domainPrefix + "/json/" + JSONPrefix + "-" + page + ".json")
         .then((response) => {
+            console.log("response", response);
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             return response.json();
         })
         .then((data) => {
+            console.log("data", data);
             initUI(data);
             colors = ["rgb(103, 39, 223)", "rgb(189, 83, 111)", "rgb(42, 135, 14)", "rgb(201, 196, 182)", "rgb(28, 186, 216)", "rgb(63, 55, 231)", "rgb(153, 48, 244)", "rgb(7, 239, 225)", "rgb(247, 42, 195)", "rgb(31, 106, 124)", "rgb(169, 82, 61)", "rgb(108, 216, 86)", "rgb(68, 124, 174)", "rgb(19, 233, 169)", "rgb(233, 167, 68)", "rgb(98, 155, 222)", "rgb(239, 107, 60)", "rgb(22, 68, 22)", "rgb(199, 253, 255)", "rgb(152, 107, 161)"];
         })
